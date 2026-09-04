@@ -5,7 +5,7 @@ from markusmd.ast import Directive, Document, MarkdownBlock, Node
 from markusmd.errors import MarkusError, MarkusSyntaxError, MarkusValidationError
 from markusmd.registry import Registry
 
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 
 __all__ = [
     "Directive",
