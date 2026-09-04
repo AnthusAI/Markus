@@ -79,3 +79,45 @@ Feature: Directive validation
     Then conversion should succeed
     And the HTML should not contain "markus-callout"
     And the HTML should contain ":::"
+
+  Scenario: Tab requires a label attribute
+    Given the Markus source:
+      """
+      :::tabs
+      :::tab
+      No label.
+      :::
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "tab.label"
+
+  Scenario: Video requires a src attribute
+    Given the Markus source:
+      """
+      ::video
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "video.src"
+
+  Scenario: Video cannot wrap content
+    Given the Markus source:
+      """
+      :::video{src="video.mp4"}
+      Wrapping content is not allowed.
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "is a leaf"
+
+  Scenario: Tabs cannot be used as a leaf
+    Given the Markus source:
+      """
+      ::tabs
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "is a container"

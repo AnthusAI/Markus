@@ -220,3 +220,77 @@ Feature: Semantic layout directives
     And the HTML should contain an attribute id of "details-anchor"
     And the HTML should contain an attribute id of "aside-anchor"
     And the HTML should contain an attribute id of "metric-anchor"
+  Scenario: Tabs container renders tab navigation and panels
+    Given the Markus source:
+      """
+      :::tabs
+      :::tab{label="macOS"}
+      `brew install anthus-markus`
+      :::
+      :::tab{label="Linux"}
+      `pip install anthus-markus`
+      :::
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then the HTML should contain a "div" with class "markus-tabs"
+    And the HTML should contain a "div" with class "markus-tabs-nav"
+    And the HTML should contain a "button" with class "markus-tab-button"
+    And the HTML should contain "macOS"
+    And the HTML should contain "Linux"
+    And the HTML should contain an attribute data-label of "macOS"
+    And the HTML should contain an attribute data-label of "Linux"
+    And the HTML should contain "<code>brew install anthus-markus</code>"
+    And the HTML should contain "<code>pip install anthus-markus</code>"
+
+  Scenario: Tab directive parses label attribute
+    Given the Markus source:
+      """
+      :::tabs
+      :::tab{label="Installation"}
+      Follow these instructions.
+      :::
+      :::
+      """
+    When I parse the source
+    Then the directive "tab" should have attribute "label" equal to "Installation"
+
+  Scenario: Step list renders ordered sequence of steps
+    Given the Markus source:
+      """
+      :::step-list
+      :::step
+      ### Download
+      Fetch the archive.
+      :::
+      :::step
+      ### Verify
+      Check the signature.
+      :::
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then the HTML should contain a "ol" with class "markus-step-list"
+    And the HTML should contain a "li" with class "markus-step"
+    And the HTML should contain "Download"
+    And the HTML should contain "Verify"
+    And the HTML should contain "Fetch the archive."
+    And the HTML should contain "Check the signature."
+
+  Scenario: Video is a leaf directive
+    Given the Markus source:
+      """
+      ::video{src="screencast.mp4" title="Walkthrough"}
+      """
+    When I convert the source to an HTML fragment
+    Then the HTML should contain a "video" with class "markus-video"
+    And the HTML should contain an attribute src of "screencast.mp4"
+    And the HTML should contain an attribute title of "Walkthrough"
+
+  Scenario: Video directive parses src attribute
+    Given the Markus source:
+      """
+      ::video{src="overview.mp4"}
+      """
+    When I parse the source
+    Then the directive "video" should have attribute "src" equal to "overview.mp4"

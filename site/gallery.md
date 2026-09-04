@@ -150,3 +150,39 @@ An aside is non-linear. It should still make sense if a later renderer flattens 
 ::metric{value="12ms" unit="p95" label="Local round trip" delta="-38%"}
 
 Leaf directives use two colons and take no body: `::metric{value="12ms" unit="p95" label="Local round trip" delta="-38%"}`.
+
+## Tabs
+
+:::tabs
+:::tab{label="macOS"}
+```bash
+brew install anthus-markus
+```
+:::
+:::tab{label="Linux"}
+```bash
+pip install anthus-markus
+```
+:::
+:::
+
+## Step list
+
+:::step-list
+:::step
+### 1. Author intent
+Choose semantic directives that declare structure without presentation classes.
+:::
+:::step
+### 2. Validate strictly
+Compile through strict Pydantic schemas that reject arbitrary CSS.
+:::
+:::step
+### 3. Render anywhere
+Generate accessible HTML, styled for web and print.
+:::
+:::
+
+## Video
+
+::video{src="assets/pipeline.svg" title="Pipeline demonstration"}

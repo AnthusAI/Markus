@@ -89,6 +89,26 @@ def _id_attr(attrs: dict[str, Any]) -> str:
     if ident is not None and str(ident).strip():
         return f' id="{escape(str(ident))}"'
     return ""
+class TabsAttrs(_Strict):
+    label: str | None = None
+
+
+class TabAttrs(_Strict):
+    label: str
+
+
+class StepListAttrs(_Strict):
+    pass
+
+
+class StepAttrs(_Strict):
+    pass
+
+
+class VideoAttrs(_Strict):
+    src: str
+    title: str | None = None
+    poster: str | None = None
 
 
 def _render_callout(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
@@ -253,6 +273,61 @@ def _render_metric(directive: Directive, inner: str, attrs: dict[str, Any]) -> s
         f"<dt>{escape(str(label))}</dt>"
         f"<dd><span class=\"markus-metric-value\">{value}</span>{unit}{delta_html}</dd>"
         f"</dl>"
+    )
+
+
+def _render_tabs(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    label = attrs.get("label")
+    aria_label = f' aria-label="{escape(str(label))}"' if label else ""
+    buttons = []
+    for idx, child in enumerate(directive.children):
+        if isinstance(child, Directive) and child.name == "tab":
+            tab_label = child.attributes.get("label", "")
+            active = " markus-tab-button--active" if idx == 0 else ""
+            aria_selected = ' aria-selected="true"' if idx == 0 else ' aria-selected="false"'
+            buttons.append(
+                f'<button class="markus-tab-button{active}" '
+                f'type="button" role="tab"{aria_selected}>'
+                f"{escape(str(tab_label))}"
+                f"</button>"
+            )
+    nav = (
+        f'<div class="markus-tabs-nav" role="tablist"{aria_label}>{"".join(buttons)}</div>'
+        if buttons
+        else ""
+    )
+    return f'<div{_id_attr(attrs)} class="markus-tabs">{nav}{inner}</div>'
+
+
+def _render_tab(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    label = attrs["label"]
+    return (
+        f'<div{_id_attr(attrs)} class="markus-tab" role="tabpanel" '
+        f'aria-label="{escape(str(label))}" '
+        f'data-label="{escape(str(label))}">'
+        f"{inner}"
+        f"</div>"
+    )
+
+
+def _render_step_list(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    return f'<ol{_id_attr(attrs)} class="markus-step-list">{inner}</ol>'
+
+
+def _render_step(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    return f'<li{_id_attr(attrs)} class="markus-step">{inner}</li>'
+
+
+def _render_video(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    src = attrs["src"]
+    title = attrs.get("title")
+    poster = attrs.get("poster")
+    title_attr = f' title="{escape(str(title), quote=True)}"' if title else ""
+    poster_attr = f' poster="{escape(str(poster), quote=True)}"' if poster else ""
+    return (
+        f'<video{_id_attr(attrs)} class="markus-video" src="{escape(str(src), quote=True)}"'
+        f"{title_attr}{poster_attr} controls>"
+        f"</video>"
     )
 
 
@@ -462,6 +537,34 @@ def default_specs() -> list[DirectiveSpec]:
             renderer=_render_metric,
             leaf=True,
         ),
+        DirectiveSpec(
+            name="tabs",
+            schema=TabsAttrs,
+            renderer=_render_tabs,
+            allowed_children=frozenset({"tab"}),
+        ),
+        DirectiveSpec(
+            name="tab",
+            schema=TabAttrs,
+            renderer=_render_tab,
+        ),
+        DirectiveSpec(
+            name="step-list",
+            schema=StepListAttrs,
+            renderer=_render_step_list,
+            allowed_children=frozenset({"step"}),
+        ),
+        DirectiveSpec(
+            name="step",
+            schema=StepAttrs,
+            renderer=_render_step,
+        ),
+        DirectiveSpec(
+            name="video",
+            schema=VideoAttrs,
+            renderer=_render_video,
+            leaf=True,
+        ),
     ]
 
 
@@ -508,6 +611,24 @@ def _assert_cardinality(name: str, children: list[Any], *, line: int) -> None:
         if count < 1:
             raise MarkusValidationError(
                 "Directive 'card-grid' requires at least one card child",
+                line=line,
+            )
+    if name == "tabs":
+        count = sum(
+            1 for child in children if isinstance(child, Directive) and child.name == "tab"
+        )
+        if count < 1:
+            raise MarkusValidationError(
+                "Directive 'tabs' requires at least one tab child",
+                line=line,
+            )
+    if name == "step-list":
+        count = sum(
+            1 for child in children if isinstance(child, Directive) and child.name == "step"
+        )
+        if count < 1:
+            raise MarkusValidationError(
+                "Directive 'step-list' requires at least one step child",
                 line=line,
             )
 

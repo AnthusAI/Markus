@@ -36,6 +36,10 @@ Markdown, including nested directives.
 | `figure` | Media with caption | `src`, `alt`, `caption`, `credit` |
 | `details` | Progressive disclosure | `summary`, `open` |
 | `aside` | Supporting, non-linear material | `title` |
+| `tabs` | Tabbed container | `label` |
+| `tab` | One tab panel | `label` |
+| `step-list` | Ordered sequence of steps | — |
+| `step` | Single step | — |
 
 A trailing kramdown-style attribute list is also accepted inside a directive:
 
@@ -50,12 +54,20 @@ A trailing kramdown-style attribute list is also accepted inside a directive:
 
 ```
 ::metric{value="12" unit="ms" label="p95 latency" delta="-8%"}
+::video{src="screencast.mp4" title="Walkthrough"}
 ```
+
+| Name | Meaning | Notable attributes |
+| --- | --- | --- |
+| `metric` | Key metric fact | `value`, `unit`, `label`, `delta` |
+| `video` | Video player | `src`, `title`, `poster` |
 
 ## Nesting rules
 
 - `card-grid` may contain only `card` (or the `feature-card` alias)
 - `two-up` must contain exactly two `column` children
+- `tabs` may contain only `tab`
+- `step-list` may contain only `step`
 - Other containers may nest Markdown and further directives
 - Fenced code blocks are not scanned for directives
 

@@ -377,6 +377,94 @@
 .markus-metric-delta--down { color: var(--markus-tip); }
 .markus-metric-delta--up { color: var(--markus-caution); }
 
+.markus-tabs {
+  margin: 1.5rem 0;
+  border: 1px solid var(--markus-line);
+  border-radius: 1rem;
+  background: var(--markus-card);
+  overflow: hidden;
+}
+
+.markus-tabs-nav {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 0.6rem 0;
+  border-bottom: 1px solid var(--markus-line);
+  background: rgba(28, 25, 20, 0.03);
+}
+
+.markus-tab-button {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 0.45rem 0.85rem;
+  font-family: var(--markus-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--markus-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  border-radius: 0.4rem 0.4rem 0 0;
+}
+
+.markus-tab-button--active {
+  color: var(--markus-accent);
+  border-bottom-color: var(--markus-accent);
+  background: var(--markus-card);
+}
+
+.markus-tab {
+  padding: 1.1rem 1.15rem 1.2rem;
+}
+
+.markus-tab > :first-child { margin-top: 0; }
+.markus-tab > :last-child { margin-bottom: 0; }
+
+.markus-step-list {
+  list-style: none;
+  counter-reset: markus-step-counter;
+  padding-left: 0;
+  margin: 1.6rem 0;
+}
+
+.markus-step {
+  counter-increment: markus-step-counter;
+  position: relative;
+  padding-left: 2.75rem;
+  margin: 1.25rem 0;
+}
+
+.markus-step::before {
+  content: counter(markus-step-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 999px;
+  background: var(--markus-accent);
+  color: var(--markus-paper);
+  font-family: var(--markus-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.markus-step > :first-child { margin-top: 0; }
+.markus-step > :last-child { margin-bottom: 0; }
+
+.markus-video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.8rem;
+  background: #000;
+  margin: 1.5rem 0;
+}
+
 .contains-task-list {
   list-style: none;
   padding-left: 0;
@@ -411,5 +499,5 @@
 
 @media print {
   .markus-body { background: white; }
-  .markus-card, .markus-callout, .markus-details { break-inside: avoid; }
+  .markus-card, .markus-callout, .markus-details, .markus-tabs, .markus-step { break-inside: avoid; }
 }

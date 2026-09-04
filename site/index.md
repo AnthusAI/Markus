@@ -110,7 +110,7 @@ Leaf directives cover facts that should be extractable later — not just styled
 :::
 
 :::card
-::metric{value="12" unit="blocks" label="Directive vocabulary" delta="+12"}
+::metric{value="15" unit="blocks" label="Directive vocabulary" delta="+15"}
 :::
 
 :::card
@@ -120,6 +120,57 @@ Leaf directives cover facts that should be extractable later — not just styled
 
 :::figure{src="assets/pipeline.svg" alt="Pipeline from Markus source through a validated AST to semantic HTML" caption="Parse, validate, then render. Never regex-replace a directive after the fact." credit="Markus 0.1"}
 :::
+
+## Structured procedures
+
+:::step-list
+:::step
+### 1. Encode intent in source
+Author content in GFM, wrapping layouts in colon-fenced directives.
+:::
+
+:::step
+### 2. Validate against strict schemas
+Markus checks directives and attributes at compile time, rejecting rogue CSS.
+:::
+
+:::step
+### 3. Render accessible HTML
+Output semantic markup ready for static hosting, responsive themes, or print.
+:::
+:::
+
+## Multi-platform instructions
+
+:::tabs{label="Install instructions"}
+:::tab{label="macOS"}
+Install with Homebrew or pip:
+
+```bash
+brew install anthus-markus
+```
+:::
+
+:::tab{label="Linux"}
+Install using pip:
+
+```bash
+pip install anthus-markus
+```
+:::
+
+:::tab{label="Windows"}
+Install via PowerShell:
+
+```powershell
+pip install anthus-markus
+```
+:::
+:::
+
+## Media walkthrough
+
+::video{src="assets/pipeline.svg" title="Pipeline demonstration"}
 
 :::details{summary="Why not raw HTML?"}
 Raw HTML is a compatibility hatch, not the authoring API. It names CSS classes, invites sanitizer fights, and cannot tell a renderer whether three boxes are a comparison, a feature set, or leftover layout. Markus keeps a registry: unknown names fail in CI instead of silently becoming untyped markup.
