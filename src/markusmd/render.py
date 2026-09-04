@@ -1,0 +1,116 @@
+"""Render a Markus document AST to semantic HTML."""
+
+from __future__ import annotations
+
+from html import escape
+from importlib.resources import files
+
+from markdown_it import MarkdownIt
+from mdit_py_plugins.tasklists import tasklists_plugin
+
+from markusmd.ast import Document, MarkdownBlock, Node
+from markusmd.registry import Registry
+
+
+def make_markdown(*, allow_html: bool = False) -> MarkdownIt:
+    """GitHub-flavored Markdown parser used for ordinary (non-directive) regions."""
+    try:
+        md = MarkdownIt(
+            "gfm-like2",
+            {"html": allow_html, "linkify": True, "typographer": True},
+        )
+    except (KeyError, ValueError):
+        md = MarkdownIt(
+            "gfm-like",
+            {"html": allow_html, "linkify": True, "typographer": True},
+        )
+        md.use(tasklists_plugin)
+    return md
+
+
+def default_css() -> str:
+    return files("markusmd").joinpath("static", "markus.css").read_text(encoding="utf-8")
+
+
+def render_document(
+    document: Document,
+    *,
+    registry: Registry | None = None,
+    allow_html: bool = False,
+    include_css: bool = True,
+    full_document: bool = True,
+    markdown: MarkdownIt | None = None,
+) -> str:
+    registry = registry or Registry.default()
+    markdown = markdown or make_markdown(allow_html=allow_html)
+    body = _render_nodes(document.children, registry=registry, markdown=markdown)
+    article = _wrap_article(document, body)
+    if not full_document:
+        if include_css:
+            return f"<style>\n{default_css()}\n</style>\n{article}"
+        return article
+    title = escape(str(document.front_matter.get("title") or "Markus"))
+    css = f"<style>\n{default_css()}\n</style>" if include_css else ""
+    return (
+        "<!DOCTYPE html>\n"
+        '<html lang="en">\n'
+        "<head>\n"
+        '  <meta charset="utf-8">\n'
+        '  <meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        f"  <title>{title}</title>\n"
+        f"  {css}\n"
+        "</head>\n"
+        '<body class="markus-body">\n'
+        f"{article}\n"
+        "</body>\n"
+        "</html>\n"
+    )
+
+
+def _wrap_article(document: Document, body: str) -> str:
+    header = _render_header(document.front_matter)
+    return f'<article class="markus-document">{header}{body}</article>'
+
+
+def _render_header(front_matter: dict) -> str:
+    title = front_matter.get("title")
+    if not title:
+        return ""
+    authors = front_matter.get("authors") or front_matter.get("author")
+    if isinstance(authors, list):
+        author_text = ", ".join(str(item) for item in authors)
+    elif authors:
+        author_text = str(authors)
+    else:
+        author_text = ""
+    date = front_matter.get("date")
+    meta_bits = [bit for bit in (author_text, str(date) if date else "") if bit]
+    meta = (
+        f'<p class="markus-byline">{escape(" · ".join(meta_bits))}</p>' if meta_bits else ""
+    )
+    description = front_matter.get("description")
+    lede = (
+        f'<p class="markus-lede">{escape(str(description))}</p>' if description else ""
+    )
+    return (
+        f'<header class="markus-header">'
+        f"<h1>{escape(str(title))}</h1>"
+        f"{meta}{lede}"
+        f"</header>"
+    )
+
+
+def _render_nodes(
+    nodes: list[Node],
+    *,
+    registry: Registry,
+    markdown: MarkdownIt,
+) -> str:
+    parts = []
+    for node in nodes:
+        if isinstance(node, MarkdownBlock):
+            parts.append(markdown.render(node.source))
+        else:
+            inner = _render_nodes(node.children, registry=registry, markdown=markdown)
+            parts.append(registry.render(node, inner))
+    return "".join(parts)

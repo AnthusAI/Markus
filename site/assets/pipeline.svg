@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-labelledby="title desc">
+  <title id="title">Markus rendering pipeline</title>
+  <desc id="desc">Markdown source flows into a parser, then a validated directive AST, then semantic HTML.</desc>
+  <rect width="720" height="220" rx="18" fill="#fffcf6" stroke="#d9d0c0"/>
+  <g font-family="Georgia, serif" font-size="16" fill="#1c1914" text-anchor="middle">
+    <rect x="28" y="58" width="150" height="104" rx="12" fill="#f4efe4" stroke="#0f5f5b" stroke-width="2"/>
+    <text x="103" y="104">Markus</text>
+    <text x="103" y="128">source</text>
+    <rect x="214" y="58" width="150" height="104" rx="12" fill="#f4efe4" stroke="#0f5f5b" stroke-width="2"/>
+    <text x="289" y="104">Parser</text>
+    <text x="289" y="128">GFM + fences</text>
+    <rect x="400" y="58" width="150" height="104" rx="12" fill="#f4efe4" stroke="#0f5f5b" stroke-width="2"/>
+    <text x="475" y="104">Registry</text>
+    <text x="475" y="128">validate</text>
+    <rect x="586" y="58" width="106" height="104" rx="12" fill="#0f5f5b"/>
+    <text x="639" y="116" fill="#f4efe4">HTML</text>
+  </g>
+  <g fill="#b45309">
+    <polygon points="186,110 206,100 206,120"/>
+    <polygon points="372,110 392,100 392,120"/>
+    <polygon points="558,110 578,100 578,120"/>
+  </g>
+</svg>

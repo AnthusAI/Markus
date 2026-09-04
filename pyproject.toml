@@ -1,0 +1,87 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "anthus-markus"
+version = "0.1.0"
+description = "Markus: GitHub-flavored Markdown with semantic layout directives."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+  { name = "Anthus AI Solutions", email = "info@anthus.ai" },
+]
+keywords = [
+  "markdown",
+  "commonmark",
+  "gfm",
+  "directives",
+  "layout",
+  "publishing",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Text Processing :: Markup",
+  "Topic :: Text Processing :: Markup :: Markdown",
+  "Typing :: Typed",
+]
+dependencies = [
+  "markdown-it-py[linkify]>=3.0,<5",
+  "mdit-py-plugins>=0.4.0,<1",
+  "pydantic>=2.0,<3",
+  "pyyaml>=6.0,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+  "behave>=1.2.6",
+  "ruff>=0.6",
+  "build>=1.2",
+]
+
+[project.scripts]
+markus = "markusmd.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/AnthusAI/Markus"
+Documentation = "https://github.com/AnthusAI/Markus#readme"
+Repository = "https://github.com/AnthusAI/Markus"
+Issues = "https://github.com/AnthusAI/Markus/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/markusmd"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+  "/features",
+  "/site",
+  "/examples",
+  "/docs",
+  "/README.md",
+  "/LICENSE",
+  "/CHANGELOG.md",
+  "/behave.ini",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "features"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"features/steps/**" = ["F811"]
