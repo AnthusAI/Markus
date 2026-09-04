@@ -3,7 +3,7 @@
   "title": "Add a theme switcher to the demo site",
   "description": "Implement a theme switcher or gallery on the demo site that allows users to preview and switch between all the supported Antharchy themes.",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -14,7 +14,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-09-04T13:00:48.093912Z",
-  "updated_at": "2026-09-04T13:00:48.093912Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T14:18:23.538911Z",
+  "closed_at": "2026-09-04T14:18:23.538911Z",
   "custom": {}
 }
