@@ -74,6 +74,8 @@ def _output_name(page: Path) -> str:
 
 
 def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = None) -> str:
+    from markusmd.themes import AVAILABLE_THEMES
+
     parts = []
     for href, label in NAV:
         current_attr = ' aria-current="page"' if href == current else ""
@@ -84,21 +86,84 @@ def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = Non
         "gallery": "Markus gallery — every directive",
         "gfm": "Markus — GitHub Flavored Markdown",
     }.get(stem, "Markus")
-    theme_attr = f' data-theme="{escape(theme)}"' if theme and theme != "default" else ""
+
+    theme_options = []
+    for t in sorted(AVAILABLE_THEMES):
+        theme_options.append(f'<option value="{escape(t)}">{escape(t)}</option>')
+
+    theme_switcher = f"""
+    <div class="theme-switcher">
+      <label for="theme-select">Theme:</label>
+      <select id="theme-select">
+        {"".join(theme_options)}
+      </select>
+    </div>"""
+
+    default_theme_js = f"'{escape(theme)}'" if theme and theme != "default" else "'default'"
+    
     return f"""<!DOCTYPE html>
-<html lang="en"{theme_attr}>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <link rel="stylesheet" href="markus.css">
   <link rel="stylesheet" href="site.css">
+  <script>
+    (function() {{
+      const saved = localStorage.getItem('markus-theme');
+      const currentTheme = saved || {default_theme_js};
+      function applyTheme(t) {{
+        if (t !== 'default') {{
+          document.documentElement.setAttribute('data-theme', t);
+          let link = document.getElementById('theme-link');
+          if (!link) {{
+            link = document.createElement('link');
+            link.id = 'theme-link';
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+          }}
+          link.href = 'themes/' + t + '.css';
+        }} else {{
+          document.documentElement.removeAttribute('data-theme');
+          const link = document.getElementById('theme-link');
+          if (link) link.remove();
+        }}
+      }}
+      applyTheme(currentTheme);
+      
+      document.addEventListener('DOMContentLoaded', () => {{
+        if (currentTheme !== 'default') {{
+          document.body.setAttribute('data-theme', currentTheme);
+        }} else {{
+          document.body.removeAttribute('data-theme');
+        }}
+        const select = document.getElementById('theme-select');
+        if (select) {{
+          select.value = currentTheme;
+          select.addEventListener('change', (e) => {{
+            const t = e.target.value;
+            localStorage.setItem('markus-theme', t);
+            applyTheme(t);
+            if (t !== 'default') {{
+              document.body.setAttribute('data-theme', t);
+            }} else {{
+              document.body.removeAttribute('data-theme');
+            }}
+          }});
+        }}
+      }});
+    }})();
+  </script>
 </head>
-<body class="markus-body markus-site"{theme_attr}>
+<body class="markus-body markus-site">
   <header class="site-banner">
     <a class="site-wordmark" href="index.html">Markus</a>
     <p class="site-tagline">GitHub-flavored Markdown, plus a small vocabulary for layout intent.</p>
-    <nav class="site-nav" aria-label="Demo">{nav}</nav>
+    <div class="site-nav-container" style="display: flex; gap: 1rem; align-items: center;">
+      <nav class="site-nav" aria-label="Demo">{nav}</nav>
+      {theme_switcher}
+    </div>
   </header>
   <main>
     {article}
