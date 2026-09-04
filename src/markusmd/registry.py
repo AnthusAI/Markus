@@ -17,6 +17,7 @@ RenderFn = Callable[["Directive", str, dict[str, Any]], str]
 
 class _Strict(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+    id: str | None = None
 
 
 class CalloutAttrs(_Strict):
@@ -83,11 +84,19 @@ class MetricAttrs(_Strict):
     delta: str | None = None
 
 
+def _id_attr(attrs: dict[str, Any]) -> str:
+    ident = attrs.get("id")
+    if ident is not None and str(ident).strip():
+        return f' id="{escape(str(ident))}"'
+    return ""
+
+
 def _render_callout(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
     kind = attrs["kind"]
     title = attrs.get("title") or kind.capitalize()
     return (
-        f'<aside class="markus-callout markus-callout--{escape(kind)}" role="note">'
+        f'<aside{_id_attr(attrs)} class="markus-callout markus-callout--{escape(kind)}" '
+        f'role="note">'
         f'<p class="markus-callout-title">{escape(title)}</p>'
         f'<div class="markus-callout-body">{inner}</div>'
         f"</aside>"
@@ -112,7 +121,7 @@ def _render_pull_quote(directive: Directive, inner: str, attrs: dict[str, Any]) 
             parts.append(f'<cite>{escape(str(source))}</cite>')
         caption = f"<figcaption>{' · '.join(parts)}</figcaption>"
     return (
-        f'<figure class="{classes}">'
+        f'<figure{_id_attr(attrs)} class="{classes}">'
         f"<blockquote>{inner}</blockquote>"
         f"{caption}"
         f"</figure>"
@@ -152,7 +161,7 @@ def _render_card(directive: Directive, inner: str, attrs: dict[str, Any]) -> str
     )
     title_html = f'<h3 class="markus-card-title">{escape(str(title))}</h3>' if title else ""
     return (
-        f'<article class="markus-card"{span_attr}>'
+        f'<article{_id_attr(attrs)} class="markus-card"{span_attr}>'
         f"{icon_html}{title_html}"
         f'<div class="markus-card-body">{inner}</div>'
         f"</article>"
@@ -164,7 +173,8 @@ def _render_card_grid(directive: Directive, inner: str, attrs: dict[str, Any]) -
     columns = attrs.get("columns")
     style = f' style="--markus-columns: {int(columns)}"' if columns else ""
     return (
-        f'<section class="markus-card-grid" aria-label="{escape(str(label))}"{style}>'
+        f'<section{_id_attr(attrs)} class="markus-card-grid" '
+        f'aria-label="{escape(str(label))}"{style}>'
         f"{inner}"
         f"</section>"
     )
@@ -174,7 +184,7 @@ def _render_two_up(directive: Directive, inner: str, attrs: dict[str, Any]) -> s
     ratio = attrs["ratio"]
     align = attrs["align"]
     return (
-        f'<section class="markus-two-up markus-two-up--{escape(align)}" '
+        f'<section{_id_attr(attrs)} class="markus-two-up markus-two-up--{escape(align)}" '
         f'data-ratio="{escape(ratio)}">'
         f"{inner}"
         f"</section>"
@@ -182,7 +192,7 @@ def _render_two_up(directive: Directive, inner: str, attrs: dict[str, Any]) -> s
 
 
 def _render_column(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
-    return f'<div class="markus-column">{inner}</div>'
+    return f'<div{_id_attr(attrs)} class="markus-column">{inner}</div>'
 
 
 def _render_figure(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
@@ -197,14 +207,14 @@ def _render_figure(directive: Directive, inner: str, attrs: dict[str, Any]) -> s
     if attrs.get("credit"):
         caption_bits.append(f'<span class="markus-credit">{escape(str(attrs["credit"]))}</span>')
     caption = f"<figcaption>{' · '.join(caption_bits)}</figcaption>" if caption_bits else ""
-    return f'<figure class="markus-figure">{media}{inner}{caption}</figure>'
+    return f'<figure{_id_attr(attrs)} class="markus-figure">{media}{inner}{caption}</figure>'
 
 
 def _render_details(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
     opened = " open" if attrs.get("open") else ""
     summary = escape(str(attrs.get("summary") or "Details"))
     return (
-        f'<details class="markus-details"{opened}>'
+        f'<details{_id_attr(attrs)} class="markus-details"{opened}>'
         f"<summary>{summary}</summary>"
         f'<div class="markus-details-body">{inner}</div>'
         f"</details>"
@@ -214,7 +224,7 @@ def _render_details(directive: Directive, inner: str, attrs: dict[str, Any]) -> 
 def _render_aside(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
     title = attrs.get("title")
     heading = f'<p class="markus-aside-title">{escape(str(title))}</p>' if title else ""
-    return f'<aside class="markus-aside">{heading}{inner}</aside>'
+    return f'<aside{_id_attr(attrs)} class="markus-aside">{heading}{inner}</aside>'
 
 
 def _render_metric(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
@@ -239,7 +249,7 @@ def _render_metric(directive: Directive, inner: str, attrs: dict[str, Any]) -> s
             f"{escape(text)}</span>"
         )
     return (
-        f'<dl class="markus-metric">'
+        f'<dl{_id_attr(attrs)} class="markus-metric">'
         f"<dt>{escape(str(label))}</dt>"
         f"<dd><span class=\"markus-metric-value\">{value}</span>{unit}{delta_html}</dd>"
         f"</dl>"

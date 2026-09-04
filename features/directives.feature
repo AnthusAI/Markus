@@ -167,3 +167,56 @@ Feature: Semantic layout directives
     And the HTML should contain "12"
     And the HTML should contain "ms"
     And the HTML should contain "-8%"
+
+  Scenario: Directives accept an optional id attribute
+    Given the Markus source:
+      """
+      :::callout{kind="note" id="callout-anchor"}
+      Callout body.
+      :::
+
+      :::pull-quote{id="quote-anchor"}
+      Quoted wisdom.
+      :::
+
+      :::card-grid{id="grid-anchor"}
+      :::card{id="card-anchor"}
+      ## Feature
+      Feature details.
+      :::
+      :::
+
+      :::two-up{id="two-up-anchor"}
+      :::column{id="col1-anchor"}
+      Left
+      :::
+      :::column{id="col2-anchor"}
+      Right
+      :::
+      :::
+
+      :::figure{src="diagram.svg" alt="Diagram" id="figure-anchor"}
+      :::
+
+      :::details{summary="Summary" id="details-anchor"}
+      Hidden details.
+      :::
+
+      :::aside{id="aside-anchor"}
+      Aside text.
+      :::
+
+      ::metric{value="42" label="Score" id="metric-anchor"}
+      """
+    When I convert the source to an HTML fragment
+    Then the HTML should contain an attribute id of "callout-anchor"
+    And the HTML should contain an attribute id of "quote-anchor"
+    And the HTML should contain an attribute id of "grid-anchor"
+    And the HTML should contain an attribute id of "card-anchor"
+    And the HTML should contain an attribute id of "two-up-anchor"
+    And the HTML should contain an attribute id of "col1-anchor"
+    And the HTML should contain an attribute id of "col2-anchor"
+    And the HTML should contain an attribute id of "figure-anchor"
+    And the HTML should contain an attribute id of "details-anchor"
+    And the HTML should contain an attribute id of "aside-anchor"
+    And the HTML should contain an attribute id of "metric-anchor"
