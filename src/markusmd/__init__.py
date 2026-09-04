@@ -6,7 +6,7 @@ from markusmd.errors import MarkusError, MarkusSyntaxError, MarkusValidationErro
 from markusmd.registry import Registry
 from markusmd.render import minify_css
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "Directive",
