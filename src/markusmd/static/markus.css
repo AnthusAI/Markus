@@ -247,9 +247,10 @@
 
 .markus-two-up {
   display: grid;
-  gap: clamp(1.25rem, 4vw, 2.5rem);
+  gap: clamp(1rem, 2vw, 1.6rem);
   margin: 1.6rem 0;
-  align-items: start;
+  align-items: stretch;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .markus-two-up[data-ratio="1:1"] {
@@ -268,7 +269,22 @@
 .markus-two-up--end { align-items: end; }
 .markus-two-up--stretch { align-items: stretch; }
 
+.markus-column {
+  min-width: 0;
+  background: var(--markus-card);
+  border: 1px solid var(--markus-line);
+  border-radius: 1rem;
+  padding: 1.1rem 1.15rem 1.2rem;
+}
+
 .markus-column > :first-child { margin-top: 0; }
+.markus-column > :last-child { margin-bottom: 0; }
+
+.markus-column h2,
+.markus-column h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1.15rem;
+}
 
 .markus-figure {
   margin: 1.5rem 0;

@@ -40,7 +40,7 @@ A conceptual pairing: contrast, before/after, claim and caveat.
 :::
 :::
 
-:::two-up{ratio="2:1" align="start"}
+:::two-up{ratio="1:1" align="start"}
 :::column
 ## What belongs in the source
 
