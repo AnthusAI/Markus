@@ -4,6 +4,7 @@ description: GitHub-flavored Markdown with a small, semantic vocabulary for layo
 authors:
   - Anthus AI Solutions
 date: 2026-09-04
+theme: catppuccin
 ---
 
 Markus keeps [GitHub Flavored Markdown](gfm.html) as the content language, then adds a handful of colon-fenced directives for the things Markdown was never meant to say: *this is a pull quote*, *these are peer cards*, *these two ideas belong beside each other*.

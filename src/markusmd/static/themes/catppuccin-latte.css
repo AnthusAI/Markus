@@ -1,0 +1,25 @@
+/* Catppuccin Latte theme - based on Omarchy/Antharchy palette */
+
+[data-theme="catppuccin-latte"],
+:root[data-theme="catppuccin-latte"],
+.markus-theme-catppuccin-latte {
+  --markus-ink: #4c4f69;
+  --markus-muted: #9ca0b0;
+  --markus-paper: #eff1f5;
+  --markus-card: #dce0e8;
+  --markus-line: #acb0be;
+  --markus-accent: #1e66f5;
+  --markus-accent-2: #d84e2b;
+  --markus-quote: #5c5f77;
+  --markus-note: #179299;
+  --markus-warning: #df8e1d;
+  --markus-tip: #40a02b;
+  --markus-caution: #d20f39;
+  --markus-pre-bg: #e3e4e8;
+  --markus-pre-ink: #4c4f69;
+  --markus-code-bg: rgba(76, 79, 105, 0.08);
+  --markus-aside-bg: rgba(220, 224, 232, 0.6);
+  --markus-tab-nav-bg: rgba(227, 228, 232, 0.5);
+  --markus-th-bg: rgba(30, 102, 245, 0.1);
+  color-scheme: light;
+}

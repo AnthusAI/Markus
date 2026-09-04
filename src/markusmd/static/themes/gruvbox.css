@@ -1,0 +1,25 @@
+/* Gruvbox theme - based on Omarchy/Antharchy palette */
+
+[data-theme="gruvbox"],
+:root[data-theme="gruvbox"],
+.markus-theme-gruvbox {
+  --markus-ink: #d4be98;
+  --markus-muted: #7c6f64;
+  --markus-paper: #282828;
+  --markus-card: #3c3836;
+  --markus-line: #665c54;
+  --markus-accent: #7daea3;
+  --markus-accent-2: #e1875c;
+  --markus-quote: #bdae93;
+  --markus-note: #89b482;
+  --markus-warning: #d8a657;
+  --markus-tip: #a9b665;
+  --markus-caution: #ea6962;
+  --markus-pre-bg: #1e1e1e;
+  --markus-pre-ink: #d4be98;
+  --markus-code-bg: rgba(212, 190, 152, 0.08);
+  --markus-aside-bg: rgba(60, 56, 54, 0.6);
+  --markus-tab-nav-bg: rgba(30, 30, 30, 0.5);
+  --markus-th-bg: rgba(125, 174, 163, 0.1);
+  color-scheme: dark;
+}

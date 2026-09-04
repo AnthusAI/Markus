@@ -1,0 +1,25 @@
+/* Ethereal theme - based on Omarchy/Antharchy palette */
+
+[data-theme="ethereal"],
+:root[data-theme="ethereal"],
+.markus-theme-ethereal {
+  --markus-ink: #ffcead;
+  --markus-muted: #6d7db6;
+  --markus-paper: #060b1e;
+  --markus-card: #131a3a;
+  --markus-line: #6d7db6;
+  --markus-accent: #7d82d9;
+  --markus-accent-2: #eb8b54;
+  --markus-quote: #c9b8a6;
+  --markus-note: #a3bfd1;
+  --markus-warning: #e9bb4f;
+  --markus-tip: #92a593;
+  --markus-caution: #ed5b5a;
+  --markus-pre-bg: #040816;
+  --markus-pre-ink: #ffcead;
+  --markus-code-bg: rgba(255, 206, 173, 0.08);
+  --markus-aside-bg: rgba(19, 26, 58, 0.6);
+  --markus-tab-nav-bg: rgba(4, 8, 22, 0.5);
+  --markus-th-bg: rgba(125, 130, 217, 0.1);
+  color-scheme: dark;
+}

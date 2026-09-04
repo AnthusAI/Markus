@@ -1,0 +1,25 @@
+/* Retro 82 theme - based on Omarchy/Antharchy palette */
+
+[data-theme="retro-82"],
+:root[data-theme="retro-82"],
+.markus-theme-retro-82 {
+  --markus-ink: #f6dcac;
+  --markus-muted: #3f8f8a;
+  --markus-paper: #05182e;
+  --markus-card: #0a2540;
+  --markus-line: #2a6b78;
+  --markus-accent: #faa968;
+  --markus-accent-2: #faa968;
+  --markus-quote: #a7c9c6;
+  --markus-note: #8cbfb8;
+  --markus-warning: #e97b3c;
+  --markus-tip: #028391;
+  --markus-caution: #f85525;
+  --markus-pre-bg: #031222;
+  --markus-pre-ink: #f6dcac;
+  --markus-code-bg: rgba(246, 220, 172, 0.08);
+  --markus-aside-bg: rgba(10, 37, 64, 0.6);
+  --markus-tab-nav-bg: rgba(3, 18, 34, 0.5);
+  --markus-th-bg: rgba(250, 169, 104, 0.1);
+  color-scheme: dark;
+}

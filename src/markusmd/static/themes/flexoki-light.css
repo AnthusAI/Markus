@@ -1,0 +1,25 @@
+/* Flexoki Light theme - based on Omarchy/Antharchy palette */
+
+[data-theme="flexoki-light"],
+:root[data-theme="flexoki-light"],
+.markus-theme-flexoki-light {
+  --markus-ink: #100F0F;
+  --markus-muted: #878580;
+  --markus-paper: #FFFCF0;
+  --markus-card: #E6E4D9;
+  --markus-line: #B7B5AC;
+  --markus-accent: #205EA6;
+  --markus-accent-2: #d0772b;
+  --markus-quote: #403E3C;
+  --markus-note: #3AA99F;
+  --markus-warning: #D0A215;
+  --markus-tip: #879A39;
+  --markus-caution: #D14D41;
+  --markus-pre-bg: #f2efe4;
+  --markus-pre-ink: #100F0F;
+  --markus-code-bg: rgba(16, 15, 15, 0.08);
+  --markus-aside-bg: rgba(230, 228, 217, 0.6);
+  --markus-tab-nav-bg: rgba(242, 239, 228, 0.5);
+  --markus-th-bg: rgba(32, 94, 166, 0.1);
+  color-scheme: light;
+}

@@ -1,0 +1,25 @@
+/* Nord theme - based on Omarchy/Antharchy palette */
+
+[data-theme="nord"],
+:root[data-theme="nord"],
+.markus-theme-nord {
+  --markus-ink: #d8dee9;
+  --markus-muted: #667080;
+  --markus-paper: #2e3440;
+  --markus-card: #3b4252;
+  --markus-line: #4c566a;
+  --markus-accent: #81a1c1;
+  --markus-accent-2: #d5967a;
+  --markus-quote: #adb5c4;
+  --markus-note: #88c0d0;
+  --markus-warning: #ebcb8b;
+  --markus-tip: #a3be8c;
+  --markus-caution: #bf616a;
+  --markus-pre-bg: #222730;
+  --markus-pre-ink: #d8dee9;
+  --markus-code-bg: rgba(216, 222, 233, 0.08);
+  --markus-aside-bg: rgba(59, 66, 82, 0.6);
+  --markus-tab-nav-bg: rgba(34, 39, 48, 0.5);
+  --markus-th-bg: rgba(129, 161, 193, 0.1);
+  color-scheme: dark;
+}

@@ -1,6 +1,7 @@
 ---
 title: Markus gallery
 description: Every built-in directive, rendered from Markus source.
+theme: catppuccin
 ---
 
 # Every directive, live

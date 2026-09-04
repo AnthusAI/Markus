@@ -67,4 +67,14 @@ Feature: GitHub Pages demo site
     And "gfm.html" should contain "copy-button"
     And "site.css" should contain ".copy-button"
 
+  Scenario: The demo site defaults to the catppuccin theme
+    Given the bundled Markus site sources
+    When I build the demo site
+    Then "index.html" should contain "themes/catppuccin.css"
+    And "index.html" should contain "catppuccin"
+    And "gallery.html" should contain "themes/catppuccin.css"
+    And "gallery.html" should contain "catppuccin"
+    And "gfm.html" should contain "themes/catppuccin.css"
+    And "gfm.html" should contain "catppuccin"
+
 

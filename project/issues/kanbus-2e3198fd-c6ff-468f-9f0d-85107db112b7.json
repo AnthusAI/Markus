@@ -3,7 +3,7 @@
   "title": "Support osaka-jade theme",
   "description": "",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -12,9 +12,17 @@
     "spot"
   ],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "f2f71236-6632-445e-a3f2-be9f3abd0e16",
+      "author": "home",
+      "text": "Completed implementation of the osaka-jade theme:\n- Added standalone static/themes/osaka-jade.css based on Antharchy/Omarchy osaka-jade color palette.\n- Added \"osaka-jade\" to AVAILABLE_THEMES in markusmd.themes.\n- Added [data-theme=\"osaka-jade\"] styles to static/markus.css.\n- Added BDD feature scenarios in features/themes.feature and updated features/site.feature.\n- Verified with behave (all 83 scenarios passing), ruff lint, and demo site build.",
+      "created_at": "2026-09-04T18:00:06.330013Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-09-04T13:00:23.566432Z",
-  "updated_at": "2026-09-04T14:12:07.370680Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T18:00:09.106414Z",
+  "closed_at": "2026-09-04T18:00:09.106414Z",
   "custom": {}
 }

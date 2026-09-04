@@ -1,0 +1,25 @@
+/* Ristretto theme - based on Omarchy/Antharchy palette */
+
+[data-theme="ristretto"],
+:root[data-theme="ristretto"],
+.markus-theme-ristretto {
+  --markus-ink: #e6d9db;
+  --markus-muted: #72696a;
+  --markus-paper: #2c2525;
+  --markus-card: #3d2f2a;
+  --markus-line: #72696a;
+  --markus-accent: #f38d70;
+  --markus-accent-2: #fb9a77;
+  --markus-quote: #c3b7b8;
+  --markus-note: #85dacc;
+  --markus-warning: #f9cc6c;
+  --markus-tip: #adda78;
+  --markus-caution: #fd6883;
+  --markus-pre-bg: #211b1b;
+  --markus-pre-ink: #e6d9db;
+  --markus-code-bg: rgba(230, 217, 219, 0.08);
+  --markus-aside-bg: rgba(61, 47, 42, 0.6);
+  --markus-tab-nav-bg: rgba(33, 27, 27, 0.5);
+  --markus-th-bg: rgba(243, 141, 112, 0.1);
+  color-scheme: dark;
+}

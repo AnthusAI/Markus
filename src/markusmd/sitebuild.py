@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import shutil
 from html import escape
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -17,7 +18,7 @@ NAV = [
 ]
 
 
-def build_site(source_dir: Path, dest_dir: Path) -> Path:
+def build_site(source_dir: Path, dest_dir: Path, default_theme: str = "catppuccin") -> Path:
     source_dir = source_dir.resolve()
     dest_dir = dest_dir.resolve()
     if not source_dir.is_dir():
@@ -25,7 +26,9 @@ def build_site(source_dir: Path, dest_dir: Path) -> Path:
     dest_dir.mkdir(parents=True, exist_ok=True)
     (dest_dir / ".nojekyll").write_text("", encoding="utf-8")
     (dest_dir / "markus.css").write_text(default_css(), encoding="utf-8")
-    site_css = Path(__file__).parent.joinpath("static", "site.css")
+    site_css = source_dir / "site.css"
+    if not site_css.is_file():
+        site_css = Path(__file__).parent.joinpath("static", "site.css")
     shutil.copyfile(site_css, dest_dir / "site.css")
 
     themes_dir = Path(__file__).parent.joinpath("static", "themes")
@@ -49,7 +52,7 @@ def build_site(source_dir: Path, dest_dir: Path) -> Path:
     for page in pages:
         source = page.read_text(encoding="utf-8")
         doc = parse(source, strict=False)
-        theme = doc.front_matter.get("theme")
+        theme = doc.front_matter.get("theme") or default_theme
         article = convert(source, include_css=False, full_document=False, theme=theme)
         html = _wrap_page(page.stem, article, current=_output_name(page), theme=theme)
         (dest_dir / _output_name(page)).write_text(html, encoding="utf-8")
@@ -73,8 +76,47 @@ def _output_name(page: Path) -> str:
     return "index.html" if page.stem == "index" else f"{page.stem}.html"
 
 
-def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = None) -> str:
+_COPY_BUTTON_HTML = (
+    '  <button type="button" class="copy-button" '
+    'aria-label="Copy code to clipboard" title="Copy code to clipboard">\n'
+    '    <svg class="copy-icon" aria-hidden="true" width="14" height="14" '
+    'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+    'stroke-linecap="round" stroke-linejoin="round">\n'
+    '      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>\n'
+    '      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>\n'
+    "    </svg>\n"
+    '    <svg class="check-icon" aria-hidden="true" width="14" height="14" '
+    'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+    'stroke-linecap="round" stroke-linejoin="round">\n'
+    '      <polyline points="20 6 9 17 4 12"></polyline>\n'
+    "    </svg>\n"
+    '    <span class="copy-button-text">Copy</span>\n'
+    "  </button>"
+)
+
+
+def _add_copy_buttons(html: str) -> str:
+    pattern = re.compile(
+        r"(<pre\b[^>]*>\s*<code\b[^>]*>[\s\S]*?</code>\s*</pre>)", re.IGNORECASE
+    )
+
+    def replace_block(match: re.Match[str]) -> str:
+        pre_block = match.group(1)
+        return (
+            '<div class="code-block-wrapper">\n'
+            f"  {pre_block}\n"
+            f"{_COPY_BUTTON_HTML}\n"
+            "</div>"
+        )
+
+    return pattern.sub(replace_block, html)
+
+
+def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = "catppuccin") -> str:
     from markusmd.themes import AVAILABLE_THEMES
+
+    effective_theme = theme or "catppuccin"
+    article = _add_copy_buttons(article)
 
     parts = []
     for href, label in NAV:
@@ -89,7 +131,8 @@ def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = Non
 
     theme_options = []
     for t in sorted(AVAILABLE_THEMES):
-        theme_options.append(f'<option value="{escape(t)}">{escape(t)}</option>')
+        selected = " selected" if t == effective_theme else ""
+        theme_options.append(f'<option value="{escape(t)}"{selected}>{escape(t)}</option>')
 
     theme_switcher = f"""
     <div class="theme-switcher">
@@ -99,17 +142,25 @@ def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = Non
       </select>
     </div>"""
 
-    default_theme_js = f"'{escape(theme)}'" if theme and theme != "default" else "'default'"
-    
+    default_theme_js = (
+        f"'{escape(effective_theme)}'" if effective_theme != "default" else "'default'"
+    )
+    theme_attr = f' data-theme="{escape(effective_theme)}"' if effective_theme != "default" else ""
+    theme_link = (
+        f'<link id="theme-link" rel="stylesheet" href="themes/{escape(effective_theme)}.css">\n  '
+        if effective_theme != "default"
+        else ""
+    )
+
     return f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="en"{theme_attr}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <link rel="stylesheet" href="markus.css">
   <link rel="stylesheet" href="site.css">
-  <script>
+  {theme_link}<script>
     (function() {{
       const saved = localStorage.getItem('markus-theme');
       const currentTheme = saved || {default_theme_js};
@@ -128,6 +179,14 @@ def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = Non
           document.documentElement.removeAttribute('data-theme');
           const link = document.getElementById('theme-link');
           if (link) link.remove();
+        }}
+        const article = document.querySelector('article.markus-document');
+        if (article) {{
+          if (t !== 'default') {{
+            article.setAttribute('data-theme', t);
+          }} else {{
+            article.removeAttribute('data-theme');
+          }}
         }}
       }}
       applyTheme(currentTheme);
@@ -152,11 +211,87 @@ def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = Non
             }}
           }});
         }}
+
+        function initCopyButtons() {{
+          document.querySelectorAll('.copy-button').forEach((btn) => {{
+            if (btn.dataset.copyInitialized) return;
+            btn.dataset.copyInitialized = 'true';
+
+            btn.addEventListener('click', async () => {{
+              const wrapper = btn.closest('.code-block-wrapper');
+              const code = wrapper ? wrapper.querySelector('pre code') : null;
+              const text = code ? code.textContent : '';
+
+              async function copy(str) {{
+                if (navigator.clipboard && window.isSecureContext) {{
+                  try {{
+                    await navigator.clipboard.writeText(str);
+                    return true;
+                  }} catch (e) {{}}
+                }}
+                const ta = document.createElement('textarea');
+                ta.value = str;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                ta.style.top = '-9999px';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                let res = false;
+                try {{
+                  res = document.execCommand('copy');
+                }} catch (e) {{}}
+                ta.remove();
+                return res;
+              }}
+
+              const ok = await copy(text);
+              if (ok) {{
+                btn.classList.add('copied');
+                btn.setAttribute('aria-label', 'Copied to clipboard');
+                const textSpan = btn.querySelector('.copy-button-text');
+                if (textSpan) textSpan.textContent = 'Copied!';
+                setTimeout(() => {{
+                  btn.classList.remove('copied');
+                  btn.setAttribute('aria-label', 'Copy code to clipboard');
+                  if (textSpan) textSpan.textContent = 'Copy';
+                }}, 2000);
+              }}
+            }});
+          }});
+        }}
+
+        document.querySelectorAll('pre code').forEach((code) => {{
+          const pre = code.parentElement;
+          if (!pre || pre.closest('.code-block-wrapper')) return;
+          const wrapper = document.createElement('div');
+          wrapper.className = 'code-block-wrapper';
+          pre.parentNode.insertBefore(wrapper, pre);
+          wrapper.appendChild(pre);
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'copy-button';
+          btn.setAttribute('aria-label', 'Copy code to clipboard');
+          btn.innerHTML = (
+            '<svg class="copy-icon" aria-hidden="true" width="14" height="14" ' +
+            'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+            'stroke-linecap="round" stroke-linejoin="round">' +
+            '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>' +
+            '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>' +
+            '<svg class="check-icon" aria-hidden="true" width="14" height="14" ' +
+            'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+            'stroke-linecap="round" stroke-linejoin="round">' +
+            '<polyline points="20 6 9 17 4 12"></polyline></svg>' +
+            '<span class="copy-button-text">Copy</span>'
+          );
+          wrapper.appendChild(btn);
+        }});
+        initCopyButtons();
       }});
     }})();
   </script>
 </head>
-<body class="markus-body markus-site">
+<body class="markus-body markus-site"{theme_attr}>
   <header class="site-banner">
     <a class="site-wordmark" href="index.html">Markus</a>
     <p class="site-tagline">GitHub-flavored Markdown, plus a small vocabulary for layout intent.</p>

@@ -1,0 +1,25 @@
+/* Tokyo Night theme - based on Omarchy/Antharchy palette */
+
+[data-theme="tokyo-night"],
+:root[data-theme="tokyo-night"],
+.markus-theme-tokyo-night {
+  --markus-ink: #a9b1d6;
+  --markus-muted: #565f89;
+  --markus-paper: #1a1b26;
+  --markus-card: #24283b;
+  --markus-line: #414868;
+  --markus-accent: #7aa2f7;
+  --markus-accent-2: #eb927b;
+  --markus-quote: #b4bee6;
+  --markus-note: #449dab;
+  --markus-warning: #e0af68;
+  --markus-tip: #9ece6a;
+  --markus-caution: #f7768e;
+  --markus-pre-bg: #13141c;
+  --markus-pre-ink: #a9b1d6;
+  --markus-code-bg: rgba(169, 177, 214, 0.08);
+  --markus-aside-bg: rgba(36, 40, 59, 0.6);
+  --markus-tab-nav-bg: rgba(19, 20, 28, 0.5);
+  --markus-th-bg: rgba(122, 162, 247, 0.1);
+  color-scheme: dark;
+}

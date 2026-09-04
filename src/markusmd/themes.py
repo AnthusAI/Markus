@@ -5,8 +5,29 @@ from __future__ import annotations
 from markusmd.errors import MarkusError
 
 AVAILABLE_THEMES = {
+    "catppuccin",
+    "catppuccin-latte",
     "default",
+    "ethereal",
+    "everforest",
+    "flexoki-light",
+    "gruvbox",
     "hackerman",
+    "kanagawa",
+    "last-horizon",
+    "lumon",
+    "lupine",
+    "matte-black",
+    "miasma",
+    "nord",
+    "osaka-jade",
+    "retro-82",
+    "ristretto",
+    "rose-pine",
+    "solitude",
+    "tokyo-night",
+    "vantablack",
+    "white",
 }
 
 

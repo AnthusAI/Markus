@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "event_id": "3ec67203-8fac-4557-ae25-eed2056cb895",
+  "issue_id": "kanbus-c1cb10d2-c450-44ad-967c-867fd628bb32",
+  "event_type": "field_updated",
+  "occurred_at": "2026-09-04T18:01:56.633Z",
+  "actor_id": "home",
+  "payload": {
+    "changes": {
+      "labels": {
+        "from": [
+          "spot"
+        ],
+        "to": [
+          "spot",
+          "class:cheap"
+        ]
+      }
+    }
+  }
+}
