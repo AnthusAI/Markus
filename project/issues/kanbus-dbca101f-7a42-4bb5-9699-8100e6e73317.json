@@ -1,0 +1,20 @@
+{
+  "id": "kanbus-dbca101f-7a42-4bb5-9699-8100e6e73317",
+  "title": "Add comprehensive docstrings to parse.py and ast.py",
+  "description": "The parse.py and ast.py modules are currently under-documented. Add Google-style docstrings to all classes and functions describing their behavior, arguments, and return types.",
+  "type": "task",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [
+    "spot"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-09-04T12:59:22.222592Z",
+  "updated_at": "2026-09-04T12:59:22.222592Z",
+  "closed_at": null,
+  "custom": {}
+}

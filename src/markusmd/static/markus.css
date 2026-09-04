@@ -77,14 +77,15 @@
 .markus-document code {
   font-family: var(--markus-mono);
   font-size: 0.92em;
-  background: rgba(28, 25, 20, 0.06);
+  background: var(--markus-code-bg, rgba(28, 25, 20, 0.06));
   padding: 0.1em 0.35em;
   border-radius: 0.3em;
 }
 
 .markus-document pre {
-  background: #1c1914;
-  color: #f4efe4;
+  background: var(--markus-pre-bg, #1c1914);
+  color: var(--markus-pre-ink, #f4efe4);
+  border: 1px solid var(--markus-line);
   padding: 1rem 1.1rem;
   overflow: auto;
   border-radius: 0.7rem;
@@ -110,7 +111,7 @@
 }
 
 .markus-document th {
-  background: rgba(15, 95, 91, 0.08);
+  background: var(--markus-th-bg, rgba(15, 95, 91, 0.08));
 }
 
 .markus-document del,
@@ -328,7 +329,7 @@
 }
 
 .markus-aside {
-  background: rgba(28, 25, 20, 0.04);
+  background: var(--markus-aside-bg, rgba(28, 25, 20, 0.04));
   border-radius: 0.8rem;
   padding: 1rem 1.1rem;
   color: var(--markus-quote);
@@ -390,7 +391,7 @@
   gap: 0.25rem;
   padding: 0.5rem 0.6rem 0;
   border-bottom: 1px solid var(--markus-line);
-  background: rgba(28, 25, 20, 0.03);
+  background: var(--markus-tab-nav-bg, rgba(28, 25, 20, 0.03));
 }
 
 .markus-tab-button {
@@ -500,4 +501,30 @@
 @media print {
   .markus-body { background: white; }
   .markus-card, .markus-callout, .markus-details, .markus-tabs, .markus-step { break-inside: avoid; }
+}
+
+/* Themes */
+
+[data-theme="hackerman"],
+:root[data-theme="hackerman"],
+.markus-theme-hackerman {
+  --markus-ink: #ddf7ff;
+  --markus-muted: #6a6e95;
+  --markus-paper: #0B0C16;
+  --markus-card: #151828;
+  --markus-line: #2d3450;
+  --markus-accent: #82FB9C;
+  --markus-accent-2: #50f7a3;
+  --markus-quote: #b5c5db;
+  --markus-note: #7cf8f7;
+  --markus-warning: #50f7d4;
+  --markus-tip: #4fe88f;
+  --markus-caution: #50f872;
+  --markus-pre-bg: #080910;
+  --markus-pre-ink: #ddf7ff;
+  --markus-code-bg: rgba(221, 247, 255, 0.08);
+  --markus-aside-bg: rgba(21, 24, 40, 0.6);
+  --markus-tab-nav-bg: rgba(8, 9, 16, 0.5);
+  --markus-th-bg: rgba(130, 251, 156, 0.1);
+  color-scheme: dark;
 }

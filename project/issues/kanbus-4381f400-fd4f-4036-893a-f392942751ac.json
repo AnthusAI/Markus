@@ -1,0 +1,20 @@
+{
+  "id": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+  "title": "Support Omarchy themes",
+  "description": "",
+  "type": "epic",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [
+    "spot"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-09-04T13:00:23.365115Z",
+  "updated_at": "2026-09-04T13:00:23.365115Z",
+  "closed_at": null,
+  "custom": {}
+}

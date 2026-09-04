@@ -46,6 +46,30 @@ def when_convert(context):
         context.html = ""
 
 
+@when("I convert the source to a full HTML document")
+def when_convert_full(context):
+    try:
+        context.html = convert(context.source, include_css=True, full_document=True)
+        context.convert_failed = False
+        context.error = None
+    except MarkusError as exc:
+        context.convert_failed = True
+        context.error = exc
+        context.html = ""
+
+
+@when('I convert the source to an HTML fragment with theme "{theme}"')
+def when_convert_theme(context, theme):
+    try:
+        context.html = convert(context.source, theme=theme, include_css=False, full_document=False)
+        context.convert_failed = False
+        context.error = None
+    except MarkusError as exc:
+        context.convert_failed = True
+        context.error = exc
+        context.html = ""
+
+
 @when("I parse the source")
 def when_parse(context):
     try:

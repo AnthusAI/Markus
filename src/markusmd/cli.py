@@ -30,6 +30,10 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Pass through raw HTML in Markdown",
     )
+    convert_p.add_argument(
+        "--theme",
+        help="Apply a visual theme (e.g. hackerman)",
+    )
 
     ast_p = sub.add_parser("ast", help="Print the validated document AST as JSON")
     ast_p.add_argument("source", help="Markus file, or - for stdin")
@@ -103,6 +107,7 @@ def _cmd_convert(args: argparse.Namespace) -> int:
         allow_html=args.allow_html,
         include_css=not args.no_css,
         full_document=not args.fragment,
+        theme=args.theme,
     )
     if args.output:
         Path(args.output).write_text(html, encoding="utf-8")

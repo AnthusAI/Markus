@@ -1,0 +1,20 @@
+{
+  "id": "kanbus-2e3198fd-c6ff-468f-9f0d-85107db112b7",
+  "title": "Support osaka-jade theme",
+  "description": "",
+  "type": "task",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+  "labels": [
+    "spot"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-09-04T13:00:23.566432Z",
+  "updated_at": "2026-09-04T13:00:23.566432Z",
+  "closed_at": null,
+  "custom": {}
+}

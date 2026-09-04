@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import shutil
+from html import escape
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from markusmd.api import convert
+from markusmd.api import convert, parse
 from markusmd.render import default_css
 
 NAV = [
@@ -27,6 +28,13 @@ def build_site(source_dir: Path, dest_dir: Path) -> Path:
     site_css = Path(__file__).parent.joinpath("static", "site.css")
     shutil.copyfile(site_css, dest_dir / "site.css")
 
+    themes_dir = Path(__file__).parent.joinpath("static", "themes")
+    if themes_dir.is_dir():
+        dest_themes = dest_dir / "themes"
+        dest_themes.mkdir(parents=True, exist_ok=True)
+        for theme_file in themes_dir.glob("*.css"):
+            shutil.copyfile(theme_file, dest_themes / theme_file.name)
+
     assets = source_dir / "assets"
     if assets.is_dir():
         dest_assets = dest_dir / "assets"
@@ -40,8 +48,10 @@ def build_site(source_dir: Path, dest_dir: Path) -> Path:
 
     for page in pages:
         source = page.read_text(encoding="utf-8")
-        article = convert(source, include_css=False, full_document=False)
-        html = _wrap_page(page.stem, article, current=_output_name(page))
+        doc = parse(source, strict=False)
+        theme = doc.front_matter.get("theme")
+        article = convert(source, include_css=False, full_document=False, theme=theme)
+        html = _wrap_page(page.stem, article, current=_output_name(page), theme=theme)
         (dest_dir / _output_name(page)).write_text(html, encoding="utf-8")
     return dest_dir
 
@@ -63,7 +73,7 @@ def _output_name(page: Path) -> str:
     return "index.html" if page.stem == "index" else f"{page.stem}.html"
 
 
-def _wrap_page(stem: str, article: str, *, current: str) -> str:
+def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = None) -> str:
     parts = []
     for href, label in NAV:
         current_attr = ' aria-current="page"' if href == current else ""
@@ -74,8 +84,9 @@ def _wrap_page(stem: str, article: str, *, current: str) -> str:
         "gallery": "Markus gallery — every directive",
         "gfm": "Markus — GitHub Flavored Markdown",
     }.get(stem, "Markus")
+    theme_attr = f' data-theme="{escape(theme)}"' if theme and theme != "default" else ""
     return f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="en"{theme_attr}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -83,7 +94,7 @@ def _wrap_page(stem: str, article: str, *, current: str) -> str:
   <link rel="stylesheet" href="markus.css">
   <link rel="stylesheet" href="site.css">
 </head>
-<body class="markus-body markus-site">
+<body class="markus-body markus-site"{theme_attr}>
   <header class="site-banner">
     <a class="site-wordmark" href="index.html">Markus</a>
     <p class="site-tagline">GitHub-flavored Markdown, plus a small vocabulary for layout intent.</p>

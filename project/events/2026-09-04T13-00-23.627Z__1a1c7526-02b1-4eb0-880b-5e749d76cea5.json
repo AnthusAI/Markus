@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "1a1c7526-02b1-4eb0-880b-5e749d76cea5",
+  "issue_id": "kanbus-666cdd43-fcab-4075-9b58-e135cb89fac2",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.627Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+    "priority": 2,
+    "status": "open",
+    "title": "Support tokyo-night theme"
+  }
+}

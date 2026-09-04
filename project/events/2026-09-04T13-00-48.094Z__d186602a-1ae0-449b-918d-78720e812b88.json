@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "d186602a-1ae0-449b-918d-78720e812b88",
+  "issue_id": "kanbus-9395c156-2ee9-4f42-8f9f-8ff8762e1f03",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:48.094Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "Implement a theme switcher or gallery on the demo site that allows users to preview and switch between all the supported Antharchy themes.",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": null,
+    "priority": 2,
+    "status": "open",
+    "title": "Add a theme switcher to the demo site"
+  }
+}

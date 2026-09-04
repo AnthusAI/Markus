@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "6ae84254-2686-4539-8248-b7b57a253193",
+  "issue_id": "kanbus-ca5e4292-f2ff-4055-8281-92c7781940f4",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:48.079Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "Once all Omarchy/Antharchy themes are supported, update the demo site to use the 'catppuccin' theme as the default.",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": null,
+    "priority": 2,
+    "status": "open",
+    "title": "Set Catppuccin as the default theme for the demo site"
+  }
+}

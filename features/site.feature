@@ -10,6 +10,7 @@ Feature: GitHub Pages demo site
     And the site should include "gallery.html"
     And the site should include "gfm.html"
     And the site should include "markus.css"
+    And the site should include "themes/hackerman.css"
     And the site should include "assets/pipeline.svg"
     And "index.html" should contain "markus-pull-quote"
     And "index.html" should contain "markus-card-grid"

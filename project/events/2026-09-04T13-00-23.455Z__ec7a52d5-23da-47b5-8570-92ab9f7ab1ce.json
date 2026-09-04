@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "ec7a52d5-23da-47b5-8570-92ab9f7ab1ce",
+  "issue_id": "kanbus-174593a0-c27a-4a4d-9788-28f0663bf7ab",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.455Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+    "priority": 2,
+    "status": "open",
+    "title": "Support hackerman theme"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "01872116-ad65-4180-bd90-01b3e2846ac2",
+  "issue_id": "kanbus-77885283-16fd-4f5e-8dbf-df9f7c820801",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.388Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+    "priority": 2,
+    "status": "open",
+    "title": "Support catppuccin-latte theme"
+  }
+}

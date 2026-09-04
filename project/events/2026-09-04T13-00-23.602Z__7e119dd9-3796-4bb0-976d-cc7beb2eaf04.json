@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "7e119dd9-3796-4bb0-976d-cc7beb2eaf04",
+  "issue_id": "kanbus-c1cb10d2-c450-44ad-967c-867fd628bb32",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.602Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+    "priority": 2,
+    "status": "open",
+    "title": "Support rose-pine theme"
+  }
+}

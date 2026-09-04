@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "81e06995-8ced-4aed-9bd1-1b72f9e35609",
+  "issue_id": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.365Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "epic",
+    "labels": [
+      "spot"
+    ],
+    "parent": null,
+    "priority": 2,
+    "status": "open",
+    "title": "Support Omarchy themes"
+  }
+}

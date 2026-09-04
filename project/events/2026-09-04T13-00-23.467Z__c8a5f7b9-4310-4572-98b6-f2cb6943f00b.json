@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "c8a5f7b9-4310-4572-98b6-f2cb6943f00b",
+  "issue_id": "kanbus-ced029d7-82d4-4129-8cb8-e3a7027214b0",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.467Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+    "priority": 2,
+    "status": "open",
+    "title": "Support kanagawa theme"
+  }
+}

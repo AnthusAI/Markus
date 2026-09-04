@@ -20,3 +20,4 @@ site/_build/
 *.html
 !src/markusmd/static/*.html
 project/.overlay/
+project/.cache/

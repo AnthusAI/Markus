@@ -1,0 +1,25 @@
+/* Hackerman theme - based on Omarchy/Antharchy palette */
+
+[data-theme="hackerman"],
+:root[data-theme="hackerman"],
+.markus-theme-hackerman {
+  --markus-ink: #ddf7ff;
+  --markus-muted: #6a6e95;
+  --markus-paper: #0B0C16;
+  --markus-card: #151828;
+  --markus-line: #2d3450;
+  --markus-accent: #82FB9C;
+  --markus-accent-2: #50f7a3;
+  --markus-quote: #b5c5db;
+  --markus-note: #7cf8f7;
+  --markus-warning: #50f7d4;
+  --markus-tip: #4fe88f;
+  --markus-caution: #50f872;
+  --markus-pre-bg: #080910;
+  --markus-pre-ink: #ddf7ff;
+  --markus-code-bg: rgba(221, 247, 255, 0.08);
+  --markus-aside-bg: rgba(21, 24, 40, 0.6);
+  --markus-tab-nav-bg: rgba(8, 9, 16, 0.5);
+  --markus-th-bg: rgba(130, 251, 156, 0.1);
+  color-scheme: dark;
+}

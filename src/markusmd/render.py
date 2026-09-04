@@ -10,6 +10,7 @@ from mdit_py_plugins.tasklists import tasklists_plugin
 
 from markusmd.ast import Document, MarkdownBlock, Node
 from markusmd.registry import Registry
+from markusmd.themes import validate_theme
 
 
 def make_markdown(*, allow_html: bool = False) -> MarkdownIt:
@@ -40,36 +41,44 @@ def render_document(
     include_css: bool = True,
     full_document: bool = True,
     markdown: MarkdownIt | None = None,
+    theme: str | None = None,
 ) -> str:
     registry = registry or Registry.default()
     markdown = markdown or make_markdown(allow_html=allow_html)
+    resolved_theme = validate_theme(theme or document.front_matter.get("theme"))
     body = _render_nodes(document.children, registry=registry, markdown=markdown)
-    article = _wrap_article(document, body)
+    article = _wrap_article(document, body, theme=resolved_theme)
     if not full_document:
         if include_css:
             return f"<style>\n{default_css()}\n</style>\n{article}"
         return article
     title = escape(str(document.front_matter.get("title") or "Markus"))
     css = f"<style>\n{default_css()}\n</style>" if include_css else ""
+    theme_attr = (
+        f' data-theme="{escape(resolved_theme)}"'
+        if resolved_theme and resolved_theme != "default"
+        else ""
+    )
     return (
         "<!DOCTYPE html>\n"
-        '<html lang="en">\n'
+        f'<html lang="en"{theme_attr}>\n'
         "<head>\n"
         '  <meta charset="utf-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1">\n'
         f"  <title>{title}</title>\n"
         f"  {css}\n"
         "</head>\n"
-        '<body class="markus-body">\n'
+        f'<body class="markus-body"{theme_attr}>\n'
         f"{article}\n"
         "</body>\n"
         "</html>\n"
     )
 
 
-def _wrap_article(document: Document, body: str) -> str:
+def _wrap_article(document: Document, body: str, *, theme: str | None = None) -> str:
     header = _render_header(document.front_matter)
-    return f'<article class="markus-document">{header}{body}</article>'
+    theme_attr = f' data-theme="{escape(theme)}"' if theme and theme != "default" else ""
+    return f'<article class="markus-document"{theme_attr}>{header}{body}</article>'
 
 
 def _render_header(front_matter: dict) -> str:
@@ -85,19 +94,10 @@ def _render_header(front_matter: dict) -> str:
         author_text = ""
     date = front_matter.get("date")
     meta_bits = [bit for bit in (author_text, str(date) if date else "") if bit]
-    meta = (
-        f'<p class="markus-byline">{escape(" · ".join(meta_bits))}</p>' if meta_bits else ""
-    )
+    meta = f'<p class="markus-byline">{escape(" · ".join(meta_bits))}</p>' if meta_bits else ""
     description = front_matter.get("description")
-    lede = (
-        f'<p class="markus-lede">{escape(str(description))}</p>' if description else ""
-    )
-    return (
-        f'<header class="markus-header">'
-        f"<h1>{escape(str(title))}</h1>"
-        f"{meta}{lede}"
-        f"</header>"
-    )
+    lede = f'<p class="markus-lede">{escape(str(description))}</p>' if description else ""
+    return f'<header class="markus-header"><h1>{escape(str(title))}</h1>{meta}{lede}</header>'
 
 
 def _render_nodes(

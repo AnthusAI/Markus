@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "aac1a3b5-76ad-41a9-8abb-36a76abeb18b",
+  "issue_id": "kanbus-e9b64f4f-0bc1-45ac-b777-b71c7ea99714",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.400Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+    "priority": 2,
+    "status": "open",
+    "title": "Support ethereal theme"
+  }
+}

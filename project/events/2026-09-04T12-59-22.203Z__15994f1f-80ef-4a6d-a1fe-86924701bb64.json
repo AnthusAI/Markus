@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "15994f1f-80ef-4a6d-a1fe-86924701bb64",
+  "issue_id": "kanbus-7b122734-7b8e-41bd-89ea-010ade4e9f36",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T12:59:22.203Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "Update the demo site templates and CSS in site/ and features/ to include a copy-to-clipboard button on all <pre><code> blocks. Ensure it is accessible and provides visual feedback when clicked.",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": null,
+    "priority": 2,
+    "status": "open",
+    "title": "Add copy-to-clipboard buttons to demo site code blocks"
+  }
+}

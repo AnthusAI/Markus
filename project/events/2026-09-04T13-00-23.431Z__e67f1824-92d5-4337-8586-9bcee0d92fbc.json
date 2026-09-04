@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "e67f1824-92d5-4337-8586-9bcee0d92fbc",
+  "issue_id": "kanbus-1c951f91-93ba-4fbd-8ae5-44904dce72cf",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.431Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+    "priority": 2,
+    "status": "open",
+    "title": "Support flexoki-light theme"
+  }
+}

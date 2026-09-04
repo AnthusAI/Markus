@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "18ee491f-06e5-4d2a-b7dc-0918bb9a8544",
+  "issue_id": "kanbus-e77e0842-dbdb-4615-802d-56a6e282944b",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.482Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+    "priority": 2,
+    "status": "open",
+    "title": "Support last-horizon theme"
+  }
+}

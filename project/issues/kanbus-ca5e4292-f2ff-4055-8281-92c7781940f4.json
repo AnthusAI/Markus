@@ -1,0 +1,20 @@
+{
+  "id": "kanbus-ca5e4292-f2ff-4055-8281-92c7781940f4",
+  "title": "Set Catppuccin as the default theme for the demo site",
+  "description": "Once all Omarchy/Antharchy themes are supported, update the demo site to use the 'catppuccin' theme as the default.",
+  "type": "task",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [
+    "spot"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-09-04T13:00:48.079759Z",
+  "updated_at": "2026-09-04T13:00:48.079759Z",
+  "closed_at": null,
+  "custom": {}
+}

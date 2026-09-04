@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "3ca9e3b8-a3b8-450a-83c6-3f2ee0222661",
+  "issue_id": "kanbus-4fa7f594-20e7-4460-9606-13a098c704d5",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T13:00:23.499Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [
+      "spot"
+    ],
+    "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+    "priority": 2,
+    "status": "open",
+    "title": "Support lumon theme"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "kanbus-4fa7f594-20e7-4460-9606-13a098c704d5",
+  "title": "Support lumon theme",
+  "description": "",
+  "type": "task",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
+  "labels": [
+    "spot"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-09-04T13:00:23.499734Z",
+  "updated_at": "2026-09-04T13:00:23.499734Z",
+  "closed_at": null,
+  "custom": {}
+}
