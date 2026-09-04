@@ -8,11 +8,6 @@ items are peer cards*, *these two views belong together*. Authors encode
 meaning. The renderer turns that meaning into accessible HTML and responsive
 CSS — or, later, print, EPUB, or email.
 
-> The PyPI name [`markus`](https://pypi.org/project/markus/) is already taken
-> by Mozilla’s metrics library. This project publishes as
-> **[`anthus-markus`](https://pypi.org/project/anthus-markus/)** and imports as
-> `markusmd`. The CLI is `markus`.
-
 ## Install
 
 ```bash
@@ -71,16 +66,15 @@ Markus must not decay into an untyped CSS API. See
 
 ## Demo site
 
-The GitHub Pages demo is written in Markus and built by Markus:
+**[anthusai.github.io/Markus/](https://anthusai.github.io/Markus/)** — written in
+Markus and built by Markus.
+
+To run the same site locally:
 
 ```bash
 pip install -e ".[dev]"
 markus site site --out _site --serve --port 43147
 ```
-
-After you connect this repository to GitHub Pages, the workflow in
-`.github/workflows/pages.yml` publishes the same site to
-`https://anthusai.github.io/Markus/`.
 
 ## Preview locally
 
