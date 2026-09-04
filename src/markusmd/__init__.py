@@ -4,6 +4,7 @@ from markusmd.api import convert, parse, render
 from markusmd.ast import Directive, Document, MarkdownBlock, Node
 from markusmd.errors import MarkusError, MarkusSyntaxError, MarkusValidationError
 from markusmd.registry import Registry
+from markusmd.render import minify_css
 
 __version__ = "0.1.0"
 
@@ -18,6 +19,7 @@ __all__ = [
     "Registry",
     "__version__",
     "convert",
+    "minify_css",
     "parse",
     "render",
 ]

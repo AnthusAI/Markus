@@ -32,6 +32,7 @@ def render(
     include_css: bool = True,
     full_document: bool = True,
     theme: str | None = None,
+    minify_css: bool = False,
 ) -> str:
     """Render a parsed document to HTML."""
     return render_document(
@@ -41,6 +42,7 @@ def render(
         include_css=include_css,
         full_document=full_document,
         theme=theme,
+        minify_css=minify_css,
     )
 
 
@@ -53,6 +55,7 @@ def convert(
     include_css: bool = True,
     full_document: bool = True,
     theme: str | None = None,
+    minify_css: bool = False,
 ) -> str:
     """Parse, validate, and render Markus source to HTML."""
     if theme is not None:
@@ -65,4 +68,5 @@ def convert(
         include_css=include_css,
         full_document=full_document,
         theme=theme,
+        minify_css=minify_css,
     )

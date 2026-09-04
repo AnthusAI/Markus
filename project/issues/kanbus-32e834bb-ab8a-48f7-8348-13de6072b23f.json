@@ -3,7 +3,7 @@
   "title": "Implement CSS minification option in markus CLI",
   "description": "Add a --minify-css flag to the markus convert command in cli.py. When set, and when --no-css is not set, the inline CSS injected should be minified to reduce the payload size.",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -12,9 +12,17 @@
     "spot"
   ],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "b0369bc1-6ad5-4b67-9e3c-5a367814e6a5",
+      "author": "home",
+      "text": "Implemented --minify-css option in markus convert CLI, including API and render support with behavioral test coverage.",
+      "created_at": "2026-09-04T14:08:28.401557Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-09-04T12:59:22.232260Z",
-  "updated_at": "2026-09-04T12:59:22.232260Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T14:08:28.415851Z",
+  "closed_at": "2026-09-04T14:08:28.415851Z",
   "custom": {}
 }

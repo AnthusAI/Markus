@@ -34,6 +34,11 @@ def main(argv: list[str] | None = None) -> int:
         "--theme",
         help="Apply a visual theme (e.g. hackerman)",
     )
+    convert_p.add_argument(
+        "--minify-css",
+        action="store_true",
+        help="Minify injected inline CSS",
+    )
 
     ast_p = sub.add_parser("ast", help="Print the validated document AST as JSON")
     ast_p.add_argument("source", help="Markus file, or - for stdin")
@@ -108,6 +113,7 @@ def _cmd_convert(args: argparse.Namespace) -> int:
         include_css=not args.no_css,
         full_document=not args.fragment,
         theme=args.theme,
+        minify_css=args.minify_css,
     )
     if args.output:
         Path(args.output).write_text(html, encoding="utf-8")

@@ -217,6 +217,11 @@ def then_stdout(context, snippet):
     assert snippet in context.stdout, context.stdout
 
 
+@then('stdout should not contain "{snippet}"')
+def then_stdout_not_contains(context, snippet):
+    assert snippet not in context.stdout, context.stdout
+
+
 @then('stderr should contain "{snippet}"')
 def then_stderr(context, snippet):
     assert snippet in context.stderr, context.stderr

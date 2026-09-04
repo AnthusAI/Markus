@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from html import escape
 from importlib.resources import files
 
@@ -33,6 +34,39 @@ def default_css() -> str:
     return files("markusmd").joinpath("static", "markus.css").read_text(encoding="utf-8")
 
 
+def minify_css(css: str) -> str:
+    """Minify CSS text by removing comments and unnecessary whitespace."""
+    strings: list[str] = []
+
+    def save_str(m: re.Match[str]) -> str:
+        strings.append(m.group(0))
+        return f"__CSS_STR_{len(strings) - 1}__"
+
+    pattern = re.compile(r'("(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|/\*[\s\S]*?\*/)')
+
+    def replace_match(m: re.Match[str]) -> str:
+        val = m.group(0)
+        if val.startswith("/*"):
+            return ""
+        return save_str(m)
+
+    minified = pattern.sub(replace_match, css)
+    minified = re.sub(r"\s+", " ", minified)
+    minified = re.sub(r"\s*([\{\};,>])\s*", r"\1", minified)
+    minified = re.sub(r"\s*:\s+", ":", minified)
+    minified = re.sub(r"\(\s+", "(", minified)
+    minified = re.sub(r"\s+\)", ")", minified)
+    minified = re.sub(r";}", "}", minified)
+
+    for i, s in enumerate(strings):
+        minified = minified.replace(f"__CSS_STR_{i}__", s)
+
+    return minified.strip()
+
+
+_minify_css_helper = minify_css
+
+
 def render_document(
     document: Document,
     *,
@@ -42,6 +76,7 @@ def render_document(
     full_document: bool = True,
     markdown: MarkdownIt | None = None,
     theme: str | None = None,
+    minify_css: bool = False,
 ) -> str:
     registry = registry or Registry.default()
     markdown = markdown or make_markdown(allow_html=allow_html)
@@ -50,10 +85,17 @@ def render_document(
     article = _wrap_article(document, body, theme=resolved_theme)
     if not full_document:
         if include_css:
-            return f"<style>\n{default_css()}\n</style>\n{article}"
+            raw_css = default_css()
+            css_text = _minify_css_helper(raw_css) if minify_css else raw_css
+            return f"<style>\n{css_text}\n</style>\n{article}"
         return article
     title = escape(str(document.front_matter.get("title") or "Markus"))
-    css = f"<style>\n{default_css()}\n</style>" if include_css else ""
+    if include_css:
+        raw_css = default_css()
+        css_text = _minify_css_helper(raw_css) if minify_css else raw_css
+        css = f"<style>\n{css_text}\n</style>"
+    else:
+        css = ""
     theme_attr = (
         f' data-theme="{escape(resolved_theme)}"'
         if resolved_theme and resolved_theme != "default"

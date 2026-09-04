@@ -3,7 +3,7 @@
   "title": "Support Omarchy themes",
   "description": "",
   "type": "epic",
-  "status": "open",
+  "status": "in_progress",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -14,7 +14,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-09-04T13:00:23.365115Z",
-  "updated_at": "2026-09-04T13:00:23.365115Z",
+  "updated_at": "2026-09-04T14:12:05.677660Z",
   "closed_at": null,
   "custom": {}
 }
