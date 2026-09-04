@@ -77,4 +77,20 @@ Feature: GitHub Pages demo site
     And "gfm.html" should contain "themes/catppuccin.css"
     And "gfm.html" should contain "catppuccin"
 
+  Scenario: The demo site includes source markdown files and source controls
+    Given the bundled Markus site sources
+    When I build the demo site
+    Then the site should include "index.md"
+    And the site should include "gallery.md"
+    And the site should include "gfm.md"
+    And "index.html" should contain "index.md"
+    And "index.html" should contain "source-toggle"
+    And "index.html" should contain "source-pane"
+    And "gallery.html" should contain "gallery.md"
+    And "gallery.html" should contain "source-toggle"
+    And "gallery.html" should contain "source-pane"
+    And "gfm.html" should contain "gfm.md"
+    And "gfm.html" should contain "source-toggle"
+    And "gfm.html" should contain "source-pane"
+
 

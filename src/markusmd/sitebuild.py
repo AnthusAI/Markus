@@ -54,8 +54,15 @@ def build_site(source_dir: Path, dest_dir: Path, default_theme: str = "catppucci
         doc = parse(source, strict=False)
         theme = doc.front_matter.get("theme") or default_theme
         article = convert(source, include_css=False, full_document=False, theme=theme)
-        html = _wrap_page(page.stem, article, current=_output_name(page), theme=theme)
+        html = _wrap_page(
+            page.stem,
+            article,
+            current=_output_name(page),
+            theme=theme,
+            raw_source=source,
+        )
         (dest_dir / _output_name(page)).write_text(html, encoding="utf-8")
+        (dest_dir / page.name).write_text(source, encoding="utf-8")
     return dest_dir
 
 
@@ -112,11 +119,19 @@ def _add_copy_buttons(html: str) -> str:
     return pattern.sub(replace_block, html)
 
 
-def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = "catppuccin") -> str:
+def _wrap_page(
+    stem: str,
+    article: str,
+    *,
+    current: str,
+    theme: str | None = "catppuccin",
+    raw_source: str = "",
+) -> str:
     from markusmd.themes import AVAILABLE_THEMES
 
     effective_theme = theme or "catppuccin"
     article = _add_copy_buttons(article)
+    md_filename = f"{stem}.md"
 
     parts = []
     for href, label in NAV:
@@ -141,6 +156,26 @@ def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = "ca
         {"".join(theme_options)}
       </select>
     </div>"""
+
+    source_controls = (
+        '    <div class="source-controls">\n'
+        '      <button type="button" class="source-toggle" id="source-toggle" '
+        'aria-expanded="false" aria-controls="source-pane" '
+        'title="Toggle between rendered document and raw Markdown source">\n'
+        '        <svg class="source-icon" aria-hidden="true" width="14" height="14" '
+        'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+        'stroke-linecap="round" stroke-linejoin="round">\n'
+        '          <polyline points="16 18 22 12 16 6"></polyline>\n'
+        '          <polyline points="8 6 2 12 8 18"></polyline>\n'
+        "        </svg>\n"
+        '        <span class="source-toggle-text">View Source</span>\n'
+        "      </button>\n"
+        f'      <a class="source-raw-link" href="{escape(md_filename)}" target="_blank" '
+        f'rel="noopener" title="Open {escape(md_filename)} directly">{escape(md_filename)}</a>\n'
+        "    </div>"
+    )
+
+    escaped_source = escape(raw_source)
 
     default_theme_js = (
         f"'{escape(effective_theme)}'" if effective_theme != "default" else "'default'"
@@ -210,6 +245,28 @@ def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = "ca
               document.body.removeAttribute('data-theme');
             }}
           }});
+        }}
+
+        const sourceToggle = document.getElementById('source-toggle');
+        const renderedView = document.getElementById('rendered-view');
+        const sourcePane = document.getElementById('source-pane');
+        if (sourceToggle && renderedView && sourcePane) {{
+          function setSourceVisible(show) {{
+            sourcePane.hidden = !show;
+            renderedView.hidden = show;
+            sourceToggle.setAttribute('aria-expanded', show ? 'true' : 'false');
+            const txt = sourceToggle.querySelector('.source-toggle-text');
+            if (txt) txt.textContent = show ? 'View Rendered' : 'View Source';
+          }}
+
+          sourceToggle.addEventListener('click', () => {{
+            const willShow = sourcePane.hidden;
+            setSourceVisible(willShow);
+          }});
+
+          if (window.location.hash === '#source') {{
+            setSourceVisible(true);
+          }}
         }}
 
         function initCopyButtons() {{
@@ -295,18 +352,40 @@ def _wrap_page(stem: str, article: str, *, current: str, theme: str | None = "ca
   <header class="site-banner">
     <a class="site-wordmark" href="index.html">Markus</a>
     <p class="site-tagline">GitHub-flavored Markdown, plus a small vocabulary for layout intent.</p>
-    <div class="site-nav-container" style="display: flex; gap: 1rem; align-items: center;">
+    <div class="site-nav-container">
       <nav class="site-nav" aria-label="Demo">{nav}</nav>
-      {theme_switcher}
+      <div class="site-controls">
+        {theme_switcher}
+        {source_controls}
+      </div>
     </div>
   </header>
   <main>
-    {article}
+    <div id="rendered-view">
+      {article}
+    </div>
+    <div id="source-pane" class="source-pane" hidden>
+      <div class="source-pane-header">
+        <div class="source-pane-info">
+          <span class="source-pane-badge">Markdown Source</span>
+          <code class="source-pane-filename">{escape(md_filename)}</code>
+        </div>
+        <div class="source-pane-actions">
+          <a href="{escape(md_filename)}" class="source-download-link"
+             download="{escape(md_filename)}">Download {escape(md_filename)}</a>
+        </div>
+      </div>
+      <div class="code-block-wrapper">
+        <pre><code class="language-markdown">{escaped_source}</code></pre>
+        {_COPY_BUTTON_HTML}
+      </div>
+    </div>
   </main>
   <footer class="site-footer">
     <p>Markus is an MIT-licensed Python module by
     <a href="https://github.com/AnthusAI">Anthus AI Solutions</a>.
-    Install with <code>pip install anthus-markus</code>.</p>
+    Install with <code>pip install anthus-markus</code>.
+    · Page source: <a href="{escape(md_filename)}">{escape(md_filename)}</a></p>
   </footer>
 </body>
 </html>

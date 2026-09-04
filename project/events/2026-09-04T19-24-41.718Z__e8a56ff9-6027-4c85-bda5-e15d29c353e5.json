@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "e8a56ff9-6027-4c85-bda5-e15d29c353e5",
+  "issue_id": "kanbus-971162d5-e74e-4f2a-82e1-2603b704cbe4",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-04T19:24:41.718Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [],
+    "parent": null,
+    "priority": 2,
+    "status": "open",
+    "title": "Link to content .md files and add source view toggle to demo site"
+  }
+}
