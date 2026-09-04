@@ -168,6 +168,22 @@ pip install anthus-markus
 :::
 :::
 
+## Project timeline
+
+:::timeline{label="Development milestones"}
+:::timeline-event{date="2026-08-01" title="Initial Concept"}
+Markus originated as a strict semantic layer for technical publishing.
+:::
+
+:::timeline-event{date="2026-08-15" title="Core AST & Validation"}
+Implemented the markdown-it directive parser, Pydantic attribute validation, and early theme support.
+:::
+
+:::timeline-event{date="2026-09-04" title="Rich Directives & Themes"}
+Added tabs, step lists, timelines, and 20+ accessible color palettes.
+:::
+:::
+
 ## Media walkthrough
 
 ::video{src="assets/pipeline.svg" title="Pipeline demonstration"}

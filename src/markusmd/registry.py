@@ -111,6 +111,17 @@ class VideoAttrs(_Strict):
     poster: str | None = None
 
 
+class TimelineAttrs(_Strict):
+    label: str | None = None
+
+
+class TimelineEventAttrs(_Strict):
+    date: str | None = None
+    time: str | None = None
+    title: str | None = None
+    icon: str | None = None
+
+
 def _render_callout(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
     kind = attrs["kind"]
     title = attrs.get("title") or kind.capitalize()
@@ -328,6 +339,49 @@ def _render_video(directive: Directive, inner: str, attrs: dict[str, Any]) -> st
         f'<video{_id_attr(attrs)} class="markus-video" src="{escape(str(src), quote=True)}"'
         f"{title_attr}{poster_attr} controls>"
         f"</video>"
+    )
+
+
+def _render_timeline(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    label = attrs.get("label")
+    aria_label = f' aria-label="{escape(str(label))}"' if label else ""
+    return f'<ol{_id_attr(attrs)} class="markus-timeline"{aria_label}>{inner}</ol>'
+
+
+def _render_timeline_event(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    date = attrs.get("date")
+    time = attrs.get("time")
+    title = attrs.get("title")
+    icon = attrs.get("icon")
+
+    date_parts = []
+    if date:
+        date_parts.append(escape(str(date)))
+    if time:
+        date_parts.append(escape(str(time)))
+    date_str = " · ".join(date_parts)
+
+    date_attr = f' data-date="{escape(str(date))}"' if date else ""
+    time_attr = f' data-time="{escape(str(time))}"' if time else ""
+    date_html = f'<time class="markus-timeline-date">{date_str}</time>' if date_str else ""
+    icon_text = escape(_icon_mark(str(icon))) if icon else ""
+    icon_html = (
+        f'<span class="markus-timeline-icon" aria-hidden="true">{icon_text}</span>'
+        if icon
+        else ""
+    )
+    if title:
+        title_html = f'<h3 class="markus-timeline-title">{icon_html}{escape(str(title))}</h3>'
+    elif icon_html:
+        title_html = icon_html
+    else:
+        title_html = ""
+    return (
+        f'<li{_id_attr(attrs)} class="markus-timeline-event"{date_attr}{time_attr}>'
+        f"{date_html}"
+        f"{title_html}"
+        f'<div class="markus-timeline-body">{inner}</div>'
+        f"</li>"
     )
 
 
@@ -565,6 +619,17 @@ def default_specs() -> list[DirectiveSpec]:
             renderer=_render_video,
             leaf=True,
         ),
+        DirectiveSpec(
+            name="timeline",
+            schema=TimelineAttrs,
+            renderer=_render_timeline,
+            allowed_children=frozenset({"timeline-event"}),
+        ),
+        DirectiveSpec(
+            name="timeline-event",
+            schema=TimelineEventAttrs,
+            renderer=_render_timeline_event,
+        ),
     ]
 
 
@@ -629,6 +694,17 @@ def _assert_cardinality(name: str, children: list[Any], *, line: int) -> None:
         if count < 1:
             raise MarkusValidationError(
                 "Directive 'step-list' requires at least one step child",
+                line=line,
+            )
+    if name == "timeline":
+        count = sum(
+            1
+            for child in children
+            if isinstance(child, Directive) and child.name == "timeline-event"
+        )
+        if count < 1:
+            raise MarkusValidationError(
+                "Directive 'timeline' requires at least one timeline-event child",
                 line=line,
             )
 

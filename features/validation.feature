@@ -121,3 +121,47 @@ Feature: Directive validation
     When I convert the source to an HTML fragment
     Then conversion should fail
     And the error should contain "is a container"
+
+  Scenario: Timeline requires at least one timeline-event child
+    Given the Markus source:
+      """
+      :::timeline
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "Directive 'timeline' requires at least one timeline-event child"
+
+  Scenario: Timeline cannot contain free Markdown
+    Given the Markus source:
+      """
+      :::timeline
+      A stray paragraph.
+
+      :::timeline-event{date="2026-09-04"}
+      Event body.
+      :::
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "Directive 'timeline' may only contain timeline-event blocks"
+
+  Scenario: Timeline cannot be used as a leaf
+    Given the Markus source:
+      """
+      ::timeline
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "Directive 'timeline' is a container and cannot be used as a leaf"
+
+  Scenario: Timeline event cannot be used as a leaf
+    Given the Markus source:
+      """
+      ::timeline-event{date="2026-09-04"}
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "Directive 'timeline-event' is a container and cannot be used as a leaf"
+

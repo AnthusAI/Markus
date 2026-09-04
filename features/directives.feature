@@ -294,3 +294,42 @@ Feature: Semantic layout directives
       """
     When I parse the source
     Then the directive "video" should have attribute "src" equal to "overview.mp4"
+
+  Scenario: Timeline renders sequence of events
+    Given the Markus source:
+      """
+      :::timeline
+      :::timeline-event{date="2026-01-15" title="Project Kickoff"}
+      Initial architecture planning and repository setup.
+      :::
+      :::timeline-event{date="2026-03-01" title="Alpha Release"}
+      First internal preview release with core directives.
+      :::
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then the HTML should contain a "ol" with class "markus-timeline"
+    And the HTML should contain a "li" with class "markus-timeline-event"
+    And the HTML should contain an attribute data-date of "2026-01-15"
+    And the HTML should contain an attribute data-date of "2026-03-01"
+    And the HTML should contain a "time" with class "markus-timeline-date"
+    And the HTML should contain a "h3" with class "markus-timeline-title"
+    And the HTML should contain a "div" with class "markus-timeline-body"
+    And the HTML should contain "Project Kickoff"
+    And the HTML should contain "Alpha Release"
+    And the HTML should contain "Initial architecture planning and repository setup."
+    And the HTML should contain "First internal preview release with core directives."
+
+  Scenario: Timeline event directive parses attributes
+    Given the Markus source:
+      """
+      :::timeline
+      :::timeline-event{date="2026-09-04" title="v1.0 Launch"}
+      Production release.
+      :::
+      :::
+      """
+    When I parse the source
+    Then the directive "timeline-event" should have attribute "date" equal to "2026-09-04"
+    And the directive "timeline-event" should have attribute "title" equal to "v1.0 Launch"
+
