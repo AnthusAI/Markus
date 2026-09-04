@@ -1,0 +1,25 @@
+/* Solitude theme - based on Omarchy/Antharchy palette */
+
+[data-theme="solitude"],
+:root[data-theme="solitude"],
+.markus-theme-solitude {
+  --markus-ink: #cacccc;
+  --markus-muted: #4b4e55;
+  --markus-paper: #101315;
+  --markus-card: #101315;
+  --markus-line: #4b4e55;
+  --markus-accent: #798186;
+  --markus-accent-2: #798186;
+  --markus-quote: #cbc2be;
+  --markus-note: #707070;
+  --markus-warning: #d9dbdc;
+  --markus-tip: #9fa5a9;
+  --markus-caution: #565d60;
+  --markus-pre-bg: #0c0e10;
+  --markus-pre-ink: #cacccc;
+  --markus-code-bg: rgba(202, 204, 204, 0.08);
+  --markus-aside-bg: rgba(16, 19, 21, 0.6);
+  --markus-tab-nav-bg: rgba(12, 14, 16, 0.5);
+  --markus-th-bg: rgba(121, 129, 134, 0.1);
+  color-scheme: dark;
+}

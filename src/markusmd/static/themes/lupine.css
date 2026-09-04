@@ -1,0 +1,25 @@
+/* Lupine theme - based on Omarchy/Antharchy palette */
+
+[data-theme="lupine"],
+:root[data-theme="lupine"],
+.markus-theme-lupine {
+  --markus-ink: #212121;
+  --markus-muted: #757575;
+  --markus-paper: #fafafa;
+  --markus-card: #f5f5f5;
+  --markus-line: #9e9e9e;
+  --markus-accent: #3264eb;
+  --markus-accent-2: #026fde;
+  --markus-quote: #424242;
+  --markus-note: #0c67de;
+  --markus-warning: #026fde;
+  --markus-tip: #4a2fd0;
+  --markus-caution: #c900c4;
+  --markus-pre-bg: #ececec;
+  --markus-pre-ink: #212121;
+  --markus-code-bg: rgba(33, 33, 33, 0.08);
+  --markus-aside-bg: rgba(245, 245, 245, 0.6);
+  --markus-tab-nav-bg: rgba(236, 236, 236, 0.5);
+  --markus-th-bg: rgba(50, 100, 235, 0.1);
+  color-scheme: light;
+}

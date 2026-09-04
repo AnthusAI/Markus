@@ -3,18 +3,19 @@
   "title": "Add copy-to-clipboard buttons to demo site code blocks",
   "description": "Update the demo site templates and CSS in site/ and features/ to include a copy-to-clipboard button on all <pre><code> blocks. Ensure it is accessible and provides visual feedback when clicked.",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": null,
   "labels": [
-    "spot"
+    "spot",
+    "class:cheap"
   ],
   "dependencies": [],
   "comments": [],
   "created_at": "2026-09-04T12:59:22.203321Z",
-  "updated_at": "2026-09-04T12:59:22.203321Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T18:14:17.084593Z",
+  "closed_at": "2026-09-04T18:14:17.084593Z",
   "custom": {}
 }

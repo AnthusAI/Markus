@@ -4,6 +4,7 @@ description: GitHub-flavored Markdown with a small, semantic vocabulary for layo
 authors:
   - Anthus AI Solutions
 date: 2026-09-04
+theme: catppuccin
 ---
 
 Markus keeps [GitHub Flavored Markdown](gfm.html) as the content language, then adds a handful of colon-fenced directives for the things Markdown was never meant to say: *this is a pull quote*, *these are peer cards*, *these two ideas belong beside each other*.
@@ -165,6 +166,22 @@ Install via PowerShell:
 ```powershell
 pip install anthus-markus
 ```
+:::
+:::
+
+## Project timeline
+
+:::timeline{label="Development milestones"}
+:::timeline-event{date="2026-08-01" title="Initial Concept"}
+Markus originated as a strict semantic layer for technical publishing.
+:::
+
+:::timeline-event{date="2026-08-15" title="Core AST & Validation"}
+Implemented the markdown-it directive parser, Pydantic attribute validation, and early theme support.
+:::
+
+:::timeline-event{date="2026-09-04" title="Rich Directives & Themes"}
+Added tabs, step lists, timelines, and 20+ accessible color palettes.
 :::
 :::
 

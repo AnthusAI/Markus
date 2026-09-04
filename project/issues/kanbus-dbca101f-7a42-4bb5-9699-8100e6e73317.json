@@ -3,18 +3,27 @@
   "title": "Add comprehensive docstrings to parse.py and ast.py",
   "description": "The parse.py and ast.py modules are currently under-documented. Add Google-style docstrings to all classes and functions describing their behavior, arguments, and return types.",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": null,
   "labels": [
-    "spot"
+    "spot",
+    "class:cheap"
   ],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "5d8daf25-5053-47b6-adf1-30a63a0d5512",
+      "author": "home",
+      "text": "Added comprehensive Google-style docstrings to parse.py and ast.py covering all classes, methods, and functions with their behavior, arguments, and return types.",
+      "created_at": "2026-09-04T18:43:18.552157Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-09-04T12:59:22.222592Z",
-  "updated_at": "2026-09-04T12:59:22.222592Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T18:43:21.048001Z",
+  "closed_at": "2026-09-04T18:43:21.048001Z",
   "custom": {}
 }

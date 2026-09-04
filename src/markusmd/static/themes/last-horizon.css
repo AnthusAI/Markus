@@ -1,0 +1,25 @@
+/* Last Horizon theme - based on Omarchy/Antharchy palette */
+
+[data-theme="last-horizon"],
+:root[data-theme="last-horizon"],
+.markus-theme-last-horizon {
+  --markus-ink: #fafcfb;
+  --markus-muted: #584e51;
+  --markus-paper: #0c0b0c;
+  --markus-card: #0c0b0c;
+  --markus-line: #584e51;
+  --markus-accent: #b59790;
+  --markus-accent-2: #b59790;
+  --markus-quote: #cfd3cd;
+  --markus-note: #a5a0b6;
+  --markus-warning: #6b5e73;
+  --markus-tip: #87a9b0;
+  --markus-caution: #c38b7b;
+  --markus-pre-bg: #090809;
+  --markus-pre-ink: #fafcfb;
+  --markus-code-bg: rgba(250, 252, 251, 0.08);
+  --markus-aside-bg: rgba(12, 11, 12, 0.6);
+  --markus-tab-nav-bg: rgba(9, 8, 9, 0.5);
+  --markus-th-bg: rgba(181, 151, 144, 0.1);
+  color-scheme: dark;
+}

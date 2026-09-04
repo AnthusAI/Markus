@@ -1,0 +1,25 @@
+/* Kanagawa theme - based on Omarchy/Antharchy palette */
+
+[data-theme="kanagawa"],
+:root[data-theme="kanagawa"],
+.markus-theme-kanagawa {
+  --markus-ink: #dcd7ba;
+  --markus-muted: #727169;
+  --markus-paper: #1f1f28;
+  --markus-card: #223249;
+  --markus-line: #54546d;
+  --markus-accent: #dcd7ba;
+  --markus-accent-2: #c17158;
+  --markus-quote: #c8c093;
+  --markus-note: #6a9589;
+  --markus-warning: #c0a36e;
+  --markus-tip: #76946a;
+  --markus-caution: #c34043;
+  --markus-pre-bg: #17171e;
+  --markus-pre-ink: #dcd7ba;
+  --markus-code-bg: rgba(220, 215, 186, 0.08);
+  --markus-aside-bg: rgba(34, 50, 73, 0.6);
+  --markus-tab-nav-bg: rgba(23, 23, 30, 0.5);
+  --markus-th-bg: rgba(220, 215, 186, 0.1);
+  color-scheme: dark;
+}

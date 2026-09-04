@@ -40,6 +40,8 @@ Markdown, including nested directives.
 | `tab` | One tab panel | `label` |
 | `step-list` | Ordered sequence of steps | — |
 | `step` | Single step | — |
+| `timeline` | Chronological sequence | `label` |
+| `timeline-event` | Single event in a timeline | `date`, `time`, `title`, `icon` |
 
 A trailing kramdown-style attribute list is also accepted inside a directive:
 
@@ -68,6 +70,7 @@ A trailing kramdown-style attribute list is also accepted inside a directive:
 - `two-up` must contain exactly two `column` children
 - `tabs` may contain only `tab`
 - `step-list` may contain only `step`
+- `timeline` may contain only `timeline-event`
 - Other containers may nest Markdown and further directives
 - Fenced code blocks are not scanned for directives
 

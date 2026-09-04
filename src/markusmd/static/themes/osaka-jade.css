@@ -1,0 +1,25 @@
+/* Osaka Jade theme - based on Omarchy/Antharchy palette */
+
+[data-theme="osaka-jade"],
+:root[data-theme="osaka-jade"],
+.markus-theme-osaka-jade {
+  --markus-ink: #c1c497;
+  --markus-muted: #81b8a8;
+  --markus-paper: #111c18;
+  --markus-card: #23372b;
+  --markus-line: #53685b;
+  --markus-accent: #509475;
+  --markus-accent-2: #a2734b;
+  --markus-quote: #d6d5bc;
+  --markus-note: #2dd5b7;
+  --markus-warning: #459451;
+  --markus-tip: #549e6a;
+  --markus-caution: #ff5345;
+  --markus-pre-bg: #0c1512;
+  --markus-pre-ink: #c1c497;
+  --markus-code-bg: rgba(193, 196, 151, 0.08);
+  --markus-aside-bg: rgba(35, 55, 43, 0.6);
+  --markus-tab-nav-bg: rgba(12, 21, 18, 0.5);
+  --markus-th-bg: rgba(80, 148, 117, 0.1);
+  color-scheme: dark;
+}

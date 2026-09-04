@@ -3,18 +3,19 @@
   "title": "Add a timeline layout directive",
   "description": "Expand the Markus vocabulary in registry.py to support timeline (container) and timeline-event (child) directives. Add their Pydantic schemas, renderers, CSS styles, and Gherkin scenarios proving they work.",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": null,
   "labels": [
-    "spot"
+    "spot",
+    "class:cheap"
   ],
   "dependencies": [],
   "comments": [],
   "created_at": "2026-09-04T12:59:22.212687Z",
-  "updated_at": "2026-09-04T12:59:22.212687Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T18:24:51.743650Z",
+  "closed_at": "2026-09-04T18:24:51.743650Z",
   "custom": {}
 }

@@ -3,7 +3,7 @@
   "title": "Support tokyo-night theme",
   "description": "",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -12,9 +12,17 @@
     "spot"
   ],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "5072b082-a35f-4a83-8e76-769e89fb2d27",
+      "author": "home",
+      "text": "Completed implementation of the tokyo-night theme:\n- Added standalone static/themes/tokyo-night.css based on Antharchy/Omarchy tokyo-night color palette.\n- Added 'tokyo-night' to AVAILABLE_THEMES in markusmd.themes.\n- Added [data-theme=\"tokyo-night\"] styles to static/markus.css.\n- Added BDD feature scenarios in features/themes.feature and updated features/site.feature.\n- Verified with behave (all 67 scenarios passing) and ruff lint.",
+      "created_at": "2026-09-04T15:08:01.435991Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-09-04T13:00:23.627225Z",
-  "updated_at": "2026-09-04T13:00:23.627225Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T15:08:04.037771Z",
+  "closed_at": "2026-09-04T15:08:04.037771Z",
   "custom": {}
 }

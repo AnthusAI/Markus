@@ -1,0 +1,25 @@
+/* White theme - based on Omarchy/Antharchy palette */
+
+[data-theme="white"],
+:root[data-theme="white"],
+.markus-theme-white {
+  --markus-ink: #000000;
+  --markus-muted: #c0c0c0;
+  --markus-paper: #ffffff;
+  --markus-card: #c0c0c0;
+  --markus-line: #808080;
+  --markus-accent: #6e6e6e;
+  --markus-accent-2: #6e6e6e;
+  --markus-quote: #000000;
+  --markus-note: #3e3e3e;
+  --markus-warning: #4a4a4a;
+  --markus-tip: #3a3a3a;
+  --markus-caution: #2a2a2a;
+  --markus-pre-bg: #f5f5f5;
+  --markus-pre-ink: #000000;
+  --markus-code-bg: rgba(0, 0, 0, 0.08);
+  --markus-aside-bg: rgba(192, 192, 192, 0.6);
+  --markus-tab-nav-bg: rgba(245, 245, 245, 0.5);
+  --markus-th-bg: rgba(110, 110, 110, 0.1);
+  color-scheme: light;
+}

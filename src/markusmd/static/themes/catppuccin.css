@@ -1,0 +1,25 @@
+/* Catppuccin theme - based on Omarchy/Antharchy palette */
+
+[data-theme="catppuccin"],
+:root[data-theme="catppuccin"],
+.markus-theme-catppuccin {
+  --markus-ink: #cdd6f4;
+  --markus-muted: #6c7086;
+  --markus-paper: #1e1e2e;
+  --markus-card: #313244;
+  --markus-line: #585b70;
+  --markus-accent: #89b4fa;
+  --markus-accent-2: #f6b6ab;
+  --markus-quote: #bac2de;
+  --markus-note: #94e2d5;
+  --markus-warning: #f9e2af;
+  --markus-tip: #a6e3a1;
+  --markus-caution: #f38ba8;
+  --markus-pre-bg: #161622;
+  --markus-pre-ink: #cdd6f4;
+  --markus-code-bg: rgba(205, 214, 244, 0.08);
+  --markus-aside-bg: rgba(49, 50, 68, 0.6);
+  --markus-tab-nav-bg: rgba(22, 22, 34, 0.5);
+  --markus-th-bg: rgba(137, 180, 250, 0.1);
+  color-scheme: dark;
+}

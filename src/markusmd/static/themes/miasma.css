@@ -1,0 +1,25 @@
+/* Miasma theme - based on Omarchy/Antharchy palette */
+
+[data-theme="miasma"],
+:root[data-theme="miasma"],
+.markus-theme-miasma {
+  --markus-ink: #c2c2b0;
+  --markus-muted: #555555;
+  --markus-paper: #222222;
+  --markus-card: #2c2c2c;
+  --markus-line: #666666;
+  --markus-accent: #78824b;
+  --markus-accent-2: #8d6242;
+  --markus-quote: #8a8a7e;
+  --markus-note: #c9a554;
+  --markus-warning: #b36d43;
+  --markus-tip: #5f875f;
+  --markus-caution: #685742;
+  --markus-pre-bg: #191919;
+  --markus-pre-ink: #c2c2b0;
+  --markus-code-bg: rgba(194, 194, 176, 0.08);
+  --markus-aside-bg: rgba(44, 44, 44, 0.6);
+  --markus-tab-nav-bg: rgba(25, 25, 25, 0.5);
+  --markus-th-bg: rgba(120, 130, 75, 0.1);
+  color-scheme: dark;
+}

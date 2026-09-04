@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "event_id": "83dfee97-7f37-4992-8cba-90142c62e16d",
+  "issue_id": "kanbus-38af66d8-b028-490e-b4f2-783fdefef9bb",
+  "event_type": "state_transition",
+  "occurred_at": "2026-09-04T14:50:23.441Z",
+  "actor_id": "home",
+  "payload": {
+    "from_status": "in_progress",
+    "to_status": "closed"
+  }
+}

@@ -3,18 +3,27 @@
   "title": "Support ethereal theme",
   "description": "",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
   "labels": [
-    "spot"
+    "spot",
+    "class:cheap"
   ],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "08d6e730-2c6f-4623-bc8f-c1c8435eab2f",
+      "author": "home",
+      "text": "Completed implementation of the ethereal theme:\n- Added standalone static/themes/ethereal.css based on Antharchy/Omarchy ethereal color palette.\n- Added \"ethereal\" to AVAILABLE_THEMES in markusmd.themes.\n- Added [data-theme=\"ethereal\"] styles to static/markus.css.\n- Added BDD feature scenarios in features/themes.feature and updated features/site.feature.\n- Verified with behave (all 135 scenarios passing), ruff lint, and demo site build.",
+      "created_at": "2026-09-04T18:02:26.925353Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-09-04T13:00:23.399893Z",
-  "updated_at": "2026-09-04T13:00:23.399893Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T18:02:26.938242Z",
+  "closed_at": "2026-09-04T18:02:26.938242Z",
   "custom": {}
 }

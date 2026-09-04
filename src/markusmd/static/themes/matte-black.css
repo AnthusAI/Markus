@@ -1,0 +1,25 @@
+/* Matte Black theme - based on Omarchy/Antharchy palette */
+
+[data-theme="matte-black"],
+:root[data-theme="matte-black"],
+.markus-theme-matte-black {
+  --markus-ink: #bebebe;
+  --markus-muted: #555555;
+  --markus-paper: #121212;
+  --markus-card: #1e1e1e;
+  --markus-line: #333333;
+  --markus-accent: #e68e0d;
+  --markus-accent-2: #c63d3d;
+  --markus-quote: #8a8a8d;
+  --markus-note: #bebebe;
+  --markus-warning: #b91c1c;
+  --markus-tip: #ffc107;
+  --markus-caution: #d35f5f;
+  --markus-pre-bg: #0d0d0d;
+  --markus-pre-ink: #bebebe;
+  --markus-code-bg: rgba(190, 190, 190, 0.08);
+  --markus-aside-bg: rgba(30, 30, 30, 0.6);
+  --markus-tab-nav-bg: rgba(13, 13, 13, 0.5);
+  --markus-th-bg: rgba(230, 142, 13, 0.1);
+  color-scheme: dark;
+}

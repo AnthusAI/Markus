@@ -3,18 +3,27 @@
   "title": "Support kanagawa theme",
   "description": "",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": "kanbus-4381f400-fd4f-4036-893a-f392942751ac",
   "labels": [
-    "spot"
+    "spot",
+    "class:cheap"
   ],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "d19ae5d7-d902-4d65-8e6d-00a33a125075",
+      "author": "home",
+      "text": "Completed implementation of the kanagawa theme:\n- Added standalone static/themes/kanagawa.css based on Antharchy/Omarchy kanagawa color palette.\n- Added \"kanagawa\" to AVAILABLE_THEMES in markusmd.themes.\n- Added [data-theme=\"kanagawa\"] styles to static/markus.css.\n- Added BDD feature scenarios in features/themes.feature and updated features/site.feature.\n- Verified with behave (all 135 scenarios passing), ruff lint, and demo site build.",
+      "created_at": "2026-09-04T18:02:26.817030Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-09-04T13:00:23.467584Z",
-  "updated_at": "2026-09-04T13:00:23.467584Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T18:02:26.830376Z",
+  "closed_at": "2026-09-04T18:02:26.830376Z",
   "custom": {}
 }

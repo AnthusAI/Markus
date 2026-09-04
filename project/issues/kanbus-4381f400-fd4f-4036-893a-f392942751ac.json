@@ -3,7 +3,7 @@
   "title": "Support Omarchy themes",
   "description": "",
   "type": "epic",
-  "status": "in_progress",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -12,9 +12,17 @@
     "spot"
   ],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "c072b113-d42c-4151-99cd-b1cb28102a5e",
+      "author": "home",
+      "text": "Completed implementation of all Omarchy visual themes for Markus:\n- Supported all 22 Omarchy visual themes: catppuccin, catppuccin-latte, ethereal, everforest, flexoki-light, gruvbox, hackerman, kanagawa, last-horizon, lumon, lupine, matte-black, miasma, nord, osaka-jade, retro-82, ristretto, rose-pine, solitude, tokyo-night, vantablack, and white.\n- Added standalone theme stylesheets to static/themes/ and bundled theme CSS custom properties in static/markus.css.\n- Registered and validated themes in markusmd.themes.AVAILABLE_THEMES.\n- Added comprehensive BDD feature tests in features/themes.feature and site asset verification in features/site.feature.\n- Verified full test suite with behave (135 scenarios passing), ruff lint passing, and demo site build succeeding.",
+      "created_at": "2026-09-04T18:02:29.924535Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-09-04T13:00:23.365115Z",
-  "updated_at": "2026-09-04T14:12:05.677660Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T18:02:33.550564Z",
+  "closed_at": "2026-09-04T18:02:33.550564Z",
   "custom": {}
 }

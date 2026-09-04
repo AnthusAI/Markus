@@ -3,18 +3,27 @@
   "title": "Set Catppuccin as the default theme for the demo site",
   "description": "Once all Omarchy/Antharchy themes are supported, update the demo site to use the 'catppuccin' theme as the default.",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": null,
   "labels": [
-    "spot"
+    "spot",
+    "class:cheap"
   ],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "0abed86d-73fa-49f4-9735-246ac1e6a583",
+      "author": "home",
+      "text": "Set Catppuccin as default theme for demo site:\n- Updated build_site and _wrap_page in sitebuild.py to default to 'catppuccin'.\n- Added data-theme attribute and stylesheet link pre-rendering with catppuccin default.\n- Added theme: catppuccin to demo site pages (index.md, gallery.md, gfm.md).\n- Added styling for theme switcher in site.css.\n- Added BDD feature scenario to features/site.feature and verified with behave (143 scenarios passing) and ruff lint.",
+      "created_at": "2026-09-04T18:35:28.575508Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-09-04T13:00:48.079759Z",
-  "updated_at": "2026-09-04T13:00:48.079759Z",
-  "closed_at": null,
+  "updated_at": "2026-09-04T18:35:31.027270Z",
+  "closed_at": "2026-09-04T18:35:31.027270Z",
   "custom": {}
 }
