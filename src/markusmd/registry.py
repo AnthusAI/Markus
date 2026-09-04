@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from html import escape
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 from markusmd.ast import Directive
 from markusmd.errors import MarkusValidationError
@@ -34,6 +34,16 @@ class PullQuoteAttrs(_Strict):
 class CardAttrs(_Strict):
     icon: str | None = None
     title: str | None = None
+    span: int | Literal["full"] | None = None
+
+    @field_validator("span")
+    @classmethod
+    def _validate_span(cls, value: int | Literal["full"] | None) -> int | Literal["full"] | None:
+        if value is None or value == "full":
+            return value
+        if not 1 <= int(value) <= 6:
+            raise ValueError("span must be between 1 and 6, or 'full'")
+        return int(value)
 
 
 class CardGridAttrs(_Strict):
@@ -129,6 +139,12 @@ def _icon_mark(icon: str) -> str:
 def _render_card(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
     icon = attrs.get("icon")
     title = attrs.get("title")
+    span = attrs.get("span")
+    span_attr = ""
+    if span == "full":
+        span_attr = ' data-span="full"'
+    elif span is not None:
+        span_attr = f' data-span="{int(span)}"'
     icon_html = (
         f'<span class="markus-card-icon" aria-hidden="true">{escape(_icon_mark(str(icon)))}</span>'
         if icon
@@ -136,7 +152,7 @@ def _render_card(directive: Directive, inner: str, attrs: dict[str, Any]) -> str
     )
     title_html = f'<h3 class="markus-card-title">{escape(str(title))}</h3>' if title else ""
     return (
-        f'<article class="markus-card">'
+        f'<article class="markus-card"{span_attr}>'
         f"{icon_html}{title_html}"
         f'<div class="markus-card-body">{inner}</div>'
         f"</article>"

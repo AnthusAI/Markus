@@ -224,6 +224,16 @@
   min-width: 0;
 }
 
+.markus-card[data-span="full"] {
+  grid-column: 1 / -1;
+}
+
+.markus-card[data-span="2"] { grid-column: span 2; }
+.markus-card[data-span="3"] { grid-column: span 3; }
+.markus-card[data-span="4"] { grid-column: span 4; }
+.markus-card[data-span="5"] { grid-column: span 5; }
+.markus-card[data-span="6"] { grid-column: span 6; }
+
 .markus-card-icon {
   display: inline-flex;
   width: 2rem;

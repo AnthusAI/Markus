@@ -30,7 +30,7 @@ Markdown, including nested directives.
 | `note`, `warning`, `tip`, `caution` | Aliases for `callout` | `title` |
 | `pull-quote` | Editorial quotation | `attribution`, `source`, `tone`, `align` |
 | `card-grid` / `feature-grid` | Peer cards | `label`, `columns` (hint) |
-| `card` / `feature-card` | One peer item | `icon`, `title` |
+| `card` / `feature-card` | One peer item | `icon`, `title`, `span` (`1`–`6` or `full`) |
 | `two-up` | A conceptual pair | `ratio` (`1:1`, `2:1`, `1:2`), `align` |
 | `column` | One side of `two-up` | — |
 | `figure` | Media with caption | `src`, `alt`, `caption`, `credit` |

@@ -103,6 +103,29 @@ Feature: Semantic layout directives
     And the HTML should contain "What changes"
     And the HTML should contain "What remains"
 
+  Scenario: Cards can span columns in a grid
+    Given the Markus source:
+      """
+      :::card-grid{columns=3}
+      :::card{span=2}
+      ## Wide card
+      Spans two columns.
+      :::
+      :::card
+      ## Narrow card
+      One column.
+      :::
+      :::card{span=full}
+      ## Full width
+      Spans the entire track.
+      :::
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then the HTML should contain an attribute data-span of "2"
+    And the HTML should contain an attribute data-span of "full"
+    And the HTML should contain "Spans the entire track"
+
   Scenario: Figure with media attributes
     Given the Markus source:
       """

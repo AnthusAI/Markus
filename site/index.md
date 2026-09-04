@@ -60,6 +60,46 @@ A conceptual pairing: contrast, before/after, claim and caveat.
 :::
 :::
 
+## Ratios on a three-column track
+
+`two-up` ratios count parts across three columns: `2:1` is two parts plus one; `1:2` is one plus two. Blocks outside `two-up` span the full width.
+
+:::two-up{ratio="2:1"}
+:::column
+### Primary (2 parts)
+
+The narrative, claim, or longer explanation belongs in the wider column.
+:::
+
+:::column
+### Aside (1 part)
+
+Metadata, a caveat, or a short counterpoint.
+:::
+:::
+
+:::two-up{ratio="1:2"}
+:::column
+### Lead (1 part)
+
+A label, qualifier, or setup line.
+:::
+
+:::column
+### Body (2 parts)
+
+Material that should dominate when the second column carries the weight.
+:::
+:::
+
+:::card-grid{columns=3 label="Spanning the track"}
+:::card{span=full}
+### Full width (all three columns)
+
+Outside `two-up`, ordinary blocks span the entire track. Inside a `card-grid`, set `span=full` on a card to do the same.
+:::
+:::
+
 ## Metrics as first-class facts
 
 Leaf directives cover facts that should be extractable later — not just styled.

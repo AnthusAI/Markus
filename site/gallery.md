@@ -92,6 +92,44 @@ Authors name the structure. The theme chooses a responsive layout, including pri
 :::
 :::
 
+On a three-column track, `ratio` divides the row into proportional parts:
+
+:::two-up{ratio="2:1"}
+:::column
+### Primary (2 parts)
+
+Wider column for the main narrative.
+:::
+
+:::column
+### Aside (1 part)
+
+Narrow column for a sidebar or counterpoint.
+:::
+:::
+
+:::two-up{ratio="1:2"}
+:::column
+### Lead (1 part)
+
+Narrow setup or qualifier.
+:::
+
+:::column
+### Body (2 parts)
+
+Wider column when the second side should dominate.
+:::
+:::
+
+:::card-grid{columns=3}
+:::card{span=full}
+### Full width
+
+`span=full` on a card spans every column in the grid.
+:::
+:::
+
 ## Figure
 
 :::figure{src="assets/pipeline.svg" alt="Markus processing pipeline" caption="Source becomes a directive AST, then semantic HTML." credit="Anthus AI"}
