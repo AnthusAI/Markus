@@ -42,6 +42,11 @@ def main(argv: list[str] | None = None) -> int:
 
     ast_p = sub.add_parser("ast", help="Print the validated document AST as JSON")
     ast_p.add_argument("source", help="Markus file, or - for stdin")
+    ast_p.add_argument(
+        "--allow-html",
+        action="store_true",
+        help="Surface raw HTML blocks/inline HTML as typed nodes",
+    )
 
     validate_p = sub.add_parser("validate", help="Validate Markus source and exit")
     validate_p.add_argument("source", help="Markus file, or - for stdin")
@@ -125,8 +130,11 @@ def _cmd_convert(args: argparse.Namespace) -> int:
 
 
 def _cmd_ast(args: argparse.Namespace) -> int:
+    from markusmd.render import make_markdown
+
     document = parse(_read(args.source))
-    json.dump(document.to_dict(), sys.stdout, indent=2)
+    markdown = make_markdown(allow_html=args.allow_html)
+    json.dump(document.to_dict(markdown=markdown), sys.stdout, indent=2)
     sys.stdout.write("\n")
     return 0
 
