@@ -1,0 +1,26 @@
+{
+  "id": "kanbus-2ecaf764-b1f9-4a51-8d3e-b838fe4fcf14",
+  "title": "Bare HH:MM:SS in front matter silently becomes an integer (YAML 1.1 sexagesimal)",
+  "description": "",
+  "type": "bug",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "2f0fa693-d2d1-4d6d-b03e-7390d5f2db57",
+      "author": "home",
+      "text": "Found reviewing kanbus-dacb70. PRE-EXISTING PyYAML behavior, not introduced by that fix, but it defeats part of it.\n\nREPRO:\n  front matter:  t: 13:30:00\n  markus ast ->  \"t\": 48600\n\nCAUSE: PyYAML implements YAML 1.1, where bare HH:MM:SS is a SEXAGESIMAL INTEGER literal, not a time. 13*3600 + 30*60 = 48600. The value is converted to a meaningless int by the YAML loader BEFORE any Markus code sees it.\n\nTWO CONSEQUENCES:\n1. SILENT DATA CORRUPTION. A publication time in front matter becomes a nonsense integer with no error at all. This is the exact failure class kanbus-dacb70 was told to avoid - it is arguably worse than the crash that bug fixed, because it is silent. Newsroom content has publication times; this will bite.\n2. The datetime.time branch of _to_json_safe added in kanbus-dacb70 (e374323) is effectively DEAD CODE for YAML front matter, since PyYAML never produces a datetime.time from a bare HH:MM:SS. Worth confirming and either removing it or making it reachable.\n\nNOTE date is unaffected: 'when: 2026-09-04' correctly yields datetime.date and now serializes to ISO 8601. Only bare times are affected.\n\nFIX DIRECTIONS (decide deliberately, this is a contract question):\n(a) Use a YAML 1.2 core-schema loader (e.g. ruamel.yaml in 1.2 mode), where sexagesimals are gone and 13:30:00 stays a string. Cleanest semantics; check blast radius on existing front matter.\n(b) Keep PyYAML but install a resolver that removes the sexagesimal int pattern.\n(c) Document that times must be quoted, and detect the ambiguous pattern to raise a clear error rather than silently coercing.\n\n(a) or (b) preferred - option (c) still relies on authors remembering. Whatever is chosen, add behave coverage.",
+      "created_at": "2026-09-06T13:03:55.126682Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-09-06T13:03:55.115828Z",
+  "updated_at": "2026-09-06T13:03:55.126682Z",
+  "closed_at": null,
+  "custom": {}
+}
