@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "ef244352-8cb1-41b6-8c5b-c9d62074f302",
+  "issue_id": "kanbus-37dd9a9f-ecdf-4b68-b95c-33c6055fc093",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-06T12:43:08.429Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "task",
+    "labels": [],
+    "parent": null,
+    "priority": 1,
+    "status": "open",
+    "title": "Full document AST: typed block nodes, not raw markdown source strings"
+  }
+}

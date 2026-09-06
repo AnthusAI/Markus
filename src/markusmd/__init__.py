@@ -7,7 +7,7 @@ from markusmd.errors import MarkusError, MarkusSyntaxError, MarkusValidationErro
 from markusmd.registry import Registry
 from markusmd.render import minify_css
 
-__version__ = "0.1.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "IR_SCHEMA_VERSION",
