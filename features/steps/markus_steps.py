@@ -342,6 +342,23 @@ def then_ir_front_matter_list(context, key, value):
     assert all(isinstance(item, str) for item in actual), actual
 
 
+@then('the document IR front matter key "{key}" should be the integer {value:d}')
+def then_ir_front_matter_integer(context, key, value):
+    actual = context.ir["front_matter"][key]
+    assert actual == value, actual
+    # bool is an int subclass in Python; require a real int here so a
+    # boolean scalar can't slip through this assertion.
+    assert isinstance(actual, int) and not isinstance(actual, bool), type(actual)
+
+
+@then('the document IR front matter key "{key}" should be the boolean {value}')
+def then_ir_front_matter_boolean(context, key, value):
+    actual = context.ir["front_matter"][key]
+    expected = json.loads(value)
+    assert actual == expected, actual
+    assert isinstance(actual, bool), type(actual)
+
+
 @then("parsing the document IR should fail")
 def then_ir_parse_failed(context):
     assert context.ir is None, context.ir

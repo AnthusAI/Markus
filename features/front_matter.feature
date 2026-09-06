@@ -103,6 +103,74 @@ Feature: YAML front matter
     And stdout should contain "2026-09-04"
     And the ast JSON output front matter key "date" should be the string "2026-09-04"
 
+  Scenario: An unquoted bare HH:MM:SS front matter time stays a string in the IR
+    Given the Markus source:
+      """
+      ---
+      title: Dateline
+      t: 13:30:00
+      ---
+
+      Hello.
+      """
+    When I parse the source into the document IR
+    Then the document IR front matter key "t" should be the string "13:30:00"
+
+  Scenario: An unquoted bare HH:MM:SS.fff front matter time stays a string in the IR
+    Given the Markus source:
+      """
+      ---
+      title: Dateline
+      t: 13:30:00.500
+      ---
+
+      Hello.
+      """
+    When I parse the source into the document IR
+    Then the document IR front matter key "t" should be the string "13:30:00.500"
+
+  Scenario: An unquoted octal-looking front matter value is still parsed as an integer
+    Given the Markus source:
+      """
+      ---
+      title: Permissions
+      mode: 0755
+      ---
+
+      Hello.
+      """
+    When I parse the source into the document IR
+    Then the document IR front matter key "mode" should be the integer 493
+
+  Scenario: Unquoted yes/no front matter values are still parsed as booleans
+    Given the Markus source:
+      """
+      ---
+      title: Flags
+      draft: no
+      featured: yes
+      ---
+
+      Hello.
+      """
+    When I parse the source into the document IR
+    Then the document IR front matter key "draft" should be the boolean false
+    And the document IR front matter key "featured" should be the boolean true
+
+  Scenario: markus ast prints a bare HH:MM:SS front matter value as a plain JSON string
+    Given a Markus file "timed.md" with:
+      """
+      ---
+      t: 13:30:00
+      ---
+
+      Body.
+      """
+    When I run "markus ast timed.md"
+    Then the command should succeed
+    And stdout should contain "13:30:00"
+    And the ast JSON output front matter key "t" should be the string "13:30:00"
+
   Scenario: Front matter with an unrepresentable value fails with a clear, actionable error
     Given the Markus source:
       """

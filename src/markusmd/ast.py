@@ -142,6 +142,18 @@ class Document:
         the offending key and type, since a silent fallback would hide data
         loss from downstream consumers like Papyrus.
 
+        Note on `datetime.time`: PyYAML's safe loader can never produce a
+        bare `datetime.time` from front matter -- its timestamp resolver
+        requires a full `YYYY-MM-DD` date before it will look at a time
+        component at all, so an unquoted `HH:MM:SS` scalar is never resolved
+        as a timestamp (see `markusmd._frontmatter_yaml` for what it *is*
+        resolved as, and why). A front matter value that happens to be a
+        `datetime.time` object (only possible via hand-constructed
+        `Document.front_matter`, never via `parse_document()`) is therefore
+        deliberately treated the same as any other type JSON can't represent
+        losslessly: it raises `MarkusSerializationError` rather than being
+        silently coerced.
+
         Args:
             markdown: markdown-it instance used to parse Markdown regions
                 into typed block nodes. Defaults to a standard GFM instance
@@ -166,7 +178,12 @@ class Document:
 
 
 _JSON_SAFE_SCALARS = (str, int, float, bool, type(None))
-_TEMPORAL_TYPES = (datetime.datetime, datetime.date, datetime.time)
+# `datetime.time` is deliberately excluded: PyYAML's safe loader (even with
+# the sexagesimal-int/float patch in `markusmd._frontmatter_yaml`) never
+# constructs one from front matter -- its timestamp resolver requires a full
+# date -- so there is no real producer to normalize here. See the docstring
+# on `Document.to_dict` for the full explanation.
+_TEMPORAL_TYPES = (datetime.datetime, datetime.date)
 
 
 def _json_safe_front_matter(front_matter: dict[str, Any]) -> dict[str, Any]:
@@ -177,10 +194,14 @@ def _json_safe_front_matter(front_matter: dict[str, Any]) -> dict[str, Any]:
 def _to_json_safe(value: Any, *, path: str) -> Any:
     """Recursively coerce a front matter value into JSON-serializable form.
 
-    `datetime.date`/`datetime.datetime`/`datetime.time` (the values YAML's
-    safe loader produces for unquoted date-like scalars) are normalized to
-    ISO 8601 strings -- an unambiguous, lossless, JSON-native
-    representation. `dict`/`list`/`tuple` are walked recursively so a date
+    `datetime.date`/`datetime.datetime` (the values YAML's safe loader
+    produces for unquoted date-like scalars) are normalized to ISO 8601
+    strings -- an unambiguous, lossless, JSON-native representation.
+    `datetime.time` is deliberately not in this set: PyYAML never produces
+    one from front matter, so treating a hand-constructed `datetime.time`
+    value as an unrepresentable type (see below) rather than silently
+    special-casing it keeps this function honest about what it actually
+    normalizes. `dict`/`list`/`tuple` are walked recursively so a date
     nested inside a list or mapping is caught too. Anything else that is not
     already a JSON-safe scalar (e.g. a YAML `!!set` or `!!binary` value)
     raises `MarkusSerializationError` naming the offending front matter key
