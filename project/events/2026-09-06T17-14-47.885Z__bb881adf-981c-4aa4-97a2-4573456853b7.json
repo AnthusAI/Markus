@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "bb881adf-981c-4aa4-97a2-4573456853b7",
+  "issue_id": "kanbus-703c7dbb-a5d1-46ee-8fb2-e45be2b81a9a",
+  "event_type": "issue_created",
+  "occurred_at": "2026-09-06T17:14:47.885Z",
+  "actor_id": "home",
+  "payload": {
+    "assignee": null,
+    "description": "",
+    "issue_type": "bug",
+    "labels": [],
+    "parent": null,
+    "priority": 1,
+    "status": "open",
+    "title": "two-up never collapses on mobile: data-ratio specificity beats the media-query rule"
+  }
+}

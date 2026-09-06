@@ -11,6 +11,7 @@ from typing import Any
 
 import yaml
 
+from markusmd._frontmatter_yaml import FrontMatterLoader
 from markusmd.ast import Directive, Document, MarkdownBlock, Node, SourceSpan
 from markusmd.attributes import extract_inline_attribute_lists, parse_attribute_block
 from markusmd.errors import MarkusSyntaxError
@@ -243,7 +244,7 @@ def _split_front_matter(source: str) -> tuple[dict[str, Any], str, int]:
     if not match:
         return {}, source, 1
     raw = match.group(1)
-    loaded = yaml.safe_load(raw) if raw.strip() else {}
+    loaded = yaml.load(raw, Loader=FrontMatterLoader) if raw.strip() else {}
     if loaded is None:
         loaded = {}
     if not isinstance(loaded, dict):

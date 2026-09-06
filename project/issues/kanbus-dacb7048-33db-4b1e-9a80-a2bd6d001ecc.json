@@ -1,0 +1,40 @@
+{
+  "id": "kanbus-dacb7048-33db-4b1e-9a80-a2bd6d001ecc",
+  "title": "markus ast crashes on date front matter: Object of type date is not JSON serializable",
+  "description": "",
+  "type": "bug",
+  "status": "closed",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "073b1380-24fc-49e9-9e35-9b29620091ef",
+      "author": "home",
+      "text": "Found during kanbus-37dd9a review. PRE-EXISTING on main (verified via git stash), not introduced by the IR work.\n\nREPRO: markus ast site/index.md\n  TypeError: Object of type date is not JSON serializable\n\nCAUSE: YAML front matter parses an unquoted 'date:' value into a datetime.date, and Document.to_dict() hands it straight to json.dump.\n\nWHY IT MATTERS MORE NOW: with the typed document IR landed, 'markus ast' is a downstream contract consumed by Papyrus, not just a debug aid. A front-matter type that cannot serialize means the IR cannot round-trip real authored content - and dates in front matter are near-universal in newsroom content, which is the first consumer.\n\nFIX DIRECTION: serialize date/datetime to ISO 8601 strings at the to_dict boundary. Decide deliberately whether the IR contract says front matter is JSON-typed scalars only (recommended, and document it) or preserves richer types for the Python API while normalizing only for JSON output.",
+      "created_at": "2026-09-06T12:56:35.041814Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "70bb169f-d70b-4bb0-b199-e04fade29b66",
+      "author": "home",
+      "text": "Fixed: normalized date/datetime front matter to ISO 8601 strings at the to_dict() IR boundary (front_matter dict on the Document dataclass keeps native Python types for the parse() API; only the IR dict from to_dict()/parse_document()/markus ast normalizes). Unsupported types (sets, bytes, etc.) now raise MarkusSerializationError naming the offending key and type instead of crashing or silently stringifying. Added behave coverage in features/front_matter.feature (date, datetime, nested-in-list, CLI JSON output, and the failure mode). markus convert output verified byte-identical across examples/ and site/ before/after.",
+      "created_at": "2026-09-06T13:02:12.550954Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "89b5a9f2-650a-4ec0-b91d-c4d3324bb731",
+      "author": "home",
+      "text": "REVIEW: ACCEPTED (commit e374323). Verified independently, not taken on report.\n\nCONFIRMED:\n- markus ast site/index.md succeeds; date serializes as \"2026-09-04\".\n- behave: 163 scenarios / 867 steps pass. ruff: clean.\n- render.py UNTOUCHED in the diff. Round-trip markus convert vs main re-run by me: byte-identical.\n- Versions correctly held at 0.4.0 in both locations.\n- Error path tested directly with a YAML !!set: raises with the key name, the offending type, AND the remedy. No silent fallback. Exactly right.\n\nCONTRACT DECISION ENDORSED: document IR is JSON-typed only, while the lower-level parse() API keeps native types. Correct split - the serialization boundary is the right place to commit to JSON-safety.\n\nTWO NOTES:\n1. Report said 'zero differences across all 8 files' in examples/ and site/. There are 4 .md files there, not 8. The round-trip result is real (I re-verified), but the count was overstated. Precision in verification claims matters more than usual here, because these reports are what I review against.\n2. FOUND DURING REVIEW, SPLIT OUT AS kanbus-2ecaf7: bare 'HH:MM:SS' in front matter is silently parsed by PyYAML as a YAML 1.1 sexagesimal INTEGER (13:30:00 -> 48600) before Markus sees it. Silent corruption, and it means the datetime.time branch added here is effectively dead code for YAML front matter. Pre-existing, not a defect in this fix, but it partially defeats it.\n\nStaying closed.",
+      "created_at": "2026-09-06T13:04:06.808930Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-09-06T12:56:35.029390Z",
+  "updated_at": "2026-09-06T13:04:06.808930Z",
+  "closed_at": "2026-09-06T13:02:12.560835Z",
+  "custom": {}
+}

@@ -537,6 +537,7 @@
 
 @container (max-width: 42rem) {
   .markus-two-up,
+  .markus-two-up[data-ratio],
   .markus-card-grid,
   .markus-card-grid[style*="--markus-columns"] {
     grid-template-columns: 1fr;
@@ -552,6 +553,7 @@
 
 @media (max-width: 640px) {
   .markus-two-up,
+  .markus-two-up[data-ratio],
   .markus-card-grid,
   .markus-card-grid[style*="--markus-columns"] {
     grid-template-columns: 1fr;

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import json
 import os
 import re
 import shlex
@@ -10,10 +11,10 @@ from contextlib import redirect_stderr, redirect_stdout
 
 from behave import given, then, when
 
-from markusmd.api import convert, parse
+from markusmd.api import convert, parse, parse_document
 from markusmd.ast import Directive, MarkdownBlock
 from markusmd.cli import main
-from markusmd.errors import MarkusError
+from markusmd.errors import MarkusError, MarkusSerializationError
 from markusmd.sitebuild import build_site
 
 
@@ -80,6 +81,26 @@ def when_parse(context):
         context.convert_failed = True
         context.error = exc
         context.document = None
+
+
+@when("I parse the source into the document IR")
+def when_parse_ir(context):
+    context.ir = parse_document(context.source)
+
+
+@when("I parse the source into the document IR with html allowed")
+def when_parse_ir_html(context):
+    context.ir = parse_document(context.source, allow_html=True)
+
+
+@when("I try to parse the source into the document IR")
+def when_try_parse_ir(context):
+    try:
+        context.ir = parse_document(context.source)
+        context.ir_error = None
+    except MarkusSerializationError as exc:
+        context.ir = None
+        context.ir_error = exc
 
 
 @when('I run "{command}"')
@@ -237,6 +258,129 @@ def then_site_includes(context, relative):
 def then_page_contains(context, page, snippet):
     text = (context.site_dir / page).read_text(encoding="utf-8")
     assert snippet in text, text
+
+
+@then("the document IR schema_version should be {version:d}")
+def then_ir_schema_version(context, version):
+    assert context.ir["schema_version"] == version, context.ir["schema_version"]
+
+
+@then('the document IR child {index:d} type should be "{expected}"')
+def then_ir_child_type(context, index, expected):
+    child = context.ir["children"][index]
+    assert child["type"] == expected, child
+
+
+@then('the document IR child {index:d} field "{field}" should equal {value}')
+def then_ir_child_field(context, index, field, value):
+    child = context.ir["children"][index]
+    expected = json.loads(value)
+    assert child[field] == expected, (field, child.get(field), expected)
+
+
+@then('the document IR child {index:d} should have {count:d} "{field}" entries')
+def then_ir_child_count(context, index, count, field):
+    child = context.ir["children"][index]
+    assert len(child[field]) == count, child[field]
+
+
+@then('the document IR child {index:d} item {item:d} checked should be {value}')
+def then_ir_child_item_checked(context, index, item, value):
+    child = context.ir["children"][index]
+    expected = json.loads(value)
+    actual = child["items"][item]["checked"]
+    assert actual == expected, (actual, expected)
+
+
+@then('the document IR child {index:d} inline text should be "{expected}"')
+def then_ir_child_inline_text(context, index, expected):
+    child = context.ir["children"][index]
+    assert _flatten_inline_text(child["inline"]) == expected, child["inline"]
+
+
+@then("the document IR children types should be:")
+def then_ir_children_types(context):
+    actual = [child["type"] for child in context.ir["children"]]
+    expected = [row["type"] for row in context.table]
+    assert actual == expected, actual
+
+
+@then("the ast JSON output children types should be:")
+def then_ast_json_children_types(context):
+    doc = json.loads(context.stdout)
+    actual = [child["type"] for child in doc["children"]]
+    expected = [row["type"] for row in context.table]
+    assert actual == expected, actual
+
+
+@then("the ast JSON output schema_version should be {version:d}")
+def then_ast_json_schema_version(context, version):
+    doc = json.loads(context.stdout)
+    assert doc["schema_version"] == version, doc["schema_version"]
+
+
+@then('the ast JSON output front matter key "{key}" should be the string "{value}"')
+def then_ast_json_front_matter_string(context, key, value):
+    doc = json.loads(context.stdout)
+    actual = doc["front_matter"][key]
+    assert actual == value, actual
+    assert isinstance(actual, str), type(actual)
+
+
+@then('the document IR front matter key "{key}" should be the string "{value}"')
+def then_ir_front_matter_string(context, key, value):
+    actual = context.ir["front_matter"][key]
+    assert actual == value, actual
+    assert isinstance(actual, str), type(actual)
+
+
+@then('the document IR front matter key "{key}" should be the list {value}')
+def then_ir_front_matter_list(context, key, value):
+    actual = context.ir["front_matter"][key]
+    expected = json.loads(value)
+    assert actual == expected, actual
+    assert all(isinstance(item, str) for item in actual), actual
+
+
+@then('the document IR front matter key "{key}" should be the integer {value:d}')
+def then_ir_front_matter_integer(context, key, value):
+    actual = context.ir["front_matter"][key]
+    assert actual == value, actual
+    # bool is an int subclass in Python; require a real int here so a
+    # boolean scalar can't slip through this assertion.
+    assert isinstance(actual, int) and not isinstance(actual, bool), type(actual)
+
+
+@then('the document IR front matter key "{key}" should be the boolean {value}')
+def then_ir_front_matter_boolean(context, key, value):
+    actual = context.ir["front_matter"][key]
+    expected = json.loads(value)
+    assert actual == expected, actual
+    assert isinstance(actual, bool), type(actual)
+
+
+@then("parsing the document IR should fail")
+def then_ir_parse_failed(context):
+    assert context.ir is None, context.ir
+    assert context.ir_error is not None, "expected the document IR to fail to serialize"
+
+
+@then('the document IR error should contain "{snippet}"')
+def then_ir_error_contains(context, snippet):
+    assert context.ir_error is not None, "no document IR error captured"
+    assert snippet in str(context.ir_error), str(context.ir_error)
+
+
+def _flatten_inline_text(inline_nodes) -> str:
+    parts = []
+    for node in inline_nodes:
+        if node["type"] == "text":
+            parts.append(node["text"])
+        elif "children" in node:
+            parts.append(_flatten_inline_text(node["children"]))
+        elif node["type"] == "soft_break" or node["type"] == "hard_break":
+            parts.append("\n")
+    return "".join(parts)
 
 
 def _find_directive(nodes, name):
