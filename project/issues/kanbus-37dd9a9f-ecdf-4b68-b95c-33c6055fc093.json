@@ -3,7 +3,7 @@
   "title": "Full document AST: typed block nodes, not raw markdown source strings",
   "description": "",
   "type": "task",
-  "status": "in_progress",
+  "status": "closed",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -17,10 +17,17 @@
       "text": "PROBLEM (verified): `markus ast` returns a DIRECTIVE ast, not a document AST. Markdown between directives comes back as opaque raw source:\n\n  {\"type\":\"markdown\",\"source\":\"# Test headline\n\nA first paragraph.\n\"}\n\nThis blocks Markus from being a shared content IR. Papyrus's Pretext renderer needs block-level structure (paragraphs, headings, lists) to feed its layout solver, which consumes Article.body as string[] of paragraphs. Today it would have to re-parse Markdown in TypeScript, defeating the single-source-of-truth goal.\n\nWHY THIS MATTERS BEYOND PAPYRUS: README already promises 'the renderer turns that meaning into accessible HTML and responsive CSS - or, later, print, EPUB, or email.' Every one of those targets needs the same thing: a complete, typed document tree. This is that tree.\n\nSCOPE:\n1. Parse Markdown blocks into typed AST nodes: heading(level,text), paragraph, list(ordered,items), blockquote, code(lang), table, thematic_break, html (if allowed). Inline content may stay as a string initially IF the string is documented as inline-Markdown; prefer typed inline nodes (text/emphasis/strong/link/code) if tractable.\n2. Directives keep current shape; they become peers of block nodes in one ordered children[] in document order.\n3. Add a schema_version field to the document root. This IR is a contract for downstream consumers; version it from day one.\n4. Expose it: keep 'markus ast' output stable/typed, and export a Python API (markusmd.parse_document or similar) returning the same structure.\n5. Round-trip integrity: rendering from the AST must produce byte-identical HTML to today's direct render for all examples/ and site/ content. This is the safety net for a maximalist refactor - prove no regression.\n6. Behave specs covering each block type + mixed directive/markdown documents.\n\nNON-NEGOTIABLE: no HTML regressions. Existing 'markus convert' output must not change.",
       "created_at": "2026-09-06T12:43:24.564452Z",
       "comment_type": "default"
+    },
+    {
+      "id": "a8c16c64-f553-47bb-b12e-764a0f694253",
+      "author": "home",
+      "text": "REVIEWED AND ACCEPTED (commit d938d7c, plus fix da1c748).\n\nINDEPENDENTLY VERIFIED, not taken on report:\n- render.py is UNTOUCHED in the diff. That is the strongest possible no-regression evidence: the IR is computed from the same markdown-it token stream purely for serialization, so its existence cannot alter rendered HTML.\n- Round-trip: re-ran markus convert across all 4 renderable md files on main vs branch. Byte-identical.\n- behave: 158 scenarios / 848 steps passed. ruff: clean.\n- IR shape validated against a realistic newsroom article (front matter + pull-quote + card-grid): schema_version present, front matter parsed, typed paragraphs and directives as ordered peers.\n- Prototyped the Pretext projection against the real IR: it yields exactly Article.body string[] + pullQuotes string[], with card-grid degrading to inline content and NOTHING dropped. The shared-schema thesis is now proven, not asserted.\n\nDEFECT I FOUND AND FIXED (agent did not report it): the commit downgraded the package version 0.4.0 -> 0.1.0 in BOTH pyproject.toml and src/markusmd/__init__.py. Unintended; would have shipped a version regression. Fixed in da1c748.\n\nDESIGN CALL UPHELD: naming the inline node 'code_span' distinct from block 'code' is correct and should stay. A JSON consumer filtering on type must not have to inspect nesting depth to know which shape it has. Keep it.\n\nSPLIT OUT: kanbus-dacb70 (markus ast crashes on date front matter, pre-existing).\n\nRemaining risk for downstream: the renderable corpus is only 4 files, so round-trip coverage is real but thin. Papyrus content migration (PPY-b794e1) will be the first broad exercise of this IR.",
+      "created_at": "2026-09-06T12:56:47.395335Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-09-06T12:43:08.429606Z",
-  "updated_at": "2026-09-06T12:43:48.071192Z",
-  "closed_at": null,
+  "updated_at": "2026-09-06T12:56:47.405356Z",
+  "closed_at": "2026-09-06T12:56:47.405356Z",
   "custom": {}
 }
