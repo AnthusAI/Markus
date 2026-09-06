@@ -1,0 +1,33 @@
+{
+  "id": "kanbus-703c7dbb-a5d1-46ee-8fb2-e45be2b81a9a",
+  "title": "two-up never collapses on mobile: data-ratio specificity beats the media-query rule",
+  "description": "",
+  "type": "bug",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "cc854d74-6a27-4b2c-be9c-ed963479ea2e",
+      "author": "home",
+      "text": "FOUND BY BROWSER-TESTING THE LIVE PILOBOL.US SITE (https://main.d1od6t7lzbwanr.amplifyapp.com/articles/fungus-among-us.html) at a 375px mobile viewport. Affects EVERY Markus site, not just Pilobol - this is base markus.css.\n\nSYMPTOM: .markus-two-up stays two-column on mobile. Measured getComputedStyle at innerWidth 375: gridTemplateColumns = '159.5px 159.5px'. Two ~160px prose columns render 2-3 words per line and break headings mid-phrase. By contrast .markus-card-grid DOES collapse correctly (measured '335px').\n\nROOT CAUSE - CSS specificity, not a missing rule. The collapse rule exists but can never win:\n  line 267  .markus-two-up[data-ratio=\"1:1\"] { grid-template-columns: minmax(0,1fr) minmax(0,1fr) }   specificity (0,2,0)\n  line 554  @media (max-width:640px) { .markus-two-up { grid-template-columns: 1fr } }                  specificity (0,1,0)\nMedia queries add NO specificity, so the data-ratio rule wins at every viewport. Same defect in the @container (max-width:42rem) block at line 539.\n\nThe emitted markup confirms it: class='markus-two-up markus-two-up--start' with data-ratio='1:1'. Every two-up gets a data-ratio attribute, so the collapse is dead for all of them.\n\nWHY CARD-GRID WORKS: the same media blocks explicitly list '.markus-card-grid[style*=\"--markus-columns\"]' - specificity (0,2,0) - precisely to out-specify its inline custom property. So the authors already knew about this trap and handled it for card-grid, then missed the data-ratio variants of two-up.\n\nFIX: add the attribute-bearing selector to both responsive blocks so specificity matches, e.g. '.markus-two-up[data-ratio]' alongside '.markus-two-up'. Both blocks (@container at 539 and @media at 554) need it.\n\nREGRESSION GUARD: markus convert output is HTML and must stay byte-identical; this is CSS-only. Verify at 375px that computed gridTemplateColumns becomes a single track for ratios 1:1, 2:1 and 1:2.",
+      "created_at": "2026-09-06T17:14:47.898255Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "f3da1cdb-057b-41e1-8963-721229b27984",
+      "author": "home",
+      "text": "FIXED and VERIFIED in commit 6ff5238 on feature/document-ir.\n\nAdded .markus-two-up[data-ratio] to both responsive blocks (@container max-width 42rem, @media max-width 640px) so the collapse rule matches the (0,2,0) specificity of the data-ratio rules.\n\nVERIFIED IN A REAL BROWSER at 375px viewport, all three ratios, measured via getComputedStyle:\n  before: 1:1 -> '159.5px 159.5px'\n  after:  1:1 -> '319px', 2:1 -> '319px', 1:2 -> '319px'\nCSS only; markus convert HTML output unchanged.\n\nNOTE FOR WHOEVER RELEASES THIS: the fix is on the UNPUSHED feature/document-ir branch. Published anthus-markus 0.5.0 still has the bug, and so does the CSS currently vendored into the live Pilobol.us site. See Papyrus PPY-ed9d09 - the same unpushed-branch problem affects the document IR, the front-matter date fix, and the sexagesimal fix. This will not reach any real site until Markus is pushed and released.",
+      "created_at": "2026-09-06T17:20:44.283117Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-09-06T17:14:47.885569Z",
+  "updated_at": "2026-09-06T17:20:44.283117Z",
+  "closed_at": null,
+  "custom": {}
+}
