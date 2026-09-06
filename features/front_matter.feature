@@ -46,3 +46,76 @@ Feature: YAML front matter
     When I parse the source
     Then the document should have empty front matter
     And the document should contain markdown starting with "Just a paragraph."
+
+  Scenario: An unquoted front matter date serializes as an ISO 8601 string in the IR
+    Given the Markus source:
+      """
+      ---
+      title: Dateline
+      date: 2026-09-04
+      ---
+
+      Hello.
+      """
+    When I parse the source into the document IR
+    Then the document IR front matter key "date" should be the string "2026-09-04"
+
+  Scenario: An unquoted front matter datetime serializes as an ISO 8601 string in the IR
+    Given the Markus source:
+      """
+      ---
+      title: Dateline
+      published_at: 2026-09-04T12:30:00
+      ---
+
+      Hello.
+      """
+    When I parse the source into the document IR
+    Then the document IR front matter key "published_at" should be the string "2026-09-04T12:30:00"
+
+  Scenario: A front matter date nested in a list serializes as an ISO 8601 string in the IR
+    Given the Markus source:
+      """
+      ---
+      title: Dateline
+      revisions:
+        - 2026-09-01
+        - 2026-09-04
+      ---
+
+      Hello.
+      """
+    When I parse the source into the document IR
+    Then the document IR front matter key "revisions" should be the list ["2026-09-01", "2026-09-04"]
+
+  Scenario: markus ast prints a date front matter value as a plain JSON string
+    Given a Markus file "dated.md" with:
+      """
+      ---
+      title: Dateline
+      date: 2026-09-04
+      ---
+
+      Hello.
+      """
+    When I run "markus ast dated.md"
+    Then the command should succeed
+    And stdout should contain "2026-09-04"
+    And the ast JSON output front matter key "date" should be the string "2026-09-04"
+
+  Scenario: Front matter with an unrepresentable value fails with a clear, actionable error
+    Given the Markus source:
+      """
+      ---
+      title: Bad front matter
+      tags: !!set
+        news: null
+        weather: null
+      ---
+
+      Hello.
+      """
+    When I try to parse the source into the document IR
+    Then parsing the document IR should fail
+    And the document IR error should contain "tags"
+    And the document IR error should contain "set"

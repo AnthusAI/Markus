@@ -20,3 +20,14 @@ class MarkusSyntaxError(MarkusError):
 
 class MarkusValidationError(MarkusError):
     """A directive name, attribute, or nesting rule failed validation."""
+
+
+class MarkusSerializationError(MarkusError):
+    """A parsed value cannot be represented in the Markus document IR.
+
+    Raised when front matter (or other IR data) contains a Python value that
+    the IR's JSON-typed-scalars-only contract does not cover and that has no
+    safe, lossless normalization (e.g. a YAML `!!set` or `!!binary` value).
+    See `markusmd.ast._to_json_safe` for the values that *are* normalized
+    (dates, datetimes, times) versus those that raise this error.
+    """

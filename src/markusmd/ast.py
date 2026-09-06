@@ -7,10 +7,12 @@ source spans.
 
 from __future__ import annotations
 
+import datetime
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
 from markusmd.blocks import IR_SCHEMA_VERSION, parse_markdown_blocks
+from markusmd.errors import MarkusSerializationError
 
 if TYPE_CHECKING:
     from markdown_it import MarkdownIt
@@ -122,6 +124,24 @@ class Document:
         thematic_break, html) are peers in that list -- there is no opaque
         raw-Markdown node in the output.
 
+        Contract: the IR is JSON-typed scalars, lists, and mappings only --
+        never arbitrary Python objects. `front_matter` is YAML, and YAML's
+        safe loader produces a few types `json.dump` rejects outright (most
+        commonly `datetime.date`/`datetime.datetime` from an unquoted
+        `date:` value). Those well-known types are normalized here to ISO
+        8601 strings so the IR stays JSON-serializable; this method is the
+        one boundary where that normalization happens, so both the Python
+        `parse_document()` helper and the `markus ast` CLI (which just
+        `json.dump`s this dict) get it for free. The `Document.front_matter`
+        attribute on *this* dataclass is left untouched -- callers using the
+        lower-level `parse()` API still get native `date`/`datetime` values
+        if they want them; only the IR (this method's return value) commits
+        to JSON-safe scalars. A front matter value with no safe, lossless
+        JSON representation (e.g. a YAML `!!set` or `!!binary` value) is not
+        silently stringified -- it raises `MarkusSerializationError` naming
+        the offending key and type, since a silent fallback would hide data
+        loss from downstream consumers like Papyrus.
+
         Args:
             markdown: markdown-it instance used to parse Markdown regions
                 into typed block nodes. Defaults to a standard GFM instance
@@ -132,13 +152,55 @@ class Document:
         Returns:
             Dictionary with 'type', 'schema_version', 'front_matter', and
             'children' keys.
+
+        Raises:
+            MarkusSerializationError: A front matter value cannot be
+                represented as JSON-typed scalars/lists/mappings.
         """
         return {
             "type": "document",
             "schema_version": IR_SCHEMA_VERSION,
-            "front_matter": dict(self.front_matter),
+            "front_matter": _json_safe_front_matter(self.front_matter),
             "children": _serialize_children(self.children, markdown),
         }
+
+
+_JSON_SAFE_SCALARS = (str, int, float, bool, type(None))
+_TEMPORAL_TYPES = (datetime.datetime, datetime.date, datetime.time)
+
+
+def _json_safe_front_matter(front_matter: dict[str, Any]) -> dict[str, Any]:
+    """Coerce a parsed front matter mapping into JSON-typed scalars only."""
+    return {key: _to_json_safe(value, path=key) for key, value in front_matter.items()}
+
+
+def _to_json_safe(value: Any, *, path: str) -> Any:
+    """Recursively coerce a front matter value into JSON-serializable form.
+
+    `datetime.date`/`datetime.datetime`/`datetime.time` (the values YAML's
+    safe loader produces for unquoted date-like scalars) are normalized to
+    ISO 8601 strings -- an unambiguous, lossless, JSON-native
+    representation. `dict`/`list`/`tuple` are walked recursively so a date
+    nested inside a list or mapping is caught too. Anything else that is not
+    already a JSON-safe scalar (e.g. a YAML `!!set` or `!!binary` value)
+    raises `MarkusSerializationError` naming the offending front matter key
+    and type, rather than silently stringifying it -- a silent fallback
+    would hide data loss from downstream consumers.
+    """
+    if isinstance(value, _JSON_SAFE_SCALARS):
+        return value
+    if isinstance(value, _TEMPORAL_TYPES):
+        return value.isoformat()
+    if isinstance(value, dict):
+        return {k: _to_json_safe(v, path=f"{path}.{k}") for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_to_json_safe(v, path=f"{path}[{i}]") for i, v in enumerate(value)]
+    raise MarkusSerializationError(
+        f"front matter key {path!r} has value of type {type(value).__name__!r}, "
+        "which cannot be represented in the Markus document IR (JSON-typed "
+        "scalars, lists, and mappings only); use a string, number, boolean, "
+        "null, list, or mapping in the source front matter instead"
+    )
 
 
 def _default_markdown() -> MarkdownIt:

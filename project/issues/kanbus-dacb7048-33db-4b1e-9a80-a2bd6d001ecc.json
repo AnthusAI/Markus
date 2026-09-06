@@ -3,7 +3,7 @@
   "title": "markus ast crashes on date front matter: Object of type date is not JSON serializable",
   "description": "",
   "type": "bug",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -17,10 +17,17 @@
       "text": "Found during kanbus-37dd9a review. PRE-EXISTING on main (verified via git stash), not introduced by the IR work.\n\nREPRO: markus ast site/index.md\n  TypeError: Object of type date is not JSON serializable\n\nCAUSE: YAML front matter parses an unquoted 'date:' value into a datetime.date, and Document.to_dict() hands it straight to json.dump.\n\nWHY IT MATTERS MORE NOW: with the typed document IR landed, 'markus ast' is a downstream contract consumed by Papyrus, not just a debug aid. A front-matter type that cannot serialize means the IR cannot round-trip real authored content - and dates in front matter are near-universal in newsroom content, which is the first consumer.\n\nFIX DIRECTION: serialize date/datetime to ISO 8601 strings at the to_dict boundary. Decide deliberately whether the IR contract says front matter is JSON-typed scalars only (recommended, and document it) or preserves richer types for the Python API while normalizing only for JSON output.",
       "created_at": "2026-09-06T12:56:35.041814Z",
       "comment_type": "default"
+    },
+    {
+      "id": "70bb169f-d70b-4bb0-b199-e04fade29b66",
+      "author": "home",
+      "text": "Fixed: normalized date/datetime front matter to ISO 8601 strings at the to_dict() IR boundary (front_matter dict on the Document dataclass keeps native Python types for the parse() API; only the IR dict from to_dict()/parse_document()/markus ast normalizes). Unsupported types (sets, bytes, etc.) now raise MarkusSerializationError naming the offending key and type instead of crashing or silently stringifying. Added behave coverage in features/front_matter.feature (date, datetime, nested-in-list, CLI JSON output, and the failure mode). markus convert output verified byte-identical across examples/ and site/ before/after.",
+      "created_at": "2026-09-06T13:02:12.550954Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-09-06T12:56:35.029390Z",
-  "updated_at": "2026-09-06T12:56:35.041814Z",
-  "closed_at": null,
+  "updated_at": "2026-09-06T13:02:12.560835Z",
+  "closed_at": "2026-09-06T13:02:12.560835Z",
   "custom": {}
 }

@@ -14,7 +14,7 @@ from behave import given, then, when
 from markusmd.api import convert, parse, parse_document
 from markusmd.ast import Directive, MarkdownBlock
 from markusmd.cli import main
-from markusmd.errors import MarkusError
+from markusmd.errors import MarkusError, MarkusSerializationError
 from markusmd.sitebuild import build_site
 
 
@@ -91,6 +91,16 @@ def when_parse_ir(context):
 @when("I parse the source into the document IR with html allowed")
 def when_parse_ir_html(context):
     context.ir = parse_document(context.source, allow_html=True)
+
+
+@when("I try to parse the source into the document IR")
+def when_try_parse_ir(context):
+    try:
+        context.ir = parse_document(context.source)
+        context.ir_error = None
+    except MarkusSerializationError as exc:
+        context.ir = None
+        context.ir_error = exc
 
 
 @when('I run "{command}"')
@@ -307,6 +317,41 @@ def then_ast_json_children_types(context):
 def then_ast_json_schema_version(context, version):
     doc = json.loads(context.stdout)
     assert doc["schema_version"] == version, doc["schema_version"]
+
+
+@then('the ast JSON output front matter key "{key}" should be the string "{value}"')
+def then_ast_json_front_matter_string(context, key, value):
+    doc = json.loads(context.stdout)
+    actual = doc["front_matter"][key]
+    assert actual == value, actual
+    assert isinstance(actual, str), type(actual)
+
+
+@then('the document IR front matter key "{key}" should be the string "{value}"')
+def then_ir_front_matter_string(context, key, value):
+    actual = context.ir["front_matter"][key]
+    assert actual == value, actual
+    assert isinstance(actual, str), type(actual)
+
+
+@then('the document IR front matter key "{key}" should be the list {value}')
+def then_ir_front_matter_list(context, key, value):
+    actual = context.ir["front_matter"][key]
+    expected = json.loads(value)
+    assert actual == expected, actual
+    assert all(isinstance(item, str) for item in actual), actual
+
+
+@then("parsing the document IR should fail")
+def then_ir_parse_failed(context):
+    assert context.ir is None, context.ir
+    assert context.ir_error is not None, "expected the document IR to fail to serialize"
+
+
+@then('the document IR error should contain "{snippet}"')
+def then_ir_error_contains(context, snippet):
+    assert context.ir_error is not None, "no document IR error captured"
+    assert snippet in str(context.ir_error), str(context.ir_error)
 
 
 def _flatten_inline_text(inline_nodes) -> str:
