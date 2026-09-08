@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from html import escape
@@ -120,6 +121,31 @@ class TimelineEventAttrs(_Strict):
     time: str | None = None
     title: str | None = None
     icon: str | None = None
+
+
+_FINDING_ID_RE = re.compile(r"^finding-[a-f0-9]{16}$")
+
+
+class EditorialFindingAttrs(_Strict):
+    id: str
+    kind: str
+    rationale: str | None = None
+    decision: Literal["skip", "rewrite", "delete", "keep", "add"] | None = None
+    group: str | None = None
+
+    @field_validator("id")
+    @classmethod
+    def _validate_finding_id(cls, value: str) -> str:
+        if not _FINDING_ID_RE.match(value):
+            raise ValueError("id must match finding-[16 lowercase hex chars]")
+        return value
+
+    @field_validator("kind")
+    @classmethod
+    def _validate_kind(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("kind is required")
+        return value.strip()
 
 
 def _render_callout(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
@@ -346,6 +372,36 @@ def _render_timeline(directive: Directive, inner: str, attrs: dict[str, Any]) ->
     label = attrs.get("label")
     aria_label = f' aria-label="{escape(str(label))}"' if label else ""
     return f'<ol{_id_attr(attrs)} class="markus-timeline"{aria_label}>{inner}</ol>'
+
+
+def _render_editorial_finding(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    kind = escape(str(attrs["kind"]))
+    finding_id = escape(str(attrs["id"]))
+    decision = attrs.get("decision")
+    group = attrs.get("group")
+    rationale = attrs.get("rationale")
+    data_attrs = [
+        f'data-finding-id="{finding_id}"',
+        f'data-kind="{kind}"',
+    ]
+    if decision:
+        data_attrs.append(f'data-decision="{escape(str(decision))}"')
+    if group:
+        data_attrs.append(f'data-group="{escape(str(group))}"')
+    meta_parts = [f"<span class=\"markus-editorial-finding-kind\">{kind}</span>"]
+    if rationale:
+        meta_parts.append(
+            f'<span class="markus-editorial-finding-rationale">{escape(str(rationale))}</span>'
+        )
+    meta = f'<p class="markus-editorial-finding-meta">{" · ".join(meta_parts)}</p>'
+    body = inner.strip()
+    body_html = f'<div class="markus-editorial-finding-body">{inner}</div>' if body else ""
+    return (
+        f'<aside id="{finding_id}" class="markus-editorial-finding markus-editorial-finding--{kind}" '
+        f'{" ".join(data_attrs)} role="note">'
+        f"{meta}{body_html}"
+        f"</aside>"
+    )
 
 
 def _render_timeline_event(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
@@ -629,6 +685,11 @@ def default_specs() -> list[DirectiveSpec]:
             name="timeline-event",
             schema=TimelineEventAttrs,
             renderer=_render_timeline_event,
+        ),
+        DirectiveSpec(
+            name="editorial-finding",
+            schema=EditorialFindingAttrs,
+            renderer=_render_editorial_finding,
         ),
     ]
 
