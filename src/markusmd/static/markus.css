@@ -198,6 +198,29 @@
 .markus-callout-body > :first-child { margin-top: 0; }
 .markus-callout-body > :last-child { margin-bottom: 0; }
 
+.markus-editorial-finding {
+  border-left: 4px solid var(--markus-accent-2);
+  background: color-mix(in srgb, var(--markus-accent-2) 8%, var(--markus-card));
+  padding: 0.75rem 1rem;
+  border-radius: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.markus-editorial-finding-meta {
+  margin: 0 0 0.5rem;
+  color: var(--markus-muted);
+  font-size: 0.85rem;
+}
+
+.markus-editorial-finding-kind {
+  font-weight: 600;
+  text-transform: lowercase;
+  font-family: var(--markus-mono);
+}
+
+.markus-editorial-finding-body > :first-child { margin-top: 0; }
+.markus-editorial-finding-body > :last-child { margin-bottom: 0; }
+
 .markus-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
