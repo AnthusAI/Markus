@@ -397,7 +397,8 @@ def _render_editorial_finding(directive: Directive, inner: str, attrs: dict[str,
     body = inner.strip()
     body_html = f'<div class="markus-editorial-finding-body">{inner}</div>' if body else ""
     return (
-        f'<aside id="{finding_id}" class="markus-editorial-finding markus-editorial-finding--{kind}" '
+        f'<aside id="{finding_id}" '
+        f'class="markus-editorial-finding markus-editorial-finding--{kind}" '
         f'{" ".join(data_attrs)} role="note">'
         f"{meta}{body_html}"
         f"</aside>"
