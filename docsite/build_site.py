@@ -1,4 +1,6 @@
 import argparse
+import shutil
+import tempfile
 from pathlib import Path
 
 from papyrus_content.markus_renderer.build import build_markus_site
@@ -32,14 +34,44 @@ SITE_CHROME = SiteChrome(
 )
 
 
+def stage_papyrus_content_layout(staging_directory: Path) -> None:
+    shutil.copytree(SITE_CONTENT_DIRECTORY / "assets", staging_directory / "assets")
+    articles_directory = staging_directory / "articles"
+    articles_directory.mkdir()
+    for source_page in SITE_CONTENT_DIRECTORY.glob("*.md"):
+        page_text = source_page.read_text(encoding="utf-8")
+        if source_page.name == "index.md":
+            for article_page in ("gallery", "gfm"):
+                page_text = page_text.replace(f"({article_page}.html)", f"(articles/{article_page}.html)")
+            (staging_directory / "index.md").write_text(page_text, encoding="utf-8")
+        else:
+            (articles_directory / source_page.name).write_text(page_text, encoding="utf-8")
+
+
+def write_redirects_from_former_urls(output_directory: Path) -> None:
+    for former_page in ("gallery", "gfm"):
+        (output_directory / f"{former_page}.html").write_text(
+            '<!DOCTYPE html><meta charset="utf-8">'
+            f'<meta http-equiv="refresh" content="0; url=articles/{former_page}.html">'
+            f'<link rel="canonical" href="articles/{former_page}.html">'
+            f'<a href="articles/{former_page}.html">Moved to articles/{former_page}.html</a>',
+            encoding="utf-8",
+        )
+
+
 def build_documentation_site(output_directory: Path):
-    return build_markus_site(
-        content_dir=SITE_CONTENT_DIRECTORY,
-        out_dir=output_directory,
-        theme=SITE_THEME_NAME,
-        site_css=SITE_STYLESHEET,
-        chrome=SITE_CHROME,
-    )
+    with tempfile.TemporaryDirectory(prefix="markus-site-content-") as staging_name:
+        staging_directory = Path(staging_name)
+        stage_papyrus_content_layout(staging_directory)
+        build_result = build_markus_site(
+            content_dir=staging_directory,
+            out_dir=output_directory,
+            theme=SITE_THEME_NAME,
+            site_css=SITE_STYLESHEET,
+            chrome=SITE_CHROME,
+        )
+    write_redirects_from_former_urls(output_directory)
+    return build_result
 
 
 if __name__ == "__main__":

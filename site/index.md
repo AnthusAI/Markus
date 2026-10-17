@@ -7,7 +7,7 @@ date: 2026-09-04
 theme: catppuccin
 ---
 
-Markus keeps [GitHub Flavored Markdown](articles/gfm.html) as the content language, then adds a handful of colon-fenced directives for the things Markdown was never meant to say: *this is a pull quote*, *these are peer cards*, *these two ideas belong beside each other*.
+Markus keeps [GitHub Flavored Markdown](gfm.html) as the content language, then adds a handful of colon-fenced directives for the things Markdown was never meant to say: *this is a pull quote*, *these are peer cards*, *these two ideas belong beside each other*.
 
 The source stays diffable. The renderer decides whether that pairing becomes two columns, a stacked phone layout, or a print spread.
 
@@ -194,7 +194,7 @@ Raw HTML is a compatibility hatch, not the authoring API. It names CSS classes, 
 :::
 
 :::aside{title="Try it"}
-Install the Python module with `pip install anthus-markus`, then run `markus convert page.md`. The [gallery](articles/gallery.html) renders every directive in the 0.1 vocabulary. `markus preview` opens a live editor.
+Install the Python module with `pip install anthus-markus`, then run `markus convert page.md`. The [gallery](gallery.html) renders every directive in the 0.1 vocabulary. `markus preview` opens a live editor.
 :::
 
 :::tip{title="A note on the package name"}
