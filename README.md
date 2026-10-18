@@ -47,7 +47,7 @@ Keep common interactions local.
 :::
 ```
 
-The 0.1 vocabulary:
+The core vocabulary. The [feature index](https://anthusai.github.io/Markus/articles/features.html) documents every directive, with source and preview side by side.
 
 | Directive | Intent |
 | --- | --- |
@@ -59,6 +59,7 @@ The 0.1 vocabulary:
 | `details` | Progressive disclosure |
 | `aside` | Supporting, non-linear material |
 | `metric` | A labeled fact (`::metric{...}`) |
+| `example` | Markus source beside its rendered preview, for documentation |
 
 Unknown names and unknown attributes fail validation. That is intentional:
 Markus must not decay into an untyped CSS API. See

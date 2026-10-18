@@ -1,14 +1,9 @@
 ---
 title: Pull quote
 description: pull-quote with attribution, source, tone, and align.
-theme: catppuccin
 ---
 
-# Pull quote
-
 A pull quote is an editorial quotation lifted out of the text. The body is Markdown; the theme chooses the quotation styling.
-
-[All features](features.html)
 
 ## Attributes
 
@@ -19,14 +14,12 @@ A pull quote is an editorial quotation lifted out of the text. The body is Markd
 | `tone` | `default`, `primary`, `quiet` | `default` |
 | `align` | `inline`, `left`, `right` | `inline` |
 
+Every directive also accepts `id`, which becomes the HTML id; see [Syntax and metadata](demo-syntax.html#element-id).
+
 ### Plain
 
-:::pull-quote
-A quotation with no attribution.
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::pull-quote
 A quotation with no attribution.
 :::
@@ -35,12 +28,8 @@ A quotation with no attribution.
 
 ### Attribution
 
-:::pull-quote{attribution="Donella Meadows"}
-The least obvious part of a system is often its most crucial determinant.
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::pull-quote{attribution="Donella Meadows"}
 The least obvious part of a system is often its most crucial determinant.
 :::
@@ -49,12 +38,8 @@ The least obvious part of a system is often its most crucial determinant.
 
 ### Attribution and source
 
-:::pull-quote{attribution="Donella Meadows" source="Thinking in Systems"}
-The source renders as a citation after the attribution.
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::pull-quote{attribution="Donella Meadows" source="Thinking in Systems"}
 The source renders as a citation after the attribution.
 :::
@@ -63,12 +48,8 @@ The source renders as a citation after the attribution.
 
 ### Source only
 
-:::pull-quote{source="Thinking in Systems"}
-A citation without a named person.
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::pull-quote{source="Thinking in Systems"}
 A citation without a named person.
 :::
@@ -79,12 +60,8 @@ A citation without a named person.
 
 ### tone="default"
 
-:::pull-quote{attribution="Tone demo" tone="default"}
-The default tone.
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::pull-quote{attribution="Tone demo" tone="default"}
 The default tone.
 :::
@@ -93,12 +70,8 @@ The default tone.
 
 ### tone="primary"
 
-:::pull-quote{attribution="Tone demo" tone="primary"}
-The primary tone, for the quotation that carries the page.
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::pull-quote{attribution="Tone demo" tone="primary"}
 The primary tone, for the quotation that carries the page.
 :::
@@ -107,12 +80,8 @@ The primary tone, for the quotation that carries the page.
 
 ### tone="quiet"
 
-:::pull-quote{attribution="Tone demo" tone="quiet"}
-The quiet tone, for a quotation that should not shout.
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::pull-quote{attribution="Tone demo" tone="quiet"}
 The quiet tone, for a quotation that should not shout.
 :::
@@ -123,14 +92,8 @@ The quiet tone, for a quotation that should not shout.
 
 ### align="inline"
 
-:::pull-quote{attribution="Align demo" align="inline"}
-Inline: the quote sits in the text flow.
-:::
-
-This paragraph follows the quote and wraps beside it when the theme floats it. Keep writing a few lines so the wrap is visible: the quick brown fox jumps over the lazy dog, and then does it again for good measure so that the text is long enough.
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::pull-quote{attribution="Align demo" align="inline"}
 Inline: the quote sits in the text flow.
 :::
@@ -141,14 +104,8 @@ This paragraph follows the quote and wraps beside it when the theme floats it. K
 
 ### align="left"
 
-:::pull-quote{attribution="Align demo" align="left"}
-Left: the quote floats to the left of the text.
-:::
-
-This paragraph follows the quote and wraps beside it when the theme floats it. Keep writing a few lines so the wrap is visible: the quick brown fox jumps over the lazy dog, and then does it again for good measure so that the text is long enough.
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::pull-quote{attribution="Align demo" align="left"}
 Left: the quote floats to the left of the text.
 :::
@@ -159,14 +116,8 @@ This paragraph follows the quote and wraps beside it when the theme floats it. K
 
 ### align="right"
 
-:::pull-quote{attribution="Align demo" align="right"}
-Right: the quote floats to the right of the text.
-:::
-
-This paragraph follows the quote and wraps beside it when the theme floats it. Keep writing a few lines so the wrap is visible: the quick brown fox jumps over the lazy dog, and then does it again for good measure so that the text is long enough.
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::pull-quote{attribution="Align demo" align="right"}
 Right: the quote floats to the right of the text.
 :::

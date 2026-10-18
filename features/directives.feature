@@ -28,6 +28,33 @@ Feature: Semantic layout directives
     Then the directive "pull-quote" should have attribute "attribution" equal to "Editorial principle"
     And the directive "pull-quote" should have attribute "tone" equal to "quiet"
 
+  Scenario: An inline attribute list belongs to the innermost directive
+    Given the Markus source:
+      """
+      :::callout{kind="note"}
+      :::pull-quote
+      > Measure what matters.
+      {: attribution="Editorial principle" }
+      :::
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should succeed
+    And the HTML should contain "<figcaption>Editorial principle</figcaption>"
+
+  Scenario: An inline attribute list inside a code fence is shown, not applied
+    Given the Markus source:
+      """
+      :::callout{kind="note"}
+      ```md
+      {: attribution="Editorial principle" }
+      ```
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should succeed
+    And the HTML should contain "{: attribution=&quot;Editorial principle&quot; }"
+
   Scenario: Callout kinds render as asides
     Given the Markus source:
       """
