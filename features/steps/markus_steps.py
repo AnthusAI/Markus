@@ -237,6 +237,14 @@ def then_directive_attr(context, name, key, value):
     assert str(actual) == value, directive.attributes
 
 
+@then('the directive "{name}" should have attribute "{key}" equal to the text:')
+def then_directive_attr_text(context, name, key):
+    directive = _find_directive(context.document.children, name)
+    assert directive is not None, f"directive {name!r} not found"
+    expected = (context.text or "").strip("\n")
+    assert str(directive.attributes.get(key)) == expected, directive.attributes
+
+
 @then("the command should succeed")
 def then_cmd_ok(context):
     assert context.exit_code == 0, context.stderr

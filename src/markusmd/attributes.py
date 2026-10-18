@@ -13,8 +13,8 @@ _ATTR_RE = re.compile(
     (?:
         \s*=\s*
         (?:
-            "(?P<double>[^"]*)"
-            | '(?P<single>[^']*)'
+            "(?P<double>(?:\\.|[^"\\])*)"
+            | '(?P<single>(?:\\.|[^'\\])*)'
             | (?P<bare>[^\s}'"]+)
         )
     )?
@@ -34,10 +34,39 @@ def parse_attribute_block(raw: str | None, *, line: int) -> dict[str, Any]:
         return {}
     body = raw.strip()
     if body.startswith("{") and body.endswith("}"):
-        body = body[1:-1].strip()
-    if not body:
+        body = body[1:-1]
+    if not body.strip():
         return {}
     return parse_attribute_body(body, line=line)
+
+
+def find_attribute_block_end(text: str) -> int | None:
+    """Return the index of the `}` closing the block opened by `text[0]`, outside quotes.
+
+    A backslash inside a quoted value escapes the next character. Returns None
+    when the text ends before the block is closed.
+    """
+    quote: str | None = None
+    index = 1
+    length = len(text)
+    while index < length:
+        char = text[index]
+        if quote is not None:
+            if char == "\\":
+                index += 2
+                continue
+            if char == quote:
+                quote = None
+        elif char in "\"'":
+            quote = char
+        elif char == "}":
+            return index
+        index += 1
+    return None
+
+
+def _unescape_quoted(value: str) -> str:
+    return re.sub(r"\\(.)", r"\1", value)
 
 
 def parse_attribute_body(body: str, *, line: int) -> dict[str, Any]:
@@ -52,15 +81,19 @@ def parse_attribute_body(body: str, *, line: int) -> dict[str, Any]:
         match = _ATTR_RE.match(body, index)
         if not match:
             snippet = body[index : index + 16]
+            offending_line = line + body.count("\n", 0, index)
+            where = (
+                f" (attribute block starts at line {line})" if offending_line != line else ""
+            )
             raise MarkusSyntaxError(
-                f"Could not parse directive attributes starting at {snippet!r}",
-                line=line,
+                f"Could not parse directive attributes starting at {snippet!r}{where}",
+                line=offending_line,
             )
         name = match.group("name")
         if match.group("double") is not None:
-            value: Any = match.group("double")
+            value: Any = _unescape_quoted(match.group("double"))
         elif match.group("single") is not None:
-            value = match.group("single")
+            value = _unescape_quoted(match.group("single"))
         elif match.group("bare") is not None:
             value = _coerce_bare(match.group("bare"))
         else:

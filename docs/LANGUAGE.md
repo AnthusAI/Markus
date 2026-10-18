@@ -29,6 +29,34 @@ Markdown, including nested directives.
 :::
 ```
 
+### Multi-line attribute blocks
+
+Leaf and container directives may spread their attribute block over several
+lines. The opening `{` must be on the directive line; the block ends at the
+first `}` outside quotes. Inside a quoted value, a backslash escapes the next
+character, so `\"` is a literal double quote and `}` is just text.
+
+```md
+::metric{
+  value="12"
+  unit="ms"
+  label="Two quote kinds: ' and \""
+}
+
+:::card{
+  title="Title"
+  icon="bolt"
+}
+Body.
+:::
+```
+
+An attribute block with no closing `}` is a syntax error reported at the
+directive's first line. A malformed attribute inside a multi-line block is
+reported at the offending line and names the line where the block starts.
+Unknown attributes are still rejected, and `{: key=value }` attribute-list
+lines inside a container work as before.
+
 | Name | Meaning | Notable attributes |
 | --- | --- | --- |
 | `callout` | Note, warning, tip, or caution | `kind`, `title` |
