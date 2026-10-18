@@ -307,3 +307,23 @@ scrolling inside a focusable region when a table is wider than the screen.
 
 Do not add `margin`, `width`, `font-size`, or other presentation keys.
 Unknown directive names and unknown attributes fail validation.
+
+## Themes
+
+Name a theme with `theme:` in front matter or `markus convert --theme NAME`.
+Themes set colors only; layout, spacing and type stay with the renderer.
+
+Ten themes are **families** with a light and a dark palette: `solarized`,
+`catppuccin` (Latte and Mocha), `everforest`, `flexoki`, `github`, `gruvbox`,
+`kanagawa` (Lotus and Wave), `one`, `rose-pine` (Dawn and Rosé Pine) and
+`tokyo-night` (Day and Night). A family follows the reader's
+`prefers-color-scheme`. Set `data-color-scheme="light"` or `"dark"` on the root
+element to force one palette, for example from a site's own light/dark switch.
+
+The other themes have one palette each. Light: `catppuccin-latte`,
+`flexoki-light`, `lupine`, `white`. Dark: `ethereal`, `hackerman`,
+`last-horizon`, `lumon`, `matte-black`, `miasma`, `nord`, `osaka-jade`,
+`retro-82`, `ristretto`, `solitude`, `vantablack`.
+
+`markusmd.themes.THEME_MODES` maps every theme name to `both`, `light` or
+`dark`.
