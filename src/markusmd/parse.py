@@ -14,9 +14,10 @@ import yaml
 from markusmd._frontmatter_yaml import FrontMatterLoader
 from markusmd.ast import Directive, Document, MarkdownBlock, Node, SourceSpan
 from markusmd.attributes import (
-    extract_inline_attribute_lists,
+    IAL_LINE_RE,
     find_attribute_block_end,
     parse_attribute_block,
+    parse_attribute_body,
 )
 from markusmd.errors import MarkusSyntaxError
 
@@ -253,6 +254,17 @@ def _parse_container(
             continue
 
         if code_fence is None:
+            if depth == 1:
+                ial = IAL_LINE_RE.match(stripped)
+                if ial:
+                    # A trailing `{: key=value }` line belongs to this directive only when it
+                    # sits directly in its body: not in a code fence, not in a nested directive.
+                    attributes.update(
+                        parse_attribute_body(ial.group("body"), line=start_line + index)
+                    )
+                    inner.append("\n")
+                    index += 1
+                    continue
             nested_head = _scan_directive_head(
                 lines, index, _OPEN_RE, line_no=start_line + index
             )
@@ -264,10 +276,7 @@ def _parse_container(
             if _CLOSE_RE.match(stripped):
                 depth -= 1
                 if depth == 0:
-                    inner_source = "".join(inner)
-                    remainder, extra = extract_inline_attribute_lists(inner_source, line=line_no)
-                    attributes.update(extra)
-                    children = parse_blocks(remainder, start_line=start_line + body_index)
+                    children = parse_blocks("".join(inner), start_line=start_line + body_index)
                     directive = Directive(
                         name=name,
                         attributes=attributes,

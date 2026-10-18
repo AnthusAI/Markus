@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "e76e9d1b-fe11-4afc-b35a-5019bb6ce84f",
+  "issue_id": "kanbus-f1335512-3ba3-44d3-9970-019a12890bd5",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-18T17:05:36.922Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Adopt the Markus design system on the demo site: system light/dark, side-by-side source and preview examples, full feature docs",
+    "description": "Apply the Markus design system (https://claude.ai/artifact/Raod2FgTPZTjoPh4MxLpfb) to the demo site. Follow the system color scheme by default with real light and dark palettes; fix the pipeline figure that stays light in dark mode. Add an example directive that renders Markus source beside its preview (stacked on narrow viewports) and use it for every example. Document every directive and language feature with examples.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": null,
+    "labels": []
+  }
+}

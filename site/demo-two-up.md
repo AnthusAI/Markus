@@ -1,14 +1,9 @@
 ---
 title: Two-up and columns
 description: two-up and column, with every ratio and alignment.
-theme: catppuccin
 ---
 
-# Two-up and columns
-
 A two-up is a conceptual pairing: contrast, before and after, claim and caveat. It must contain exactly two `column` children. On a narrow screen the columns stack.
-
-[All features](features.html)
 
 ## Attributes
 
@@ -18,24 +13,12 @@ A two-up is a conceptual pairing: contrast, before and after, claim and caveat. 
 | `align` | `start`, `center`, `end`, `stretch` | `start` |
 | `column` | no attributes |  |
 
+Every directive also accepts `id`, which becomes the HTML id; see [Syntax and metadata](demo-syntax.html#element-id).
+
 ### Default
 
-:::two-up
-:::column
-### Before
-
-Defaults to a 1:1 ratio and start alignment.
-:::
-
-:::column
-### After
-
-The second column.
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::two-up
 :::column
 ### Before
@@ -56,22 +39,8 @@ The second column.
 
 ### ratio="1:1"
 
-:::two-up{ratio="1:1"}
-:::column
-### Left
-
-First column.
-:::
-
-:::column
-### Right
-
-Second column.
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::two-up{ratio="1:1"}
 :::column
 ### Left
@@ -90,22 +59,8 @@ Second column.
 
 ### ratio="2:1"
 
-:::two-up{ratio="2:1"}
-:::column
-### Wide
-
-First column.
-:::
-
-:::column
-### Narrow
-
-Second column.
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::two-up{ratio="2:1"}
 :::column
 ### Wide
@@ -124,22 +79,8 @@ Second column.
 
 ### ratio="1:2"
 
-:::two-up{ratio="1:2"}
-:::column
-### Narrow
-
-First column.
-:::
-
-:::column
-### Wide
-
-Second column.
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::two-up{ratio="1:2"}
 :::column
 ### Narrow
@@ -162,28 +103,8 @@ Second column.
 
 ### align="start"
 
-:::two-up{ratio="1:1" align="start"}
-:::column
-### Short
-
-One line.
-:::
-
-:::column
-### Tall
-
-Many lines follow.
-
-Second paragraph.
-
-Third paragraph.
-
-Fourth paragraph.
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::two-up{ratio="1:1" align="start"}
 :::column
 ### Short
@@ -208,28 +129,8 @@ Fourth paragraph.
 
 ### align="center"
 
-:::two-up{ratio="1:1" align="center"}
-:::column
-### Short
-
-One line.
-:::
-
-:::column
-### Tall
-
-Many lines follow.
-
-Second paragraph.
-
-Third paragraph.
-
-Fourth paragraph.
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::two-up{ratio="1:1" align="center"}
 :::column
 ### Short
@@ -254,28 +155,8 @@ Fourth paragraph.
 
 ### align="end"
 
-:::two-up{ratio="1:1" align="end"}
-:::column
-### Short
-
-One line.
-:::
-
-:::column
-### Tall
-
-Many lines follow.
-
-Second paragraph.
-
-Third paragraph.
-
-Fourth paragraph.
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::two-up{ratio="1:1" align="end"}
 :::column
 ### Short
@@ -300,28 +181,8 @@ Fourth paragraph.
 
 ### align="stretch"
 
-:::two-up{ratio="1:1" align="stretch"}
-:::column
-### Short
-
-One line.
-:::
-
-:::column
-### Tall
-
-Many lines follow.
-
-Second paragraph.
-
-Third paragraph.
-
-Fourth paragraph.
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::two-up{ratio="1:1" align="stretch"}
 :::column
 ### Short
@@ -346,22 +207,8 @@ Fourth paragraph.
 
 ### Nested directives in a column
 
-:::two-up{ratio="1:1"}
-:::column
-:::callout{kind="warning" title="Claim"}
-A callout inside a column.
-:::
-:::
-
-:::column
-:::callout{kind="tip" title="Caveat"}
-Another in the second.
-:::
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::two-up{ratio="1:1"}
 :::column
 :::callout{kind="warning" title="Claim"}

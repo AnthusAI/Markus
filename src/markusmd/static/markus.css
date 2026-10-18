@@ -909,6 +909,86 @@ mark {
   margin-right: 0.45rem;
 }
 
+.markus-example {
+  container-type: inline-size;
+  margin: 1.5rem 0;
+}
+
+.markus-example-title {
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.markus-example-panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--markus-line);
+  border-radius: 0.7rem;
+  overflow: hidden;
+}
+
+@container (min-width: 44rem) {
+  .markus-example[data-layout="side-by-side"] .markus-example-panes {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .markus-example[data-layout="side-by-side"] .markus-example-source {
+    border-bottom: 0;
+    border-right: 1px solid var(--markus-line);
+  }
+}
+
+.markus-example-source,
+.markus-example-preview {
+  min-width: 0;
+  padding: 0.9rem 1rem 1rem;
+}
+
+.markus-example-source {
+  background: var(--markus-pre-bg, #1c1914);
+  color: var(--markus-pre-ink, #f4efe4);
+  border-bottom: 1px solid var(--markus-line);
+}
+
+.markus-example-preview {
+  container-type: inline-size;
+  background: var(--markus-paper);
+}
+
+.markus-example-label {
+  margin: 0 0 0.6rem;
+  font-family: var(--markus-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.markus-document .markus-example-source pre {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.markus-src-fence,
+.markus-src-name {
+  color: var(--markus-accent);
+}
+
+.markus-src-name {
+  font-weight: 600;
+}
+
+.markus-src-attrs {
+  color: var(--markus-accent-2);
+}
+
+.markus-example-render > :first-child { margin-top: 0; }
+.markus-example-render > :last-child { margin-bottom: 0; }
+
 @container (max-width: 42rem) {
   .markus-two-up,
   .markus-two-up[data-ratio],
