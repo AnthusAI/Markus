@@ -101,6 +101,27 @@ MODE_GROUPS = (
 )
 THEME_NAMES = {"github": "GitHub", "one": "One", "rose-pine": "Rosé Pine", "retro-82": "Retro 82"}
 
+# Link previews: every page shares the 1200x630 card rendered from
+# docsite/social-preview.html. Crawlers need an absolute image URL.
+SITE_URL = "https://markus.anth.us/"
+SOCIAL_DESCRIPTION = (
+    "GitHub-flavored Markdown with a small vocabulary of semantic layout directives."
+)
+SOCIAL_META = (
+    '<meta name="description" content="' + SOCIAL_DESCRIPTION + '">'
+    '<meta property="og:type" content="website">'
+    '<meta property="og:site_name" content="Markus">'
+    '<meta property="og:title" content="Markus: Markdown for layout intent">'
+    '<meta property="og:description" content="' + SOCIAL_DESCRIPTION + '">'
+    f'<meta property="og:image" content="{SITE_URL}assets/social-preview.png">'
+    '<meta property="og:image:width" content="1200">'
+    '<meta property="og:image:height" content="630">'
+    '<meta property="og:image:alt" content="Markus: Markdown for layout intent. '
+    'A Markus tip directive beside its rendered preview.">'
+    '<meta name="twitter:card" content="summary_large_image">'
+    f'<meta name="twitter:image" content="{SITE_URL}assets/social-preview.png">'
+)
+
 # Applied before first paint so a reader's saved choices never flash the defaults.
 # A single-mode theme marks the root so the light/dark switch can hide.
 COLOR_SCHEME_BOOTSTRAP = (
@@ -274,7 +295,7 @@ def render_anthus_footer() -> str:
 
 SITE_CHROME = SiteChrome(
     site_name="Markus",
-    head_html=FAVICON + COLOR_SCHEME_BOOTSTRAP,
+    head_html=FAVICON + SOCIAL_META + COLOR_SCHEME_BOOTSTRAP,
     render_masthead=render_site_banner,
     footer_html=render_anthus_footer(),
     scripts=("assets/site.js",),

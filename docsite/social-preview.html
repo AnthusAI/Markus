@@ -1,0 +1,165 @@
+<!doctype html>
+<!--
+  Source for site/assets/social-preview.png, the 1200x630 Open Graph image.
+  Light Markus theme from the design system. Render it at a 1200x630 viewport
+  with any headless browser and save a PNG screenshot over that file.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Markus social preview</title>
+<style>
+  @font-face { font-family: "Geist"; src: url("../site/assets/fonts/Geist-400.woff2") format("woff2"); font-weight: 400; }
+  @font-face { font-family: "Geist"; src: url("../site/assets/fonts/Geist-500.woff2") format("woff2"); font-weight: 500; }
+  @font-face { font-family: "Geist Mono"; src: url("../site/assets/fonts/GeistMono-400.woff2") format("woff2"); font-weight: 400; }
+  @font-face { font-family: "Geist Mono"; src: url("../site/assets/fonts/GeistMono-500.woff2") format("woff2"); font-weight: 500; }
+  @font-face { font-family: "Geist Mono"; src: url("../site/assets/fonts/GeistMono-600.woff2") format("woff2"); font-weight: 600; }
+
+  :root {
+    --bg: #f3f3ef;
+    --surface: #ffffff;
+    --surface-sunken: #e9e9e3;
+    --line: #d8d8d0;
+    --line-strong: #86887f;
+    --ink: #0f1011;
+    --ink-muted: #575a5e;
+    --volt: #c6f135;
+    --volt-ink: #476500;
+    --info: #1f5fd1;
+  }
+
+  html, body { margin: 0; }
+  body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Geist", system-ui, sans-serif;
+  }
+
+  .card {
+    position: relative;
+    box-sizing: border-box;
+    width: 1200px;
+    height: 630px;
+    padding: 56px;
+    display: grid;
+    grid-template-columns: 1fr 600px;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font: 600 36px/1 "Geist Mono", monospace;
+    letter-spacing: -0.02em;
+  }
+  .mark { width: 28px; height: 28px; background: var(--volt); box-shadow: 0 0 0 2px var(--ink); }
+
+  h1 {
+    margin: 32px 0 18px;
+    font: 600 52px/1.08 "Geist Mono", monospace;
+    letter-spacing: -0.035em;
+  }
+
+  .lede {
+    margin: 0;
+    max-width: 30ch;
+    font-size: 22px;
+    line-height: 32px;
+    color: var(--ink-muted);
+  }
+
+  .url {
+    margin-top: 32px;
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--volt);
+    box-shadow: 0 0 0 1px var(--ink), 4px 4px 0 0 var(--ink);
+    font: 500 18px/24px "Geist Mono", monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .example {
+    border: 1px solid var(--ink);
+    box-shadow: 8px 8px 0 0 var(--ink);
+    background: var(--surface);
+  }
+
+  .pane { padding: 24px 28px; }
+  .label {
+    margin: 0 0 12px;
+    font: 500 16px/20px "Geist Mono", monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .source {
+    background: var(--surface-sunken);
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .source pre {
+    margin: 0;
+    font: 400 25px/38px "Geist Mono", monospace;
+    color: var(--ink);
+  }
+  .f, .n { color: var(--volt-ink); }
+  .n { font-weight: 500; }
+  .a { color: var(--ink-muted); }
+
+  .preview { background: var(--bg); }
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    padding: 18px 22px 20px;
+  }
+  .callout-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 8px;
+    font: 500 18px/22px "Geist Mono", monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #0b7a3e;
+  }
+  .callout-title::before { content: ""; width: 12px; height: 12px; background: currentColor; }
+  .callout p { margin: 0; font-size: 26px; line-height: 36px; }
+  .callout code {
+    font: 400 16px "Geist Mono", monospace;
+    background: var(--surface-sunken);
+    padding: 1px 5px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div>
+    <div class="wordmark"><span class="mark"></span>Markus</div>
+    <h1>Markdown for<br>layout intent</h1>
+    <p class="lede">GitHub-flavored Markdown with a small vocabulary of semantic directives.</p>
+    <div class="url">markus.anth.us</div>
+  </div>
+
+  <div class="example">
+    <div class="pane source">
+      <p class="label">Markus</p>
+<pre><span class="f">:::</span><span class="n">tip</span><span class="a">{title="Encode intent"}</span>
+Say *what* a block is.
+<span class="f">:::</span></pre>
+    </div>
+    <div class="pane preview">
+      <p class="label">Preview</p>
+      <div class="callout">
+        <p class="callout-title">Encode intent</p>
+        <p>Say <em>what</em> a block is.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
