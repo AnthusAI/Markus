@@ -12,6 +12,7 @@ from markusmd.themes import THEME_MODES
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SITE_CONTENT_DIRECTORY = REPOSITORY_ROOT / "site"
+SITE_CUSTOM_DOMAIN = "markus.anth.us"
 SITE_STYLESHEET = SITE_CONTENT_DIRECTORY / "site.css"
 HOME_HREF = "index.html"
 
@@ -345,6 +346,10 @@ def stage_papyrus_content_layout(staging_directory: Path) -> None:
             (articles_directory / source_page.name).write_text(page_text, encoding="utf-8")
 
 
+def write_custom_domain(output_directory: Path) -> None:
+    (output_directory / "CNAME").write_text(f"{SITE_CUSTOM_DOMAIN}\n", encoding="utf-8")
+
+
 def write_redirects_from_former_urls(output_directory: Path) -> None:
     for former_page in ("gallery", "gfm"):
         (output_directory / f"{former_page}.html").write_text(
@@ -369,6 +374,7 @@ def build_documentation_site(output_directory: Path):
             chrome=SITE_CHROME,
         )
     write_redirects_from_former_urls(output_directory)
+    write_custom_domain(output_directory)
     return build_result
 
 
