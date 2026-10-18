@@ -1,8 +1,59 @@
-/* Everforest theme - based on Omarchy/Antharchy palette */
+/* Everforest theme - Everforest light and dark. Follows the reader's light or dark setting;
+   data-color-scheme="light" or "dark" on the root element forces one. */
 
 [data-theme="everforest"],
 :root[data-theme="everforest"],
 .markus-theme-everforest {
+  --markus-ink: #5c6a72;
+  --markus-muted: #829181;
+  --markus-paper: #fdf6e3;
+  --markus-card: #f4f0d9;
+  --markus-line: #e0dcc7;
+  --markus-accent: #3a94c5;
+  --markus-accent-2: #f57d26;
+  --markus-quote: #5c6a72;
+  --markus-note: #35a77c;
+  --markus-warning: #dfa000;
+  --markus-tip: #8da101;
+  --markus-caution: #f85552;
+  --markus-pre-bg: #efebd4;
+  --markus-pre-ink: #5c6a72;
+  --markus-code-bg: rgba(92, 106, 114, 0.08);
+  --markus-aside-bg: rgba(244, 240, 217, 0.6);
+  --markus-tab-nav-bg: rgba(239, 235, 212, 0.5);
+  --markus-th-bg: rgba(58, 148, 197, 0.1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme="light"]) [data-theme="everforest"],
+  :root[data-theme="everforest"]:not([data-color-scheme="light"]),
+  :root:not([data-color-scheme="light"]) .markus-theme-everforest {
+    --markus-ink: #d3c6aa;
+    --markus-muted: #4f585e;
+    --markus-paper: #2d353b;
+    --markus-card: #343f44;
+    --markus-line: #475258;
+    --markus-accent: #7fbbb3;
+    --markus-accent-2: #e09d7f;
+    --markus-quote: #9da9a0;
+    --markus-note: #83c092;
+    --markus-warning: #dbbc7f;
+    --markus-tip: #a7c080;
+    --markus-caution: #e67e80;
+    --markus-pre-bg: #21272c;
+    --markus-pre-ink: #d3c6aa;
+    --markus-code-bg: rgba(211, 198, 170, 0.08);
+    --markus-aside-bg: rgba(52, 63, 68, 0.6);
+    --markus-tab-nav-bg: rgba(33, 39, 44, 0.5);
+    --markus-th-bg: rgba(127, 187, 179, 0.1);
+    color-scheme: dark;
+  }
+}
+
+:root[data-color-scheme="dark"] [data-theme="everforest"],
+:root[data-color-scheme="dark"][data-theme="everforest"],
+:root[data-color-scheme="dark"] .markus-theme-everforest {
   --markus-ink: #d3c6aa;
   --markus-muted: #4f585e;
   --markus-paper: #2d353b;

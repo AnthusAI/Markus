@@ -1,0 +1,76 @@
+/* Solarized theme - Ethan Schoonover's Solarized, light and dark. Follows the reader's light or dark setting;
+   data-color-scheme="light" or "dark" on the root element forces one. */
+
+[data-theme="solarized"],
+:root[data-theme="solarized"],
+.markus-theme-solarized {
+  --markus-ink: #586e75;
+  --markus-muted: #657b83;
+  --markus-paper: #fdf6e3;
+  --markus-card: #eee8d5;
+  --markus-line: #93a1a1;
+  --markus-accent: #268bd2;
+  --markus-accent-2: #cb4b16;
+  --markus-quote: #586e75;
+  --markus-note: #2aa198;
+  --markus-warning: #b58900;
+  --markus-tip: #859900;
+  --markus-caution: #dc322f;
+  --markus-pre-bg: #eee8d5;
+  --markus-pre-ink: #586e75;
+  --markus-code-bg: rgba(88, 110, 117, 0.08);
+  --markus-aside-bg: rgba(238, 232, 213, 0.6);
+  --markus-tab-nav-bg: rgba(238, 232, 213, 0.5);
+  --markus-th-bg: rgba(38, 139, 210, 0.1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme="light"]) [data-theme="solarized"],
+  :root[data-theme="solarized"]:not([data-color-scheme="light"]),
+  :root:not([data-color-scheme="light"]) .markus-theme-solarized {
+    --markus-ink: #93a1a1;
+    --markus-muted: #839496;
+    --markus-paper: #002b36;
+    --markus-card: #073642;
+    --markus-line: #586e75;
+    --markus-accent: #268bd2;
+    --markus-accent-2: #cb4b16;
+    --markus-quote: #93a1a1;
+    --markus-note: #2aa198;
+    --markus-warning: #b58900;
+    --markus-tip: #859900;
+    --markus-caution: #dc322f;
+    --markus-pre-bg: #00212b;
+    --markus-pre-ink: #93a1a1;
+    --markus-code-bg: rgba(147, 161, 161, 0.08);
+    --markus-aside-bg: rgba(7, 54, 66, 0.6);
+    --markus-tab-nav-bg: rgba(0, 33, 43, 0.5);
+    --markus-th-bg: rgba(38, 139, 210, 0.1);
+    color-scheme: dark;
+  }
+}
+
+:root[data-color-scheme="dark"] [data-theme="solarized"],
+:root[data-color-scheme="dark"][data-theme="solarized"],
+:root[data-color-scheme="dark"] .markus-theme-solarized {
+  --markus-ink: #93a1a1;
+  --markus-muted: #839496;
+  --markus-paper: #002b36;
+  --markus-card: #073642;
+  --markus-line: #586e75;
+  --markus-accent: #268bd2;
+  --markus-accent-2: #cb4b16;
+  --markus-quote: #93a1a1;
+  --markus-note: #2aa198;
+  --markus-warning: #b58900;
+  --markus-tip: #859900;
+  --markus-caution: #dc322f;
+  --markus-pre-bg: #00212b;
+  --markus-pre-ink: #93a1a1;
+  --markus-code-bg: rgba(147, 161, 161, 0.08);
+  --markus-aside-bg: rgba(7, 54, 66, 0.6);
+  --markus-tab-nav-bg: rgba(0, 33, 43, 0.5);
+  --markus-th-bg: rgba(38, 139, 210, 0.1);
+  color-scheme: dark;
+}

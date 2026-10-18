@@ -221,7 +221,3 @@ Raw HTML is a compatibility hatch, not the authoring API. It names CSS classes, 
 :::aside{title="Try it"}
 Install the Python module with `pip install anthus-markus`, then run `markus convert page.md`. The [gallery](gallery.html) renders every directive on one page. `markus preview` opens a live editor.
 :::
-
-:::tip{title="A note on the package name"}
-The PyPI name `markus` is already taken by Mozilla’s metrics library. This project publishes as **`anthus-markus`** and imports as `markusmd`. The command-line tool is still `markus`.
-:::

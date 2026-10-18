@@ -1,8 +1,59 @@
-/* Gruvbox theme - based on Omarchy/Antharchy palette */
+/* Gruvbox theme - Gruvbox light and dark. Follows the reader's light or dark setting;
+   data-color-scheme="light" or "dark" on the root element forces one. */
 
 [data-theme="gruvbox"],
 :root[data-theme="gruvbox"],
 .markus-theme-gruvbox {
+  --markus-ink: #3c3836;
+  --markus-muted: #7c6f64;
+  --markus-paper: #fbf1c7;
+  --markus-card: #ebdbb2;
+  --markus-line: #d5c4a1;
+  --markus-accent: #076678;
+  --markus-accent-2: #af3a03;
+  --markus-quote: #504945;
+  --markus-note: #427b58;
+  --markus-warning: #b57614;
+  --markus-tip: #79740e;
+  --markus-caution: #9d0006;
+  --markus-pre-bg: #f2e5bc;
+  --markus-pre-ink: #3c3836;
+  --markus-code-bg: rgba(60, 56, 54, 0.08);
+  --markus-aside-bg: rgba(235, 219, 178, 0.6);
+  --markus-tab-nav-bg: rgba(242, 229, 188, 0.5);
+  --markus-th-bg: rgba(7, 102, 120, 0.1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme="light"]) [data-theme="gruvbox"],
+  :root[data-theme="gruvbox"]:not([data-color-scheme="light"]),
+  :root:not([data-color-scheme="light"]) .markus-theme-gruvbox {
+    --markus-ink: #d4be98;
+    --markus-muted: #7c6f64;
+    --markus-paper: #282828;
+    --markus-card: #3c3836;
+    --markus-line: #665c54;
+    --markus-accent: #7daea3;
+    --markus-accent-2: #e1875c;
+    --markus-quote: #bdae93;
+    --markus-note: #89b482;
+    --markus-warning: #d8a657;
+    --markus-tip: #a9b665;
+    --markus-caution: #ea6962;
+    --markus-pre-bg: #1e1e1e;
+    --markus-pre-ink: #d4be98;
+    --markus-code-bg: rgba(212, 190, 152, 0.08);
+    --markus-aside-bg: rgba(60, 56, 54, 0.6);
+    --markus-tab-nav-bg: rgba(30, 30, 30, 0.5);
+    --markus-th-bg: rgba(125, 174, 163, 0.1);
+    color-scheme: dark;
+  }
+}
+
+:root[data-color-scheme="dark"] [data-theme="gruvbox"],
+:root[data-color-scheme="dark"][data-theme="gruvbox"],
+:root[data-color-scheme="dark"] .markus-theme-gruvbox {
   --markus-ink: #d4be98;
   --markus-muted: #7c6f64;
   --markus-paper: #282828;
