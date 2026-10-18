@@ -5,6 +5,13 @@ description: Every Markus directive and Markdown feature, each with a page of ex
 
 Every directive in the Markus registry and every Markdown feature it renders has a page here. Each page lists the attributes, then shows every variant as Markus source beside the result it renders. On narrow screens the source sits above the preview.
 
+Markus ships with 26 themes. Pick one from the **Theme** menu at the top of any page to see every example on the site re-rendered in it.
+
+- ◐ **Light and dark**: Markus (the default), Solarized, Catppuccin, Everforest, Flexoki, GitHub, Gruvbox, Kanagawa, One, Rosé Pine, and Tokyo Night carry both palettes and follow your system setting, or the Auto/Light/Dark switch.
+- ○ **Light only** and ● **dark only**: the remaining themes always render in one mode.
+
+Apply a theme to your own pages with `theme:` in front matter or `markus convert --theme NAME`. A light-and-dark theme follows the reader's `prefers-color-scheme`; set `data-color-scheme="light"` or `"dark"` on the root element to force one.
+
 ## Directives
 
 | Directive | Kind | Page |

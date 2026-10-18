@@ -1,8 +1,8 @@
 /*
  * Markus documentation site.
  *
- * Tokens come from the Markus design system: a pixel face for headlines, a
- * clean grotesk for reading, square corners, hard block shadows, and one
+ * Tokens come from the Markus design system: semibold Geist Mono for headlines,
+ * Geist for reading, square corners, hard block shadows, and one
  * electric accent. Light and dark carry equal weight. The page follows the
  * reader's system setting unless they pick one with the scheme switch, which
  * sets data-color-scheme on <html>.
@@ -12,14 +12,16 @@
 @font-face { font-family: "Geist"; src: url("../assets/fonts/Geist-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 @font-face { font-family: "Geist"; src: url("../assets/fonts/Geist-600.woff2") format("woff2"); font-weight: 600 700; font-display: swap; }
 @font-face { font-family: "Geist Mono"; src: url("../assets/fonts/GeistMono-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
-@font-face { font-family: "Geist Mono"; src: url("../assets/fonts/GeistMono-500.woff2") format("woff2"); font-weight: 500 700; font-display: swap; }
-@font-face { font-family: "Pixelify Sans"; src: url("../assets/fonts/PixelifySans-500.woff2") format("woff2"); font-weight: 400 500; font-display: swap; }
-@font-face { font-family: "Pixelify Sans"; src: url("../assets/fonts/PixelifySans-600.woff2") format("woff2"); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("../assets/fonts/GeistMono-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("../assets/fonts/GeistMono-600.woff2") format("woff2"); font-weight: 600 700; font-display: swap; }
 
 /* ---------- Tokens ---------- */
 
-:root {
+:root:not([data-theme]) {
   color-scheme: light;
+}
+
+:root {
   --bg: #f3f3ef;
   --surface: #ffffff;
   --surface-sunken: #e9e9e3;
@@ -43,7 +45,7 @@
   --shadow-block-sm: 2px 2px 0 0 #0f1011;
   --shadow-overlay: 0 0 0 1px #d8d8d0, 8px 8px 0 0 #0f1011;
 
-  --font-pixel: "Pixelify Sans", "Geist Mono", ui-monospace, monospace;
+  --font-display: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
 
@@ -62,7 +64,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-color-scheme="light"]) {
+  :root:not([data-color-scheme="light"]):not([data-theme]) {
     color-scheme: dark;
     --bg: #0b0c0d;
     --surface: #15171a;
@@ -86,7 +88,7 @@
   }
 }
 
-:root[data-color-scheme="dark"] {
+:root[data-color-scheme="dark"]:not([data-theme]) {
   color-scheme: dark;
   --bg: #0b0c0d;
   --surface: #15171a;
@@ -109,9 +111,16 @@
   --shadow-overlay: 0 0 0 1px #2a2e33, 8px 8px 0 0 #000000;
 }
 
-/* Markus's presentation variables, fed from the design tokens. */
-:root,
-.markus-document {
+/* Markus's presentation variables. Type always comes from the design system. */
+:root {
+  --markus-sans: var(--font-sans);
+  --markus-serif: var(--font-display);
+  --markus-mono: var(--font-mono);
+}
+
+/* With the default Markus theme, the colors come from the design tokens too. */
+:root:not([data-theme]),
+:root:not([data-theme]) .markus-document {
   --markus-ink: var(--ink);
   --markus-muted: var(--ink-muted);
   --markus-paper: var(--bg);
@@ -130,9 +139,48 @@
   --markus-aside-bg: var(--surface);
   --markus-tab-nav-bg: var(--surface-sunken);
   --markus-th-bg: var(--surface-sunken);
-  --markus-sans: var(--font-sans);
-  --markus-serif: var(--font-pixel);
-  --markus-mono: var(--font-mono);
+}
+
+/*
+ * A reader-picked Markus theme (data-theme on <html>) recolors the whole page:
+ * the design tokens are rebuilt from the theme's variables, so the top bar,
+ * sidebar, wordmark and every directive re-skin together. Type, spacing and
+ * square corners stay Markus. Light-and-dark themes follow the light/dark
+ * switch like Markus does; a single-mode theme (data-theme-mode="light" or
+ * "dark") hides the switch, since it has nothing to switch.
+ */
+:root[data-theme] {
+  --bg: var(--markus-paper);
+  --surface: var(--markus-card);
+  --surface-sunken: var(--markus-pre-bg, var(--markus-card));
+  --line: var(--markus-line);
+  --line-strong: var(--markus-muted);
+  --ink: var(--markus-ink);
+  --ink-muted: var(--markus-muted);
+  --volt: var(--markus-accent);
+  --on-volt: var(--markus-paper);
+  --volt-ink: var(--markus-accent);
+  --volt-soft: var(--markus-card);
+  --flare: var(--markus-accent-2);
+  --flare-ink: var(--markus-accent-2);
+  --success: var(--markus-tip);
+  --warning: var(--markus-warning);
+  --danger: var(--markus-caution);
+  --info: var(--markus-note);
+  --focus: var(--markus-accent);
+  --shadow-block: 4px 4px 0 0 var(--markus-accent);
+  --shadow-block-sm: 2px 2px 0 0 var(--markus-accent);
+  --shadow-overlay: 0 0 0 1px var(--markus-line), 8px 8px 0 0 var(--markus-ink);
+}
+
+:root[data-theme] .markus-site main .markus-document pre,
+:root[data-theme] .markus-site main .markus-example-source {
+  color: var(--markus-pre-ink, var(--markus-ink));
+}
+
+:root[data-theme-mode="light"] .site-scheme,
+:root[data-theme-mode="dark"] .site-scheme {
+  display: none;
 }
 
 /* ---------- Base ---------- */
@@ -210,8 +258,9 @@ html {
 }
 
 .markus-site .site-wordmark {
-  font-family: var(--font-pixel);
-  font-size: 28px;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 22px;
   line-height: 32px;
   font-weight: 600;
   letter-spacing: 0;
@@ -246,6 +295,32 @@ html {
 
 .markus-site .site-links a:hover {
   color: var(--volt-ink);
+}
+
+.site-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: 500 12px/16px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.site-theme select {
+  appearance: none;
+  margin: 0;
+  padding: 4px 28px 4px 10px;
+  border: 1px solid var(--line-strong);
+  background:
+    linear-gradient(45deg, transparent 50%, var(--ink) 50%) right 14px center / 5px 5px no-repeat,
+    linear-gradient(135deg, var(--ink) 50%, transparent 50%) right 9px center / 5px 5px no-repeat,
+    var(--surface);
+  color: var(--ink);
+  font: 500 12px/16px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 
 .site-scheme {
@@ -385,6 +460,104 @@ html {
   margin: 0;
 }
 
+/* The standard Anthus platform footer, on the site's theme tokens. */
+.anthus-footer {
+  max-width: var(--page-width);
+}
+
+.anthus-footer-community {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
+  font-weight: 500;
+}
+
+.anthus-footer-community [aria-hidden] {
+  color: var(--ink-muted);
+}
+
+.markus-site .anthus-footer a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.markus-site .anthus-footer a:hover {
+  color: var(--volt-ink);
+  text-decoration: underline;
+}
+
+.anthus-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.anthus-footer-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: var(--space-6);
+  color: var(--ink);
+}
+
+.anthus-footer-panel--accent {
+  background: var(--volt-soft);
+  border-color: var(--line-strong);
+}
+
+.anthus-footer-eyebrow {
+  display: block;
+  margin-bottom: var(--space-2);
+  font: 500 12px/16px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.anthus-footer-panel h2,
+.anthus-footer-panel h3 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.anthus-footer-panel h2 {
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.anthus-footer-panel h3 {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.anthus-footer-panel p {
+  margin: 0;
+  color: var(--ink);
+}
+
+.anthus-footer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.anthus-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+}
+
 @media (min-width: 64rem) {
   .markus-site {
     grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
@@ -431,12 +604,32 @@ html {
 }
 
 @media (max-width: 40rem) {
-  .site-links {
+  .site-links,
+  .site-theme-label {
     display: none;
+  }
+
+  .site-topbar {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
+  }
+
+  .markus-site .site-wordmark {
+    flex: 1 0 100%;
+  }
+
+  .site-theme {
+    margin-left: 0;
   }
 
   .site-scheme {
     margin-left: auto;
+  }
+
+  .site-scheme button {
+    padding: 4px 6px;
   }
 }
 
@@ -456,11 +649,11 @@ html {
 }
 
 .markus-site .markus-header h1 {
-  font-family: var(--font-pixel);
-  font-size: 48px;
-  line-height: 52px;
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 48px;
   font-weight: 600;
-  letter-spacing: 0;
+  letter-spacing: -0.02em;
   margin: 0 0 var(--space-3);
   color: var(--ink);
 }
@@ -482,23 +675,24 @@ html {
 .markus-site .markus-document h1,
 .markus-site .markus-document h2,
 .markus-site .markus-document h3 {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
+  font-weight: 600;
   color: var(--ink);
-  letter-spacing: 0;
+  letter-spacing: -0.02em;
 }
 
 .markus-site .markus-document > h1,
 .markus-site .markus-document > h2 {
-  font-size: 32px;
+  font-size: 28px;
   line-height: 36px;
   font-weight: 600;
   margin: var(--space-12) 0 var(--space-4);
 }
 
 .markus-site .markus-document > h3 {
-  font-size: 24px;
+  font-size: 20px;
   line-height: 28px;
-  font-weight: 500;
+  font-weight: 600;
   margin: var(--space-8) 0 var(--space-3);
 }
 
@@ -665,10 +859,10 @@ html {
   background: transparent;
   border: 0;
   padding: 0;
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: 24px;
   line-height: 32px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink);
 }
 
@@ -716,10 +910,10 @@ html {
 .markus-site .markus-card-title,
 .markus-site .markus-card h2,
 .markus-site .markus-card h3 {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: 24px;
   line-height: 28px;
-  font-weight: 500;
+  font-weight: 600;
   margin: 0 0 var(--space-2);
 }
 
@@ -744,10 +938,10 @@ html {
 
 .markus-site .markus-column h2,
 .markus-site .markus-column h3 {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: 24px;
   line-height: 28px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .markus-site .markus-figure img,
@@ -791,7 +985,7 @@ html {
 }
 
 .markus-site .markus-metric-value {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: 32px;
   line-height: 36px;
   font-weight: 600;
@@ -809,10 +1003,10 @@ html {
 }
 
 .markus-site .markus-bar-chart .markus-bar-chart-title {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: 24px;
   line-height: 28px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .markus-site .markus-bar-chart-track {
@@ -836,10 +1030,10 @@ html {
 }
 
 .markus-site .markus-conversation-title {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: 18px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .markus-site .markus-message-role {
@@ -855,10 +1049,10 @@ html {
 }
 
 .markus-site .markus-diagram-title {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: 18px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .markus-site .markus-diagram-node {
@@ -940,10 +1134,10 @@ html {
 }
 
 .markus-site .markus-timeline-title {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display);
   font-size: 18px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* ---------- Examples: Markus source beside its preview ---------- */
@@ -1030,11 +1224,11 @@ html {
 /* ---------- Home hero ---------- */
 
 .markus-site:has(a[data-home][aria-current="page"]) .markus-header h1 {
-  font-size: clamp(48px, 8vw, 72px);
-  line-height: 1;
+  font-size: clamp(36px, 5.5vw, 56px);
+  line-height: 1.1;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  max-width: 14ch;
+  letter-spacing: -0.03em;
+  max-width: 18ch;
 }
 
 .markus-site:has(a[data-home][aria-current="page"]) .markus-lede {

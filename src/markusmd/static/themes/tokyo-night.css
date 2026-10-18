@@ -1,8 +1,59 @@
-/* Tokyo Night theme - based on Omarchy/Antharchy palette */
+/* Tokyo Night theme - Tokyo Night Day (light) and Night (dark). Follows the reader's light or dark setting;
+   data-color-scheme="light" or "dark" on the root element forces one. */
 
 [data-theme="tokyo-night"],
 :root[data-theme="tokyo-night"],
 .markus-theme-tokyo-night {
+  --markus-ink: #3760bf;
+  --markus-muted: #6172b0;
+  --markus-paper: #e1e2e7;
+  --markus-card: #d0d5e3;
+  --markus-line: #a8aecb;
+  --markus-accent: #2e7de9;
+  --markus-accent-2: #b15c00;
+  --markus-quote: #3760bf;
+  --markus-note: #007197;
+  --markus-warning: #8c6c3e;
+  --markus-tip: #587539;
+  --markus-caution: #f52a65;
+  --markus-pre-bg: #c4c8da;
+  --markus-pre-ink: #3760bf;
+  --markus-code-bg: rgba(55, 96, 191, 0.08);
+  --markus-aside-bg: rgba(208, 213, 227, 0.6);
+  --markus-tab-nav-bg: rgba(196, 200, 218, 0.5);
+  --markus-th-bg: rgba(46, 125, 233, 0.1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme="light"]) [data-theme="tokyo-night"],
+  :root[data-theme="tokyo-night"]:not([data-color-scheme="light"]),
+  :root:not([data-color-scheme="light"]) .markus-theme-tokyo-night {
+    --markus-ink: #a9b1d6;
+    --markus-muted: #565f89;
+    --markus-paper: #1a1b26;
+    --markus-card: #24283b;
+    --markus-line: #414868;
+    --markus-accent: #7aa2f7;
+    --markus-accent-2: #eb927b;
+    --markus-quote: #b4bee6;
+    --markus-note: #449dab;
+    --markus-warning: #e0af68;
+    --markus-tip: #9ece6a;
+    --markus-caution: #f7768e;
+    --markus-pre-bg: #13141c;
+    --markus-pre-ink: #a9b1d6;
+    --markus-code-bg: rgba(169, 177, 214, 0.08);
+    --markus-aside-bg: rgba(36, 40, 59, 0.6);
+    --markus-tab-nav-bg: rgba(19, 20, 28, 0.5);
+    --markus-th-bg: rgba(122, 162, 247, 0.1);
+    color-scheme: dark;
+  }
+}
+
+:root[data-color-scheme="dark"] [data-theme="tokyo-night"],
+:root[data-color-scheme="dark"][data-theme="tokyo-night"],
+:root[data-color-scheme="dark"] .markus-theme-tokyo-night {
   --markus-ink: #a9b1d6;
   --markus-muted: #565f89;
   --markus-paper: #1a1b26;

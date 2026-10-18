@@ -1,11 +1,14 @@
 import argparse
 import html
+import json
 import shutil
 import tempfile
 from pathlib import Path
 
 from papyrus_content.markus_renderer.build import build_markus_site
 from papyrus_content.markus_renderer.shell import SiteChrome
+
+from markusmd.themes import THEME_MODES
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SITE_CONTENT_DIRECTORY = REPOSITORY_ROOT / "site"
@@ -87,12 +90,80 @@ FAVICON = (
     '%3C/svg%3E">'
 )
 
-# Applied before first paint so a reader's saved choice never flashes the other scheme.
+# Every bundled Markus theme, offered in the theme picker in registry order:
+# light-and-dark families first (Solarized leading), then single-mode themes.
+# "Markus" is the design-system default and also follows light or dark.
+SITE_THEMES = list(THEME_MODES)
+MODE_MARKS = {"both": "\u25d0", "light": "\u25cb", "dark": "\u25cf"}
+MODE_GROUPS = (
+    ("both", "Light and dark"),
+    ("light", "Light only"),
+    ("dark", "Dark only"),
+)
+THEME_NAMES = {"github": "GitHub", "one": "One", "rose-pine": "Rosé Pine", "retro-82": "Retro 82"}
+
+# Link previews: every page shares the 1200x630 card rendered from
+# docsite/social-preview.html. Crawlers need an absolute image URL.
+SITE_URL = "https://markus.anth.us/"
+SOCIAL_DESCRIPTION = (
+    "GitHub-flavored Markdown with a small vocabulary of semantic layout directives."
+)
+SOCIAL_META = (
+    '<meta name="description" content="' + SOCIAL_DESCRIPTION + '">'
+    '<meta property="og:type" content="website">'
+    '<meta property="og:site_name" content="Markus">'
+    '<meta property="og:title" content="Markus: Markdown for layout intent">'
+    '<meta property="og:description" content="' + SOCIAL_DESCRIPTION + '">'
+    f'<meta property="og:image" content="{SITE_URL}assets/social-preview.png">'
+    '<meta property="og:image:width" content="1200">'
+    '<meta property="og:image:height" content="630">'
+    '<meta property="og:image:alt" content="Markus: Markdown for layout intent. '
+    'A Markus tip directive beside its rendered preview.">'
+    '<meta name="twitter:card" content="summary_large_image">'
+    f'<meta name="twitter:image" content="{SITE_URL}assets/social-preview.png">'
+)
+
+# Applied before first paint so a reader's saved choices never flash the defaults.
+# A single-mode theme marks the root so the light/dark switch can hide.
 COLOR_SCHEME_BOOTSTRAP = (
-    "<script>try{var s=localStorage.getItem('markus-color-scheme');"
-    "if(s==='light'||s==='dark')document.documentElement.setAttribute('data-color-scheme',s)"
+    "<script>try{var r=document.documentElement,"
+    "s=localStorage.getItem('markus-color-scheme'),t=localStorage.getItem('markus-theme'),"
+    f"m={json.dumps(THEME_MODES)};"
+    "if(s==='light'||s==='dark')r.setAttribute('data-color-scheme',s);"
+    "if(m[t]){r.setAttribute('data-theme',t);r.setAttribute('data-theme-mode',m[t])}"
     "}catch(e){}</script>"
 )
+
+
+def theme_label(theme: str) -> str:
+    return THEME_NAMES.get(theme) or " ".join(word.capitalize() for word in theme.split("-"))
+
+
+def theme_option(value: str, label: str, mode: str) -> str:
+    return (
+        f'<option value="{html.escape(value)}" data-mode="{mode}">'
+        f"{MODE_MARKS[mode]} {html.escape(label)}</option>"
+    )
+
+
+def render_theme_picker() -> str:
+    groups = []
+    for mode, group_label in MODE_GROUPS:
+        options = [theme_option("", "Markus", "both")] if mode == "both" else []
+        options += [
+            theme_option(theme, theme_label(theme), mode)
+            for theme in SITE_THEMES
+            if THEME_MODES[theme] == mode
+        ]
+        groups.append(
+            f'<optgroup label="{MODE_MARKS[mode]} {group_label}">{"".join(options)}</optgroup>'
+        )
+    return (
+        '<label class="site-theme">'
+        '<span class="site-theme-label">Theme</span>'
+        f'<select data-theme-picker aria-label="Markus theme">{"".join(groups)}</select>'
+        "</label>"
+    )
 
 
 def render_navigation(page_context) -> str:
@@ -123,6 +194,7 @@ def render_site_banner(page_context) -> str:
         '<a href="https://github.com/AnthusAI/Markus">GitHub</a>'
         '<a href="https://pypi.org/project/anthus-markus/">PyPI</a>'
         "</nav>"
+        f"{render_theme_picker()}"
         '<div class="site-scheme" role="group" aria-label="Color scheme">'
         '<button type="button" data-scheme="system" aria-pressed="true">Auto</button>'
         '<button type="button" data-scheme="light" aria-pressed="false">Light</button>'
@@ -138,15 +210,95 @@ def render_site_banner(page_context) -> str:
     )
 
 
+# The standard Anthus platform footer: the markup and links of the shared
+# AnthusAI/anthus-footer React component and its canonical site registry,
+# rendered statically here and styled from the site's theme tokens.
+ANTHUS_COMMUNITY_LINKS = (
+    (
+        "Contact us",
+        "https://docs.google.com/forms/d/e/1FAIpQLSdWlt4KpwPSBHzg3o8fikHcfrzxo5rCcV-0-zDt815NZ1tcyg"
+        "/viewform?usp=sf_link",
+    ),
+    ("GitHub", "https://github.com/AnthusAI"),
+    ("LinkedIn", "https://www.linkedin.com/in/ryanalynporter/"),
+    ("Discord", "https://discord.gg/uStyWraJ2M"),
+)
+ANTHUS_COLUMNS = (
+    (
+        "Anthus",
+        (
+            ("Anth.us", "https://anth.us/", False),
+            ("AI Solutions", "https://anth.us/ai-solutions", False),
+            ("Anthus Platform", "https://anth.us/platform", False),
+            ("Articles", "https://anth.us/blog", False),
+        ),
+    ),
+    (
+        "Anthus Platform",
+        (
+            ("Primus", "https://primus.anth.us/", False),
+            ("Tactus", "https://tactus.anth.us/", False),
+            ("Korporus", "https://korpor.us/", False),
+            ("Biblicus", "https://anthusai.github.io/Biblicus/", False),
+            ("Babulus", "https://babul.us/", False),
+            ("Kanbus", "https://kanb.us/", False),
+            ("Caducus", "https://caduc.us/", False),
+        ),
+    ),
+    (
+        "Markus",
+        (
+            ("Documentation", "https://markus.anth.us/", False),
+            ("GitHub", "https://github.com/AnthusAI/Markus", True),
+            ("PyPI", "https://pypi.org/project/anthus-markus/", True),
+            ("Built with Papyrus", "https://github.com/AnthusAI/Papyrus", True),
+        ),
+    ),
+)
+
+
+def anthus_link(label: str, href: str, external: bool) -> str:
+    target = ' target="_blank" rel="noreferrer"' if external else ""
+    return f'<a href="{html.escape(href)}"{target}>{html.escape(label)}</a>'
+
+
+def render_anthus_footer() -> str:
+    community = '<span aria-hidden="true">·</span>'.join(
+        anthus_link(label, href, True) for label, href in ANTHUS_COMMUNITY_LINKS
+    )
+    columns = "".join(
+        '<div class="anthus-footer-panel">'
+        f"<h3>{html.escape(title)}</h3>"
+        '<ul class="anthus-footer-list">'
+        + "".join(f"<li>{anthus_link(*link)}</li>" for link in links)
+        + "</ul></div>"
+        for title, links in ANTHUS_COLUMNS
+    )
+    return (
+        '<div class="anthus-footer">'
+        f'<div class="anthus-footer-community">{community}</div>'
+        '<div class="anthus-footer-grid">'
+        '<div class="anthus-footer-panel anthus-footer-panel--accent">'
+        '<span class="anthus-footer-eyebrow">Part of the Anthus Platform</span>'
+        "<h2>Markus</h2>"
+        "<p>Markus is GitHub-flavored Markdown with a small vocabulary for layout intent. "
+        "Authors encode meaning; the renderer turns it into accessible HTML.</p>"
+        "</div>"
+        f"{columns}"
+        "</div>"
+        '<div class="anthus-footer-bottom">'
+        "<span>Built by Anthus AI Solutions</span>"
+        "<span>Free and open-source Anthus platform components where applicable</span>"
+        "</div>"
+        "</div>"
+    )
+
+
 SITE_CHROME = SiteChrome(
     site_name="Markus",
-    head_html=FAVICON + COLOR_SCHEME_BOOTSTRAP,
+    head_html=FAVICON + SOCIAL_META + COLOR_SCHEME_BOOTSTRAP,
     render_masthead=render_site_banner,
-    footer_html=(
-        "<p>Markus is MIT licensed. Built with "
-        '<a href="https://github.com/AnthusAI/Papyrus">Papyrus</a>. '
-        'Source on <a href="https://github.com/AnthusAI/Markus">GitHub</a>.</p>'
-    ),
+    footer_html=render_anthus_footer(),
     scripts=("assets/site.js",),
 )
 

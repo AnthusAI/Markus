@@ -1,8 +1,59 @@
-/* Catppuccin theme - based on Omarchy/Antharchy palette */
+/* Catppuccin theme - Catppuccin Latte (light) and Mocha (dark). Follows the reader's light or dark setting;
+   data-color-scheme="light" or "dark" on the root element forces one. */
 
 [data-theme="catppuccin"],
 :root[data-theme="catppuccin"],
 .markus-theme-catppuccin {
+  --markus-ink: #4c4f69;
+  --markus-muted: #9ca0b0;
+  --markus-paper: #eff1f5;
+  --markus-card: #dce0e8;
+  --markus-line: #acb0be;
+  --markus-accent: #1e66f5;
+  --markus-accent-2: #d84e2b;
+  --markus-quote: #5c5f77;
+  --markus-note: #179299;
+  --markus-warning: #df8e1d;
+  --markus-tip: #40a02b;
+  --markus-caution: #d20f39;
+  --markus-pre-bg: #e3e4e8;
+  --markus-pre-ink: #4c4f69;
+  --markus-code-bg: rgba(76, 79, 105, 0.08);
+  --markus-aside-bg: rgba(220, 224, 232, 0.6);
+  --markus-tab-nav-bg: rgba(227, 228, 232, 0.5);
+  --markus-th-bg: rgba(30, 102, 245, 0.1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme="light"]) [data-theme="catppuccin"],
+  :root[data-theme="catppuccin"]:not([data-color-scheme="light"]),
+  :root:not([data-color-scheme="light"]) .markus-theme-catppuccin {
+    --markus-ink: #cdd6f4;
+    --markus-muted: #6c7086;
+    --markus-paper: #1e1e2e;
+    --markus-card: #313244;
+    --markus-line: #585b70;
+    --markus-accent: #89b4fa;
+    --markus-accent-2: #f6b6ab;
+    --markus-quote: #bac2de;
+    --markus-note: #94e2d5;
+    --markus-warning: #f9e2af;
+    --markus-tip: #a6e3a1;
+    --markus-caution: #f38ba8;
+    --markus-pre-bg: #161622;
+    --markus-pre-ink: #cdd6f4;
+    --markus-code-bg: rgba(205, 214, 244, 0.08);
+    --markus-aside-bg: rgba(49, 50, 68, 0.6);
+    --markus-tab-nav-bg: rgba(22, 22, 34, 0.5);
+    --markus-th-bg: rgba(137, 180, 250, 0.1);
+    color-scheme: dark;
+  }
+}
+
+:root[data-color-scheme="dark"] [data-theme="catppuccin"],
+:root[data-color-scheme="dark"][data-theme="catppuccin"],
+:root[data-color-scheme="dark"] .markus-theme-catppuccin {
   --markus-ink: #cdd6f4;
   --markus-muted: #6c7086;
   --markus-paper: #1e1e2e;

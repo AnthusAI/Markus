@@ -414,3 +414,25 @@ def _find_directive(nodes, name):
             if found:
                 return found
     return None
+
+
+@then("every bundled theme stylesheet matches its registered color modes")
+def then_theme_modes_match(context):
+    from importlib.resources import files
+
+    from markusmd.themes import THEME_MODES
+
+    themes_dir = files("markusmd").joinpath("static", "themes")
+    on_disk = {
+        path.name[: -len(".css")] for path in themes_dir.iterdir() if path.name.endswith(".css")
+    }
+    assert on_disk == set(THEME_MODES), sorted(on_disk ^ set(THEME_MODES))
+    for name, mode in THEME_MODES.items():
+        css = themes_dir.joinpath(f"{name}.css").read_text(encoding="utf-8")
+        schemes = set(re.findall(r"color-scheme:\s*(light|dark)", css))
+        expected = {"light", "dark"} if mode == "both" else {mode}
+        assert schemes == expected, (
+            f"{name}: registered {mode}, stylesheet declares {sorted(schemes)}"
+        )
+        if mode == "both":
+            assert "@media (prefers-color-scheme: dark)" in css, name
