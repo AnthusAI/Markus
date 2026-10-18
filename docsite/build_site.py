@@ -9,6 +9,7 @@ from papyrus_content.markus_renderer.shell import SiteChrome
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SITE_CONTENT_DIRECTORY = REPOSITORY_ROOT / "site"
 SITE_THEME_NAME = "catppuccin"
+SITE_CUSTOM_DOMAIN = "markus.anth.us"
 SITE_STYLESHEET = REPOSITORY_ROOT / "src" / "markusmd" / "static" / "site.css"
 def render_site_banner(page_context):
     navigation_links = "".join(
@@ -41,11 +42,15 @@ def stage_papyrus_content_layout(staging_directory: Path) -> None:
     for source_page in SITE_CONTENT_DIRECTORY.glob("*.md"):
         page_text = source_page.read_text(encoding="utf-8")
         if source_page.name == "index.md":
-            for article_page in ("gallery", "gfm"):
+            for article_page in sorted(page.stem for page in SITE_CONTENT_DIRECTORY.glob("*.md") if page.stem != "index"):
                 page_text = page_text.replace(f"({article_page}.html)", f"(articles/{article_page}.html)")
             (staging_directory / "index.md").write_text(page_text, encoding="utf-8")
         else:
             (articles_directory / source_page.name).write_text(page_text, encoding="utf-8")
+
+
+def write_custom_domain(output_directory: Path) -> None:
+    (output_directory / "CNAME").write_text(f"{SITE_CUSTOM_DOMAIN}\n", encoding="utf-8")
 
 
 def write_redirects_from_former_urls(output_directory: Path) -> None:
@@ -71,6 +76,7 @@ def build_documentation_site(output_directory: Path):
             chrome=SITE_CHROME,
         )
     write_redirects_from_former_urls(output_directory)
+    write_custom_domain(output_directory)
     return build_result
 
 
