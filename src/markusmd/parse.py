@@ -13,21 +13,72 @@ import yaml
 
 from markusmd._frontmatter_yaml import FrontMatterLoader
 from markusmd.ast import Directive, Document, MarkdownBlock, Node, SourceSpan
-from markusmd.attributes import extract_inline_attribute_lists, parse_attribute_block
+from markusmd.attributes import (
+    extract_inline_attribute_lists,
+    find_attribute_block_end,
+    parse_attribute_block,
+)
 from markusmd.errors import MarkusSyntaxError
 
 _FRONT_MATTER_RE = re.compile(r"\A---[ \t]*\n(.*?)\n(?:---|\.\.\.)[ \t]*\n?", re.DOTALL)
 
 _OPEN_RE = re.compile(
     r"^(?P<indent> {0,3})(?P<fence>:{3,})\s*(?P<name>[A-Za-z][\w-]*)"
-    r"(?P<attrs>\{[^\n]*\})?[ \t]*$"
+    r"(?P<attrs>\{.*)?[ \t]*$"
 )
 _CLOSE_RE = re.compile(r"^(?P<indent> {0,3})(?P<fence>:{3,})[ \t]*$")
 _LEAF_RE = re.compile(
     r"^(?P<indent> {0,3})::(?!:)(?P<name>[A-Za-z][\w-]*)"
-    r"(?P<attrs>\{[^\n]*\})?[ \t]*$"
+    r"(?P<attrs>\{.*)?[ \t]*$"
 )
 _CODE_FENCE_RE = re.compile(r"^(?P<indent> {0,3})(?P<fence>`{3,}|~{3,})")
+
+
+def _scan_directive_head(
+    lines: list[str],
+    index: int,
+    pattern: re.Pattern[str],
+    *,
+    line_no: int,
+) -> tuple[re.Match[str], str | None, int] | None:
+    """Match a directive opening line and gather its attribute block.
+
+    The block opens with `{` on the directive line and may continue over
+    following lines until the first `}` outside quotes. Returns the match, the
+    full attribute text (or None), and the index of the first line after the
+    head; returns None when the line is not a directive head.
+    """
+    match = pattern.match(lines[index].rstrip("\n"))
+    if not match:
+        return None
+    first = match.group("attrs")
+    if first is None:
+        return match, None, index + 1
+    first = first.rstrip()
+    end = find_attribute_block_end(first)
+    if end is not None:
+        if first[end + 1 :].strip():
+            return None
+        return match, first[: end + 1], index + 1
+    collected = first
+    cursor = index + 1
+    while cursor < len(lines):
+        collected += "\n" + lines[cursor].rstrip("\n")
+        end = find_attribute_block_end(collected)
+        if end is not None:
+            if collected[end + 1 :].strip():
+                raise MarkusSyntaxError(
+                    f"Unexpected text after the closing '}}' of the attribute block "
+                    f"starting at line {line_no}",
+                    line=line_no + (cursor - index),
+                )
+            return match, collected[: end + 1], cursor + 1
+        cursor += 1
+    raise MarkusSyntaxError(
+        f"Unterminated attribute block for directive {match.group('name')!r} "
+        f"starting at line {line_no}: expected a closing '}}'",
+        line=line_no,
+    )
 
 
 def parse_document(source: str) -> Document:
@@ -111,32 +162,33 @@ def parse_blocks(source: str, *, start_line: int = 1) -> list[Node]:
             index += 1
             continue
 
-        open_match = _OPEN_RE.match(stripped)
-        if open_match:
+        open_head = _scan_directive_head(lines, index, _OPEN_RE, line_no=line_no)
+        if open_head:
             flush_markdown()
             directive, index = _parse_container(
                 lines,
                 start_index=index,
                 start_line=start_line,
-                match=open_match,
+                head=open_head,
             )
             nodes.append(directive)
             markdown_start = start_line + index
             continue
 
-        leaf_match = _LEAF_RE.match(stripped)
-        if leaf_match:
+        leaf_head = _scan_directive_head(lines, index, _LEAF_RE, line_no=line_no)
+        if leaf_head:
+            leaf_match, leaf_attrs, leaf_next = leaf_head
             flush_markdown()
             nodes.append(
                 Directive(
                     name=leaf_match.group("name"),
-                    attributes=parse_attribute_block(leaf_match.group("attrs"), line=line_no),
+                    attributes=parse_attribute_block(leaf_attrs, line=line_no),
                     children=[],
                     span=SourceSpan(line=line_no),
                     leaf=True,
                 )
             )
-            index += 1
+            index = leaf_next
             markdown_start = start_line + index
             continue
 
@@ -154,7 +206,7 @@ def _parse_container(
     *,
     start_index: int,
     start_line: int,
-    match: re.Match[str],
+    head: tuple[re.Match[str], str | None, int],
 ) -> tuple[Directive, int]:
     """Parse a container directive and its nested children from line tokens.
 
@@ -167,7 +219,7 @@ def _parse_container(
         lines: Full list of lines in the block being parsed.
         start_index: 0-based index of the opening directive line in `lines`.
         start_line: 1-based starting line offset for the lines list.
-        match: Regular expression match of the opening fence line.
+        head: The opening match, its attribute text, and the index after the head.
 
     Returns:
         A tuple of `(directive, next_index)` where `directive` is the parsed Directive
@@ -177,10 +229,11 @@ def _parse_container(
         MarkusSyntaxError: If the container directive is not closed before the end
             of lines, or if attribute syntax is invalid.
     """
+    match, attribute_text, body_index = head
     name = match.group("name")
     line_no = start_line + start_index
-    attributes = parse_attribute_block(match.group("attrs"), line=line_no)
-    index = start_index + 1
+    attributes = parse_attribute_block(attribute_text, line=line_no)
+    index = body_index
     depth = 1
     inner: list[str] = []
     code_fence: tuple[str, int] | None = None
@@ -200,15 +253,21 @@ def _parse_container(
             continue
 
         if code_fence is None:
-            if _OPEN_RE.match(stripped):
+            nested_head = _scan_directive_head(
+                lines, index, _OPEN_RE, line_no=start_line + index
+            )
+            if nested_head:
                 depth += 1
-            elif _CLOSE_RE.match(stripped):
+                inner.extend(lines[index : nested_head[2]])
+                index = nested_head[2]
+                continue
+            if _CLOSE_RE.match(stripped):
                 depth -= 1
                 if depth == 0:
                     inner_source = "".join(inner)
                     remainder, extra = extract_inline_attribute_lists(inner_source, line=line_no)
                     attributes.update(extra)
-                    children = parse_blocks(remainder, start_line=line_no + 1)
+                    children = parse_blocks(remainder, start_line=start_line + body_index)
                     directive = Directive(
                         name=name,
                         attributes=attributes,

@@ -97,10 +97,30 @@
   padding: 0;
 }
 
+.markus-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.markus-table-wrap:focus-visible {
+  outline: 2px solid var(--markus-accent);
+  outline-offset: 2px;
+}
+
 .markus-document table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.markus-document caption {
+  caption-side: top;
+  padding: 0 0 0.5rem;
+  text-align: left;
+  font-weight: 650;
+  color: var(--markus-muted);
 }
 
 .markus-document th,
@@ -108,10 +128,24 @@
   border: 1px solid var(--markus-line);
   padding: 0.5rem 0.7rem;
   text-align: left;
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+
+.markus-document td {
+  min-width: 6rem;
 }
 
 .markus-document th {
   background: var(--markus-th-bg, rgba(15, 95, 91, 0.08));
+  color: var(--markus-ink);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.markus-document tbody tr:nth-child(even) td {
+  background: var(--markus-th-bg, rgba(15, 95, 91, 0.08));
+  background: color-mix(in srgb, var(--markus-th-bg, rgba(15, 95, 91, 0.08)) 45%, transparent);
 }
 
 .markus-document del,
@@ -400,6 +434,323 @@
 
 .markus-metric-delta--down { color: var(--markus-tip); }
 .markus-metric-delta--up { color: var(--markus-caution); }
+
+.markus-bar-chart {
+  margin: 1.5rem 0;
+  padding: 1rem 1.1rem;
+  background: var(--markus-card);
+  border: 1px solid var(--markus-line);
+  border-radius: 0;
+}
+
+.markus-bar-chart table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.markus-bar-chart .markus-bar-chart-title {
+  padding: 0 0 0.75rem;
+  color: var(--markus-ink);
+  font-family: var(--markus-serif);
+  font-size: 1.15rem;
+}
+
+.markus-bar-chart-head {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.markus-bar-chart th,
+.markus-bar-chart td,
+.markus-bar-chart tbody tr:nth-child(even) td {
+  border: 0;
+  background: transparent;
+  padding: 0.3rem 0.6rem 0.3rem 0;
+  vertical-align: middle;
+}
+
+.markus-bar-chart .markus-bar-chart-label {
+  width: 1%;
+  white-space: nowrap;
+  font-weight: 600;
+  background: transparent;
+}
+
+.markus-bar-chart .markus-bar-chart-bar {
+  min-width: 8rem;
+  width: 100%;
+  padding-right: 0.75rem;
+}
+
+.markus-bar-chart-line {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.markus-bar-chart-track {
+  display: block;
+  flex: 1;
+  height: 1.5rem;
+  background: var(--markus-th-bg, var(--markus-line));
+  border: 1px solid var(--markus-line);
+  border-radius: 0;
+}
+
+.markus-bar-chart-fill {
+  display: block;
+  height: 100%;
+  width: var(--markus-bar-percent, 0%);
+  background: var(--markus-accent);
+  border-radius: 0;
+}
+
+.markus-bar-chart-value {
+  flex: none;
+  min-width: 3.2rem;
+  color: var(--markus-ink);
+  font-size: 0.85rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.markus-bar-chart .markus-bar-chart-note {
+  white-space: nowrap;
+  color: var(--markus-muted);
+  font-size: 0.85rem;
+  padding-right: 0;
+}
+
+.markus-bar-chart-caption {
+  margin-top: 0.9rem;
+  text-align: center;
+  font-style: italic;
+  color: var(--markus-muted);
+}
+
+.markus-bar-chart-caption p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .markus-bar-chart .markus-bar-chart-note {
+    white-space: normal;
+  }
+}
+
+.markus-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.markus-document :is(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: 1rem;
+}
+
+.markus-document :is(h1, h2, h3, h4, h5, h6):target {
+  outline: 2px solid var(--markus-accent);
+  outline-offset: 0.25rem;
+}
+
+mark {
+  background: color-mix(in srgb, var(--markus-accent-2) 30%, transparent);
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 0;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.markus-conversation {
+  --markus-message-accent: var(--markus-accent);
+  margin: 1.5rem 0;
+  padding: 1rem 1.1rem;
+  background: var(--markus-card);
+  border: 1px solid var(--markus-line);
+  border-left: 4px solid var(--markus-message-accent);
+  border-radius: 0;
+}
+
+.markus-conversation--response {
+  --markus-message-accent: var(--markus-accent-2);
+}
+
+.markus-conversation-title,
+.markus-message-group-label {
+  margin: 0 0 0.6rem;
+  color: var(--markus-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.markus-conversation-title {
+  color: var(--markus-ink);
+  font-family: var(--markus-serif);
+  font-size: 1.1rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.markus-message-group + .markus-message-group {
+  margin-top: 1rem;
+}
+
+.markus-messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.markus-message {
+  --markus-role-accent: var(--markus-muted);
+  display: grid;
+  grid-template-columns: minmax(5rem, 9rem) minmax(0, 1fr);
+  gap: 0.25rem 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--markus-line);
+}
+
+.markus-message:first-child {
+  border-top: 0;
+}
+
+.markus-message--user { --markus-role-accent: var(--markus-accent); }
+.markus-message--assistant { --markus-role-accent: var(--markus-accent-2); }
+.markus-message--tool,
+.markus-message--function { --markus-role-accent: var(--markus-tip); }
+
+.markus-message-role {
+  color: var(--markus-role-accent);
+  font-family: var(--markus-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.markus-message-body {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.markus-message-body > :first-child { margin-top: 0; }
+.markus-message-body > :last-child { margin-bottom: 0; }
+
+.markus-message-body pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 640px) {
+  .markus-message {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.markus-diagram {
+  margin: 1.5rem 0;
+  padding: 1rem 1.1rem;
+  background: var(--markus-card);
+  border: 1px solid var(--markus-line);
+  border-radius: 0;
+}
+
+.markus-diagram-title {
+  margin: 0 0 0.75rem;
+  color: var(--markus-ink);
+  font-family: var(--markus-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.markus-diagram-flow,
+.markus-diagram-row-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.markus-diagram-row-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.markus-diagram-row-items > .markus-diagram-node {
+  flex: 1 1 9rem;
+  min-width: 0;
+}
+
+.markus-diagram-node {
+  --markus-node-accent: var(--markus-muted);
+  padding: 0.75rem 0.9rem;
+  background: color-mix(in srgb, var(--markus-node-accent) 10%, var(--markus-card));
+  border: 1px solid color-mix(in srgb, var(--markus-node-accent) 45%, var(--markus-line));
+  border-left: 4px solid var(--markus-node-accent);
+  border-radius: 0;
+  overflow-wrap: anywhere;
+}
+
+.markus-diagram-node--human { --markus-node-accent: var(--markus-accent); }
+.markus-diagram-node--agent { --markus-node-accent: var(--markus-accent-2); }
+.markus-diagram-node--risk { --markus-node-accent: var(--markus-caution); }
+.markus-diagram-node--ok { --markus-node-accent: var(--markus-tip); }
+
+.markus-diagram-node-title {
+  margin: 0;
+  color: var(--markus-ink);
+  font-weight: 700;
+}
+
+.markus-diagram-node-body {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+}
+
+.markus-diagram-node-body > :first-child { margin-top: 0; }
+.markus-diagram-node-body > :last-child { margin-bottom: 0; }
+
+.markus-diagram-link {
+  padding: 0.5rem 0;
+  text-align: center;
+  color: var(--markus-muted);
+  font-size: 0.88rem;
+}
+
+.markus-diagram-link p {
+  margin: 0;
+}
+
+.markus-diagram-link [aria-hidden="true"] {
+  margin-right: 0.4em;
+  font-weight: 700;
+}
+
+.markus-diagram-row {
+  display: block;
+}
+
+.markus-diagram-caption {
+  margin-top: 0.9rem;
+  text-align: center;
+  font-style: italic;
+  color: var(--markus-muted);
+  font-size: 0.92rem;
+}
+
+.markus-diagram-caption p {
+  margin: 0;
+}
 
 .markus-tabs {
   margin: 1.5rem 0;

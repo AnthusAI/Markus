@@ -154,6 +154,20 @@ def then_html_contains(context, snippet):
     assert snippet in context.html, context.html
 
 
+@then("the HTML should contain the markup:")
+def then_html_contains_markup(context):
+    assert not context.convert_failed, context.error
+    snippet = (context.text or "").strip("\n")
+    assert snippet in context.html, context.html
+
+
+@then("the HTML should not contain the markup:")
+def then_html_not_contains_markup(context):
+    assert not context.convert_failed, context.error
+    snippet = (context.text or "").strip("\n")
+    assert snippet not in context.html, context.html
+
+
 @then('the HTML should not contain "{snippet}"')
 def then_html_not_contains(context, snippet):
     assert not context.convert_failed, context.error
@@ -221,6 +235,14 @@ def then_directive_attr(context, name, key, value):
     assert directive is not None, f"no directive named {name}"
     actual = directive.attributes.get(key)
     assert str(actual) == value, directive.attributes
+
+
+@then('the directive "{name}" should have attribute "{key}" equal to the text:')
+def then_directive_attr_text(context, name, key):
+    directive = _find_directive(context.document.children, name)
+    assert directive is not None, f"directive {name!r} not found"
+    expected = (context.text or "").strip("\n")
+    assert str(directive.attributes.get(key)) == expected, directive.attributes
 
 
 @then("the command should succeed")

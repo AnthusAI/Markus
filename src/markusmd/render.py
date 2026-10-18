@@ -10,12 +10,44 @@ from markdown_it import MarkdownIt
 from mdit_py_plugins.tasklists import tasklists_plugin
 
 from markusmd.ast import Document, MarkdownBlock, Node
+from markusmd.heading_ids import (
+    HEADING_IDS_ENV_KEY,
+    LINE_OFFSET_ENV_KEY,
+    RESERVED_HEADING_IDS_ENV_KEY,
+    explicit_heading_ids_in,
+    heading_ids_plugin,
+)
+from markusmd.inline_mark import highlight_plugin
 from markusmd.registry import Registry
 from markusmd.themes import validate_theme
 
 
+def _wrap_tables_for_scrolling(md: MarkdownIt) -> MarkdownIt:
+    """Wrap every GFM table in a focusable scroll region so wide tables scroll on small screens."""
+
+    def table_open(renderer, tokens, idx, options, env):
+        return (
+            '<div class="markus-table-wrap" role="region" aria-label="Table" tabindex="0">\n'
+            "<table>\n"
+        )
+
+    def table_close(renderer, tokens, idx, options, env):
+        return "</table>\n</div>\n"
+
+    md.add_render_rule("table_open", table_open)
+    md.add_render_rule("table_close", table_close)
+    return md
+
+
 def make_markdown(*, allow_html: bool = False) -> MarkdownIt:
     """GitHub-flavored Markdown parser used for ordinary (non-directive) regions."""
+    markdown = _wrap_tables_for_scrolling(_build_markdown(allow_html=allow_html))
+    markdown.use(highlight_plugin)
+    markdown.use(heading_ids_plugin)
+    return markdown
+
+
+def _build_markdown(*, allow_html: bool) -> MarkdownIt:
     try:
         md = MarkdownIt(
             "gfm-like2",
@@ -147,12 +179,53 @@ def _render_nodes(
     *,
     registry: Registry,
     markdown: MarkdownIt,
+    heading_ids: set[str] | None = None,
+    reserved_ids: set[str] | None = None,
 ) -> str:
+    used_heading_ids: set[str] = heading_ids if heading_ids is not None else set()
+    if reserved_ids is None:
+        reserved_ids = _collect_reserved_heading_ids(nodes)
+
+    def render_children(children: list[Node]) -> str:
+        return _render_nodes(
+            children,
+            registry=registry,
+            markdown=markdown,
+            heading_ids=used_heading_ids,
+            reserved_ids=reserved_ids,
+        )
+
     parts = []
     for node in nodes:
         if isinstance(node, MarkdownBlock):
-            parts.append(markdown.render(node.source))
-        else:
-            inner = _render_nodes(node.children, registry=registry, markdown=markdown)
-            parts.append(registry.render(node, inner))
+            block_env = {
+                HEADING_IDS_ENV_KEY: used_heading_ids,
+                RESERVED_HEADING_IDS_ENV_KEY: reserved_ids,
+                LINE_OFFSET_ENV_KEY: node.span.line - 1,
+            }
+            parts.append(markdown.render(node.source, block_env))
+            continue
+        spec = registry.resolve(node.name)
+        if spec is not None and spec.trailing_markdown:
+            structural = [child for child in node.children if not isinstance(child, MarkdownBlock)]
+            trailing = [child for child in node.children if isinstance(child, MarkdownBlock)]
+            parts.append(
+                registry.render(
+                    node,
+                    render_children(structural),
+                    trailing_html=render_children(trailing),
+                )
+            )
+            continue
+        parts.append(registry.render(node, render_children(node.children)))
     return "".join(parts)
+
+
+def _collect_reserved_heading_ids(nodes: list[Node]) -> set[str]:
+    reserved: set[str] = set()
+    for node in nodes:
+        if isinstance(node, MarkdownBlock):
+            reserved |= explicit_heading_ids_in(node.source)
+        else:
+            reserved |= _collect_reserved_heading_ids(node.children)
+    return reserved

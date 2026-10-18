@@ -91,6 +91,16 @@ class Strikethrough:
 
 
 @dataclass(slots=True)
+class Highlight:
+    """Highlighted (``==marked==``) inline span, rendered as ``<mark>``."""
+
+    children: list[Inline] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {"type": "highlight", "children": [c.to_dict() for c in self.children]}
+
+
+@dataclass(slots=True)
 class CodeSpan:
     """Inline code span (`` `code` ``)."""
 
@@ -156,7 +166,16 @@ class HtmlInline:
 
 
 Inline = (
-    Text | Emphasis | Strong | Strikethrough | CodeSpan | Link | Image | SoftBreak | HardBreak
+    Text
+    | Emphasis
+    | Strong
+    | Strikethrough
+    | Highlight
+    | CodeSpan
+    | Link
+    | Image
+    | SoftBreak
+    | HardBreak
     | HtmlInline
 )
 
@@ -580,6 +599,8 @@ def _open_inline_node(token: Token) -> Inline:
         return Emphasis()
     if token.type == "s_open":
         return Strikethrough()
+    if token.type == "mark_open":
+        return Highlight()
     if token.type == "link_open":
         return Link(href=token.attrs.get("href"), title=token.attrs.get("title"))
     # Unknown container token type: degrade to a plain grouping with no markup semantics.
