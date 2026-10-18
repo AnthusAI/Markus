@@ -17,8 +17,11 @@
 
 /* ---------- Tokens ---------- */
 
-:root {
+:root:not([data-theme]) {
   color-scheme: light;
+}
+
+:root {
   --bg: #f3f3ef;
   --surface: #ffffff;
   --surface-sunken: #e9e9e3;
@@ -61,7 +64,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-color-scheme="light"]) {
+  :root:not([data-color-scheme="light"]):not([data-theme]) {
     color-scheme: dark;
     --bg: #0b0c0d;
     --surface: #15171a;
@@ -85,7 +88,7 @@
   }
 }
 
-:root[data-color-scheme="dark"] {
+:root[data-color-scheme="dark"]:not([data-theme]) {
   color-scheme: dark;
   --bg: #0b0c0d;
   --surface: #15171a;
@@ -139,12 +142,13 @@
 }
 
 /*
- * A reader-picked Markus theme (data-theme on <html>) recolors the content
- * area only: inside <main> the design tokens are rebuilt from the theme's
- * variables, so every directive below re-skins while the site chrome keeps
- * the brand.
+ * A reader-picked Markus theme (data-theme on <html>) recolors the whole page:
+ * the design tokens are rebuilt from the theme's variables, so the top bar,
+ * sidebar, wordmark and every directive re-skin together. Type, spacing and
+ * square corners stay Markus. The light/dark switch applies only to the
+ * default Markus theme, so it hides while another theme is active.
  */
-:root[data-theme] .markus-site main {
+:root[data-theme] {
   --bg: var(--markus-paper);
   --surface: var(--markus-card);
   --surface-sunken: var(--markus-pre-bg, var(--markus-card));
@@ -156,6 +160,7 @@
   --on-volt: var(--markus-paper);
   --volt-ink: var(--markus-accent);
   --volt-soft: var(--markus-card);
+  --flare: var(--markus-accent-2);
   --flare-ink: var(--markus-accent-2);
   --success: var(--markus-tip);
   --warning: var(--markus-warning);
@@ -164,13 +169,16 @@
   --focus: var(--markus-accent);
   --shadow-block: 4px 4px 0 0 var(--markus-accent);
   --shadow-block-sm: 2px 2px 0 0 var(--markus-accent);
-  background: var(--markus-paper);
-  color: var(--markus-ink);
+  --shadow-overlay: 0 0 0 1px var(--markus-line), 8px 8px 0 0 var(--markus-ink);
 }
 
 :root[data-theme] .markus-site main .markus-document pre,
 :root[data-theme] .markus-site main .markus-example-source {
   color: var(--markus-pre-ink, var(--markus-ink));
+}
+
+:root[data-theme] .site-scheme {
+  display: none;
 }
 
 /* ---------- Base ---------- */
