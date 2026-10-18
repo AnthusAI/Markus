@@ -333,3 +333,79 @@ Feature: Semantic layout directives
     Then the directive "timeline-event" should have attribute "date" equal to "2026-09-04"
     And the directive "timeline-event" should have attribute "title" equal to "v1.0 Launch"
 
+
+  Scenario: Bar chart renders a Markdown table as labeled bars with text fallbacks
+    Given the Markus source:
+      """
+      :::bar-chart{title="Context Snowball"}
+      | Turn | Context used | Size |
+      | --- | --- | --- |
+      | Turn 1 | 2 | ~4K tokens |
+      | Turn 50 | 100 | ~200K (full window) |
+
+      Every turn re-sends the whole conversation. **25 to 1**.
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should succeed
+    And the HTML should contain a "figure" with class "markus-bar-chart"
+    And the HTML should contain "Context Snowball</caption>"
+    And the HTML should contain "Turn 1</th>"
+    And the HTML should contain ">2%</span>"
+    And the HTML should contain "--markus-bar-percent: 100%"
+    And the HTML should contain "~200K (full window)"
+    And the HTML should contain "<strong>25 to 1</strong>."
+
+  Scenario: Bar chart honors max and unit and accepts a caption attribute
+    Given the Markus source:
+      """
+      :::bar-chart{max=200 unit="ms" caption="Lower is better"}
+      | Stage | Latency |
+      | --- | --- |
+      | Parse | 50 ms |
+      | Render | 150 |
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should succeed
+    And the HTML should contain "--markus-bar-percent: 25%"
+    And the HTML should contain ">150 ms</span>"
+    And the HTML should contain "Lower is better"
+
+  Scenario: Bar chart rejects a non-numeric value
+    Given the Markus source:
+      """
+      :::bar-chart
+      | Label | Value |
+      | --- | --- |
+      | Turn 1 | lots |
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "is not a number"
+    And the error should mention line 1
+
+  Scenario: Bar chart rejects a value above max
+    Given the Markus source:
+      """
+      :::bar-chart{max=100}
+      | Label | Value |
+      | --- | --- |
+      | Turn 1 | 120 |
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "outside 0 to 100"
+
+  Scenario: Bar chart requires a table body
+    Given the Markus source:
+      """
+      :::bar-chart
+      Just prose.
+      :::
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should fail
+    And the error should contain "Markdown table"

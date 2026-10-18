@@ -19,6 +19,8 @@ Encode intent in the document. Leave grid tracks, type ramps, and hover states t
 It is not a visual programming language. There is no `margin`, no `font-size`, and no `grid-template-columns` in the authoring API. Unknown attributes are errors, on purpose.
 :::
 
+Browse every directive and Markdown feature, each with rendered output next to its source, in the [feature index](features.html).
+
 ## A vocabulary small enough to remember
 
 :::feature-grid{columns=3 label="Core layout blocks"}

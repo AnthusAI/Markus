@@ -15,7 +15,7 @@ Feature: GitHub Flavored Markdown baseline
       ```
       """
     When I convert the source to an HTML fragment
-    Then the HTML should contain "<h1>Title</h1>"
+    Then the HTML should contain "<h1 id="title">Title</h1>"
     And the HTML should contain "<strong>bold</strong>"
     And the HTML should contain "<em>italic</em>"
     And the HTML should contain "<code>code</code>"
@@ -35,6 +35,18 @@ Feature: GitHub Flavored Markdown baseline
     And the HTML should contain "<th>Keep</th>"
     And the HTML should contain "<td>intent</td>"
     Then the HTML should contain struck text "obsolete"
+
+  Scenario: Tables scroll on small screens and keep column alignment
+    Given the Markus source:
+      """
+      | Model | Resolved | Cost |
+      | :--- | ---: | :---: |
+      | A very long model and agent configuration name | 58.8% | $0.24 |
+      """
+    When I convert the source to an HTML fragment
+    Then the HTML should contain a "div" with class "markus-table-wrap"
+    And the HTML should contain "Resolved</th>"
+    And the HTML should contain "$0.24</td>"
 
   Scenario: Task lists
     Given the Markus source:
