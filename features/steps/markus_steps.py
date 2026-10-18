@@ -154,6 +154,20 @@ def then_html_contains(context, snippet):
     assert snippet in context.html, context.html
 
 
+@then("the HTML should contain the markup:")
+def then_html_contains_markup(context):
+    assert not context.convert_failed, context.error
+    snippet = (context.text or "").strip("\n")
+    assert snippet in context.html, context.html
+
+
+@then("the HTML should not contain the markup:")
+def then_html_not_contains_markup(context):
+    assert not context.convert_failed, context.error
+    snippet = (context.text or "").strip("\n")
+    assert snippet not in context.html, context.html
+
+
 @then('the HTML should not contain "{snippet}"')
 def then_html_not_contains(context, snippet):
     assert not context.convert_failed, context.error

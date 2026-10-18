@@ -10,6 +10,8 @@ from markdown_it import MarkdownIt
 from mdit_py_plugins.tasklists import tasklists_plugin
 
 from markusmd.ast import Document, MarkdownBlock, Node
+from markusmd.heading_ids import HEADING_IDS_ENV_KEY, LINE_OFFSET_ENV_KEY, heading_ids_plugin
+from markusmd.inline_mark import highlight_plugin
 from markusmd.registry import Registry
 from markusmd.themes import validate_theme
 
@@ -33,7 +35,10 @@ def _wrap_tables_for_scrolling(md: MarkdownIt) -> MarkdownIt:
 
 def make_markdown(*, allow_html: bool = False) -> MarkdownIt:
     """GitHub-flavored Markdown parser used for ordinary (non-directive) regions."""
-    return _wrap_tables_for_scrolling(_build_markdown(allow_html=allow_html))
+    markdown = _wrap_tables_for_scrolling(_build_markdown(allow_html=allow_html))
+    markdown.use(highlight_plugin)
+    markdown.use(heading_ids_plugin)
+    return markdown
 
 
 def _build_markdown(*, allow_html: bool) -> MarkdownIt:
@@ -168,12 +173,32 @@ def _render_nodes(
     *,
     registry: Registry,
     markdown: MarkdownIt,
+    heading_ids: set[str] | None = None,
 ) -> str:
+    used_heading_ids: set[str] = heading_ids if heading_ids is not None else set()
     parts = []
     for node in nodes:
         if isinstance(node, MarkdownBlock):
-            parts.append(markdown.render(node.source))
-        else:
-            inner = _render_nodes(node.children, registry=registry, markdown=markdown)
-            parts.append(registry.render(node, inner))
+            block_env = {
+                HEADING_IDS_ENV_KEY: used_heading_ids,
+                LINE_OFFSET_ENV_KEY: node.span.line - 1,
+            }
+            parts.append(markdown.render(node.source, block_env))
+            continue
+        spec = registry.resolve(node.name)
+        if spec is not None and spec.trailing_markdown:
+            structural = [child for child in node.children if not isinstance(child, MarkdownBlock)]
+            trailing = [child for child in node.children if isinstance(child, MarkdownBlock)]
+            inner = _render_nodes(
+                structural, registry=registry, markdown=markdown, heading_ids=used_heading_ids
+            )
+            trailing_html = _render_nodes(
+                trailing, registry=registry, markdown=markdown, heading_ids=used_heading_ids
+            )
+            parts.append(registry.render(node, inner, trailing_html=trailing_html))
+            continue
+        inner = _render_nodes(
+            node.children, registry=registry, markdown=markdown, heading_ids=used_heading_ids
+        )
+        parts.append(registry.render(node, inner))
     return "".join(parts)

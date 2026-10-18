@@ -10,7 +10,7 @@ Feature: Markus command line
       """
     When I run "markus convert page.md --fragment --no-css"
     Then the command should succeed
-    And stdout should contain "<h1>Hello Markus</h1>"
+    And stdout should contain "<h1 id="hello-markus">Hello Markus</h1>"
 
   Scenario: Validate a well-formed file
     Given a Markus file "ok.md" with:
@@ -53,7 +53,7 @@ Feature: Markus command line
       """
     When I run "markus convert styled.md --minify-css"
     Then the command should succeed
-    And stdout should contain "<h1>Styled Page</h1>"
+    And stdout should contain "<h1 id="styled-page">Styled Page</h1>"
     And stdout should contain "<style>"
     And stdout should not contain "/* Markus default presentation layer"
     And stdout should contain ":root{"
@@ -65,7 +65,7 @@ Feature: Markus command line
       """
     When I run "markus convert plain.md --minify-css --no-css"
     Then the command should succeed
-    And stdout should contain "<h1>Plain Page</h1>"
+    And stdout should contain "<h1 id="plain-page">Plain Page</h1>"
     And stdout should not contain "<style>"
 
   Scenario: Convert fragment with minified CSS
@@ -78,4 +78,4 @@ Feature: Markus command line
     And stdout should contain "<style>"
     And stdout should not contain "/* Markus default presentation layer"
     And stdout should contain "markus-document"
-    And stdout should contain "<h1>Fragment</h1>"
+    And stdout should contain "<h1 id="fragment">Fragment</h1>"

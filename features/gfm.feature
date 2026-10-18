@@ -15,7 +15,7 @@ Feature: GitHub Flavored Markdown baseline
       ```
       """
     When I convert the source to an HTML fragment
-    Then the HTML should contain "<h1>Title</h1>"
+    Then the HTML should contain "<h1 id="title">Title</h1>"
     And the HTML should contain "<strong>bold</strong>"
     And the HTML should contain "<em>italic</em>"
     And the HTML should contain "<code>code</code>"

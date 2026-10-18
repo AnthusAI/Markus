@@ -13,6 +13,8 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_valida
 from markusmd.ast import Directive
 from markusmd.errors import MarkusValidationError
 
+TRAILING_HTML_KEY = "_trailing_html"
+
 RenderFn = Callable[["Directive", str, dict[str, Any]], str]
 
 
@@ -90,6 +92,47 @@ class BarChartAttrs(_Strict):
     max: float = Field(default=100, gt=0)
     unit: str = "%"
     caption: str | None = None
+
+
+class ConversationAttrs(_Strict):
+    title: str | None = None
+    kind: Literal["request", "response"] | None = None
+
+
+class MessageGroupAttrs(_Strict):
+    label: str
+
+
+class MessageAttrs(_Strict):
+    role: str
+
+    @field_validator("role")
+    @classmethod
+    def _validate_role(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("role is required")
+        return value.strip()
+
+
+DiagramTone = Literal["neutral", "human", "agent", "risk", "ok"]
+
+
+class DiagramAttrs(_Strict):
+    title: str | None = None
+
+
+class DiagramNodeAttrs(_Strict):
+    title: str
+    tone: DiagramTone = "neutral"
+
+
+class DiagramRowAttrs(_Strict):
+    pass
+
+
+class DiagramLinkAttrs(_Strict):
+    label: str | None = None
+    back: str | None = None
 
 
 def _id_attr(attrs: dict[str, Any]) -> str:
@@ -318,6 +361,97 @@ def _render_metric(directive: Directive, inner: str, attrs: dict[str, Any]) -> s
         f"<dd><span class=\"markus-metric-value\">{value}</span>{unit}{delta_html}</dd>"
         f"</dl>"
     )
+
+
+def _css_token(text: str) -> str:
+    token = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    return token or "other"
+
+
+def _render_conversation(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    title = attrs.get("title")
+    kind = attrs.get("kind")
+    kind_class = f" markus-conversation--{kind}" if kind else ""
+    label = escape(str(title) if title else "Conversation", quote=True)
+    title_html = f'<p class="markus-conversation-title">{escape(str(title))}</p>' if title else ""
+    has_groups = any(
+        isinstance(child, Directive) and child.name == "message-group"
+        for child in directive.children
+    )
+    body = inner if has_groups else f'<ol class="markus-messages">{inner}</ol>'
+    return (
+        f'<section{_id_attr(attrs)} class="markus-conversation{kind_class}" aria-label="{label}">'
+        f"{title_html}{body}</section>"
+    )
+
+
+def _render_message_group(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    label = escape(str(attrs["label"]), quote=True)
+    return (
+        f'<div{_id_attr(attrs)} class="markus-message-group" role="group" aria-label="{label}">'
+        f'<p class="markus-message-group-label">{escape(str(attrs["label"]))}</p>'
+        f'<ol class="markus-messages">{inner}</ol></div>'
+    )
+
+
+def _render_message(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    role = str(attrs["role"])
+    return (
+        f'<li{_id_attr(attrs)} class="markus-message markus-message--{_css_token(role)}">'
+        f'<span class="markus-message-role">{escape(role)}</span>'
+        f'<div class="markus-message-body">{inner}</div></li>'
+    )
+
+
+def _render_diagram(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    title = attrs.get("title")
+    label = escape(str(title) if title else "Diagram", quote=True)
+    title_html = f'<p class="markus-diagram-title">{escape(str(title))}</p>' if title else ""
+    trailing = attrs.get(TRAILING_HTML_KEY, "")
+    caption_html = (
+        f'<figcaption class="markus-diagram-caption">{trailing}</figcaption>' if trailing else ""
+    )
+    return (
+        f'<figure{_id_attr(attrs)} class="markus-diagram" role="group" aria-label="{label}">'
+        f'{title_html}<ol class="markus-diagram-flow">{inner}</ol>{caption_html}</figure>'
+    )
+
+
+def _render_diagram_node(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    tone = attrs["tone"]
+    body = f'<div class="markus-diagram-node-body">{inner}</div>' if inner.strip() else ""
+    return (
+        f'<li{_id_attr(attrs)} class="markus-diagram-node markus-diagram-node--{escape(tone)}">'
+        f'<p class="markus-diagram-node-title">{escape(str(attrs["title"]))}</p>{body}</li>'
+    )
+
+
+def _render_diagram_row(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    return (
+        f'<li{_id_attr(attrs)} class="markus-diagram-row">'
+        f'<ul class="markus-diagram-row-items">{inner}</ul></li>'
+    )
+
+
+def _render_diagram_link(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    if attrs.get("label"):
+        forward_text = (
+            '<span class="markus-visually-hidden">Then: </span>' + escape(str(attrs["label"]))
+        )
+    else:
+        forward_text = '<span class="markus-visually-hidden">Then</span>'
+    forward = (
+        '<p class="markus-diagram-link-forward"><span aria-hidden="true">&darr;</span>'
+        f"{forward_text}</p>"
+    )
+    back = ""
+    if attrs.get("back"):
+        back = (
+            '<p class="markus-diagram-link-back"><span aria-hidden="true">&uarr;</span>'
+            '<span class="markus-visually-hidden">Feeds back: </span>'
+            f'{escape(str(attrs["back"]))}</p>'
+        )
+    return f'<li{_id_attr(attrs)} class="markus-diagram-link">{forward}{back}</li>'
 
 
 def _format_bar_number(number: float) -> str:
@@ -601,6 +735,8 @@ class DirectiveSpec:
     leaf: bool = False
     canonical: str | None = None
     extra_attributes: dict[str, Any] = field(default_factory=dict)
+    allowed_parents: frozenset[str] | None = None
+    trailing_markdown: bool = False
 
 
 class Registry:
@@ -653,6 +789,14 @@ class Registry:
                     f"Allowed children: {allowed}.",
                     line=directive.span.line,
                 )
+        if spec.allowed_parents is not None and parent not in spec.allowed_parents:
+            allowed_parent_names = ", ".join(sorted(spec.allowed_parents))
+            where = f"inside {parent!r}" if parent else "at the top level"
+            raise MarkusValidationError(
+                f"Directive {spec.name!r} cannot appear {where}. "
+                f"It must be placed inside: {allowed_parent_names}.",
+                line=directive.span.line,
+            )
         try:
             validated = spec.schema.model_validate(directive.attributes)
         except ValidationError as exc:
@@ -672,6 +816,7 @@ class Registry:
         if spec.allowed_children is not None:
             _assert_only_allowed_children(directive, spec, children)
         _assert_cardinality(canonical_name, children, line=directive.span.line)
+        _assert_structure(canonical_name, children, line=directive.span.line)
         return Directive(
             name=canonical_name,
             attributes=attributes,
@@ -680,14 +825,23 @@ class Registry:
             leaf=directive.leaf,
         )
 
-    def render(self, directive: Directive, inner_html: str) -> str:
+    def render(
+        self,
+        directive: Directive,
+        inner_html: str,
+        *,
+        trailing_html: str | None = None,
+    ) -> str:
         spec = self.resolve(directive.name)
         if spec is None:
             raise MarkusValidationError(
                 f"Cannot render unknown directive {directive.name!r}",
                 line=directive.span.line,
             )
-        return spec.renderer(directive, inner_html, directive.attributes)
+        attributes = directive.attributes
+        if trailing_html is not None:
+            attributes = {**attributes, TRAILING_HTML_KEY: trailing_html}
+        return spec.renderer(directive, inner_html, attributes)
 
     @classmethod
     def default(cls) -> Registry:
@@ -801,6 +955,52 @@ def default_specs() -> list[DirectiveSpec]:
             renderer=_render_bar_chart,
         ),
         DirectiveSpec(
+            name="conversation",
+            schema=ConversationAttrs,
+            renderer=_render_conversation,
+            allowed_children=frozenset({"message", "message-group"}),
+        ),
+        DirectiveSpec(
+            name="message-group",
+            schema=MessageGroupAttrs,
+            renderer=_render_message_group,
+            allowed_children=frozenset({"message"}),
+            allowed_parents=frozenset({"conversation"}),
+        ),
+        DirectiveSpec(
+            name="message",
+            schema=MessageAttrs,
+            renderer=_render_message,
+            allowed_parents=frozenset({"conversation", "message-group"}),
+        ),
+        DirectiveSpec(
+            name="diagram",
+            schema=DiagramAttrs,
+            renderer=_render_diagram,
+            allowed_children=frozenset({"node", "row", "link"}),
+            trailing_markdown=True,
+        ),
+        DirectiveSpec(
+            name="row",
+            schema=DiagramRowAttrs,
+            renderer=_render_diagram_row,
+            allowed_children=frozenset({"node"}),
+            allowed_parents=frozenset({"diagram"}),
+        ),
+        DirectiveSpec(
+            name="node",
+            schema=DiagramNodeAttrs,
+            renderer=_render_diagram_node,
+            allowed_parents=frozenset({"diagram", "row"}),
+        ),
+        DirectiveSpec(
+            name="link",
+            schema=DiagramLinkAttrs,
+            renderer=_render_diagram_link,
+            leaf=True,
+            allowed_parents=frozenset({"diagram"}),
+        ),
+        DirectiveSpec(
             name="tabs",
             schema=TabsAttrs,
             renderer=_render_tabs,
@@ -857,6 +1057,8 @@ def _assert_only_allowed_children(
     allowed = spec.allowed_children or frozenset()
     for child in children:
         if isinstance(child, MarkdownBlock):
+            if spec.trailing_markdown:
+                continue
             if child.source.strip():
                 allowed_names = ", ".join(sorted(allowed))
                 raise MarkusValidationError(
@@ -920,6 +1122,76 @@ def _assert_cardinality(name: str, children: list[Any], *, line: int) -> None:
             raise MarkusValidationError(
                 "Directive 'timeline' requires at least one timeline-event child",
                 line=line,
+            )
+
+
+def _assert_structure(name: str, children: list[Any], *, line: int) -> None:
+    directive_children = [child for child in children if isinstance(child, Directive)]
+    if name == "conversation":
+        kinds = {child.name for child in directive_children}
+        if kinds == {"message", "message-group"}:
+            raise MarkusValidationError(
+                "Directive 'conversation' cannot mix bare message blocks with "
+                "message-group blocks; put every message in a group or none",
+                line=line,
+            )
+        if not directive_children:
+            raise MarkusValidationError(
+                "Directive 'conversation' needs at least one message", line=line
+            )
+        if kinds == {"message-group"} and not any(
+            grandchild.name == "message"
+            for child in directive_children
+            for grandchild in child.children
+            if isinstance(grandchild, Directive)
+        ):
+            raise MarkusValidationError(
+                "Directive 'conversation' needs at least one message", line=line
+            )
+    if name == "message-group" and not any(child.name == "message" for child in directive_children):
+        raise MarkusValidationError(
+                "Directive 'message-group' needs at least one message", line=line
+            )
+    if name == "diagram":
+        _assert_diagram_structure(children, line=line)
+    if name == "row" and not any(child.name == "node" for child in directive_children):
+        raise MarkusValidationError("Directive 'row' needs at least one node", line=line)
+
+
+def _assert_diagram_structure(children: list[Any], *, line: int) -> None:
+    from markusmd.ast import MarkdownBlock
+
+    structural = [child for child in children if isinstance(child, Directive)]
+    if not any(child.name in ("node", "row") for child in structural):
+        raise MarkusValidationError("Directive 'diagram' needs at least one node or row", line=line)
+    last_structural_index = max(
+        index for index, child in enumerate(children) if isinstance(child, Directive)
+    )
+    for index, child in enumerate(children):
+        if (
+            isinstance(child, MarkdownBlock)
+            and child.source.strip()
+            and index < last_structural_index
+        ):
+            raise MarkusValidationError(
+                "Directive 'diagram' accepts prose only after its last node or row, "
+                "as the caption",
+                line=child.span.line,
+            )
+    for index, child in enumerate(structural):
+        if child.name != "link":
+            continue
+        before = structural[index - 1] if index > 0 else None
+        after = structural[index + 1] if index + 1 < len(structural) else None
+        if (
+            before is None
+            or after is None
+            or before.name == "link"
+            or after.name == "link"
+        ):
+            raise MarkusValidationError(
+                "A diagram link must sit between two nodes (or rows)",
+                line=child.span.line,
             )
 
 

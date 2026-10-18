@@ -16,6 +16,11 @@ date: 2026-09-04
 ---
 ```
 
+`authors` stays a list of strings or `{name, url}` mappings, for example
+`- name: Ryan Porter` with `url: /ryan`. Markus carries these values through
+unchanged; the consuming publishing system decides how an author is resolved
+and linked. Do not put HTML in front matter.
+
 ## Container directives
 
 ```
@@ -43,6 +48,12 @@ Markdown, including nested directives.
 | `timeline` | Chronological sequence | `label` |
 | `timeline-event` | Single event in a timeline | `date`, `time`, `title`, `icon` |
 | `bar-chart` | Labeled bars from a Markdown table | `title`, `max`, `unit`, `caption` |
+| `conversation` | Transcript of role-labeled messages | `title`, `kind` (`request`, `response`) |
+| `message-group` | Labeled run of messages inside a conversation | `label` |
+| `message` | One message in a conversation | `role` |
+| `diagram` | Vertical flow of boxes and arrows | `title` |
+| `row` | Nodes side by side inside a diagram | — |
+| `node` | One box in a diagram | `title`, `tone` |
 | `editorial-finding` | Editorial diagnose finding (machine or human) | `id`, `kind`, `rationale`, `decision`, `group` |
 
 A trailing kramdown-style attribute list is also accepted inside a directive:
@@ -88,6 +99,116 @@ the offending row named. The output is a real `<table>` (row headers, values as
 text, bars hidden from assistive technology), so it reads correctly with no CSS
 and degrades to a plain table in other Markdown renderers.
 
+## Conversation
+
+`conversation` writes a transcript, such as an API request or response, as
+role-labeled messages. Each `message` body is ordinary Markdown, so lists and
+code blocks need no HTML.
+
+```md
+:::conversation{title="request from application to OpenAI" kind="request"}
+:::message-group{label="conversation history"}
+:::message{role="system"}
+You are a helpful agent for an online store.
+:::
+:::message{role="user"}
+What's the status of order 123456789?
+:::
+:::
+:::message-group{label="functions"}
+:::message{role="check order status"}
+Call this function with the order ID.
+:::
+:::
+:::
+```
+
+| Directive | Attribute | Meaning |
+| --- | --- | --- |
+| `conversation` | `title` | Heading and accessible name |
+| `conversation` | `kind` | `request` or `response`; changes the accent color |
+| `message-group` | `label` | Required name of the group, such as `functions` |
+| `message` | `role` | Required free text shown as the speaker label |
+
+A conversation holds `message` blocks directly, or `message-group` blocks that
+hold messages, never both, and needs at least one message. `message` and
+`message-group` are valid only inside a conversation. The output is a `section`
+containing ordered lists, with the role label before each body; on narrow
+screens the label sits above the body. The roles `system`, `user`, `assistant`,
+`tool` and `function` get distinct theme accents.
+
+## Highlight
+
+`==text==` renders `<mark>text</mark>`.
+
+```md
+A preview of ==a new type of software solution.==
+==**Run the counterfactual as a smoke test.**== Then compare.
+```
+
+The opening `==` must touch the first character and the closing `==` the last,
+so `x == y` stays literal. A highlight nests with emphasis, strong text, links
+and code, and may span soft line breaks inside one paragraph, but not a blank
+line. It is never applied inside code spans or fenced code. The highlight color
+comes from the theme.
+
+## Diagram
+
+`diagram` draws a vertical flow as accessible HTML and CSS (an ordered list;
+no script, no image). `node` is a box, `row` places nodes side by side, and the
+leaf `::link` is the arrow between two items.
+
+```md
+:::diagram{title="The Cybernetic Loop"}
+:::node{title="Engine" tone="agent"}
+LLM generation. Fast, prolific, tireless.
+:::
+::link{label="output" back="correction"}
+:::node{title="Governor" tone="human"}
+Specs, tests, CI gates, telemetry.
+:::
+Skip the loop and it stops being cybernetic: it is just an Engine running open.
+:::
+```
+
+| Directive | Attribute | Meaning |
+| --- | --- | --- |
+| `diagram` | `title` | Heading and accessible name |
+| `node` | `title` | Required box heading |
+| `node` | `tone` | `neutral` (default), `human`, `agent`, `risk`, `ok` |
+| `link` | `label` | Text next to the downward arrow |
+| `link` | `back` | Text next to an upward (feedback) arrow |
+
+`tone` is a meaning: the theme chooses the color, so it stays readable in every
+theme. A node body is Markdown. A `link` must sit between two nodes or rows
+(never first, last, or beside another link). Prose after the last node or row
+is the caption; prose before it is an error. A `row` holds only nodes and needs
+at least one; rows stack into one column on narrow screens.
+
+## Heading anchors
+
+Every heading receives an `id`. The generated id is the heading text with
+inline markup ignored, lowercased, punctuation removed, and words joined with
+single hyphens (`## Example 1: Use AI` becomes `example-1-use-ai`). A repeated
+slug takes `-1`, `-2` and so on in document order across the whole document,
+including headings inside directives. A heading with no usable characters gets
+`section`.
+
+End a heading with `{#custom-id}` to choose the id; the suffix is not shown.
+
+```md
+## Use AI models from any API {#ai-api-multiplexer}
+
+See [the multiplexer](#ai-api-multiplexer).
+```
+
+A custom id starts with a letter or underscore and may use letters, digits,
+`-`, `_`, `:` and `.`. A malformed or duplicate custom id fails validation with
+the line number. Generated ids are stable as long as no earlier heading with the
+same text is added or removed; use a custom id for any heading that other
+documents link to. Custom ids are claimed before generated ones within the same
+Markdown region, so a generated slug never steals an explicit id.
+
 ## Tables
 
 GFM tables render with column alignment from the delimiter row (`:---`, `:---:`,
@@ -105,6 +226,7 @@ scrolling inside a focusable region when a table is wider than the screen.
 | --- | --- | --- |
 | `metric` | Key metric fact | `value`, `unit`, `label`, `delta` |
 | `video` | Video player | `src`, `title`, `poster` |
+| `link` | Arrow between diagram items | `label`, `back` |
 
 ## Nesting rules
 
@@ -113,6 +235,9 @@ scrolling inside a focusable region when a table is wider than the screen.
 - `tabs` may contain only `tab`
 - `step-list` may contain only `step`
 - `timeline` may contain only `timeline-event`
+- `conversation` may contain only `message` or `message-group` (not both); `message-group` may contain only `message`
+- `diagram` may contain `node`, `row` and `link`, then optional caption prose; `row` may contain only `node`
+- `message`, `message-group`, `node`, `row` and `link` are valid only inside their parent
 - Other containers may nest Markdown and further directives
 - Fenced code blocks are not scanned for directives
 
