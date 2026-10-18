@@ -5,7 +5,8 @@ generated slug by ending the heading with ``{#custom-id}``. Generated slugs are
 lowercase, drop punctuation, join words with single hyphens, and take a numeric
 suffix (``-1``, ``-2``) when the same slug appeared earlier in the document, so
 a given heading keeps the same id until a heading above it with the same text
-is added or removed.
+is added or removed. An explicit id anywhere in the document is reserved, so a
+generated slug that would collide with it takes the numeric suffix instead.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ from markdown_it.token import Token
 from markusmd.errors import MarkusValidationError
 
 HEADING_IDS_ENV_KEY = "markus_heading_ids"
+RESERVED_HEADING_IDS_ENV_KEY = "markus_reserved_heading_ids"
 LINE_OFFSET_ENV_KEY = "markus_line_offset"
 
 _EXPLICIT_ID_SUFFIX = re.compile(r"[ \t]*\{#([^{}]*)\}[ \t]*$")
@@ -26,6 +28,16 @@ _VALID_EXPLICIT_ID = re.compile(r"^[A-Za-z_][\w:.-]*$")
 _SLUG_DROPPED_CHARACTERS = re.compile(r"[^\w\s-]", re.UNICODE)
 _SLUG_SEPARATORS = re.compile(r"[\s-]+")
 _FALLBACK_SLUG = "section"
+_ATX_EXPLICIT_ID_LINE = re.compile(
+    r"^ {0,3}#{1,6}[ \t]+.*\{#([A-Za-z_][\w:.-]*)\}[ \t]*$", re.MULTILINE
+)
+_FENCED_CODE = re.compile(r"^ {0,3}(`{3,}|~{3,}).*?^ {0,3}\1[`~]*[ \t]*$", re.MULTILINE | re.DOTALL)
+
+
+def explicit_heading_ids_in(markdown_source: str) -> set[str]:
+    """Collect the ``{#id}`` values of ATX headings so generated slugs can avoid them."""
+    without_code = _FENCED_CODE.sub("", markdown_source)
+    return set(_ATX_EXPLICIT_ID_LINE.findall(without_code))
 
 
 def slugify_heading_text(text: str) -> str:
@@ -81,6 +93,7 @@ def _unique_generated_id(base: str, used: set[str]) -> str:
 
 def _assign_heading_ids(state: Any) -> None:
     used: set[str] = state.env.setdefault(HEADING_IDS_ENV_KEY, set())
+    reserved: set[str] = state.env.get(RESERVED_HEADING_IDS_ENV_KEY, set())
     line_offset: int = state.env.get(LINE_OFFSET_ENV_KEY, 0)
     tokens = state.tokens
     explicit: list[tuple[Token, str, int | None]] = []
@@ -104,7 +117,7 @@ def _assign_heading_ids(state: Any) -> None:
     used.update(seen_explicit)
     for index in generated:
         slug = slugify_heading_text(_plain_text_of(tokens[index + 1]))
-        unique = _unique_generated_id(slug, used)
+        unique = _unique_generated_id(slug, used | reserved)
         used.add(unique)
         tokens[index].attrSet("id", unique)
 

@@ -206,8 +206,9 @@ A custom id starts with a letter or underscore and may use letters, digits,
 `-`, `_`, `:` and `.`. A malformed or duplicate custom id fails validation with
 the line number. Generated ids are stable as long as no earlier heading with the
 same text is added or removed; use a custom id for any heading that other
-documents link to. Custom ids are claimed before generated ones within the same
-Markdown region, so a generated slug never steals an explicit id.
+documents link to. Custom ids are reserved for the whole document before any slug is generated, so
+a generated slug never steals an explicit id, even from a heading further down;
+it takes the numeric suffix instead.
 
 ## Tables
 

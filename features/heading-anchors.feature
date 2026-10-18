@@ -109,6 +109,24 @@ Feature: Heading anchors
       <h2 id="install-1">Install</h2>
       """
 
+  Scenario: An explicit id later in the document wins over an earlier generated slug
+    Given the Markus source:
+      """
+      ### [Safeguard Retry Loops](#safeguard-retry-loops)
+
+      ## Example 3: Add a safeguard retry loop {#safeguard-retry-loops}
+      """
+    When I convert the source to an HTML fragment
+    Then conversion should succeed
+    And the HTML should contain the markup:
+      """
+      <h2 id="safeguard-retry-loops">Example 3: Add a safeguard retry loop</h2>
+      """
+    And the HTML should contain the markup:
+      """
+      <h3 id="safeguard-retry-loops-1">
+      """
+
   Scenario: Non-English headings keep their letters
     Given the Markus source:
       """
