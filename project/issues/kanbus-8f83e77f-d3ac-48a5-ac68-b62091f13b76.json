@@ -1,0 +1,22 @@
+{
+  "id": "kanbus-8f83e77f-d3ac-48a5-ac68-b62091f13b76",
+  "title": "Build the demo site through Papyrus (dogfood)",
+  "description": "The Markus site builds with Papyrus build_markus_site and the pinned papyrus-newsroom release instead of markus site. Pages moved under articles/. Tracked from Papyrus PPY-b36e4b.",
+  "type": "task",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-17T22:29:13.965007Z",
+  "updated_at": "2026-10-17T22:29:13.965198Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {},
+  "agent": null,
+  "agent_assignment": null
+}

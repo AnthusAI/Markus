@@ -42,6 +42,7 @@ Markdown, including nested directives.
 | `step` | Single step | — |
 | `timeline` | Chronological sequence | `label` |
 | `timeline-event` | Single event in a timeline | `date`, `time`, `title`, `icon` |
+| `editorial-finding` | Editorial diagnose finding (machine or human) | `id`, `kind`, `rationale`, `decision`, `group` |
 
 A trailing kramdown-style attribute list is also accepted inside a directive:
 
