@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "89a2f6eb-42e5-4ec4-a7ad-680ad2a5fbf4",
+  "issue_id": "kanbus-8f83e77f-d3ac-48a5-ac68-b62091f13b76",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-17T22:29:13.965Z",
+  "actor_id": "unknown",
+  "payload": {
+    "title": "Build the demo site through Papyrus (dogfood)",
+    "description": "The Markus site builds with Papyrus build_markus_site and the pinned papyrus-newsroom release instead of markus site. Pages moved under articles/. Tracked from Papyrus PPY-b36e4b.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": null,
+    "labels": []
+  }
+}

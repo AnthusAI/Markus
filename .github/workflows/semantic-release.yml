@@ -76,7 +76,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -107,27 +106,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: semantic-release publish
-
-      - name: Publish built artifacts to PyPI (twine)
-        if: ${{ steps.semrel_version.outputs.released == 'true' }}
-        env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-          TWINE_USERNAME: __token__
-        run: |
-          set -euo pipefail
-          if [ -z "${PYPI_TOKEN:-}" ]; then
-            echo "::warning::PYPI_TOKEN is empty; skipping explicit PyPI upload."
-            exit 0
-          fi
-          python -m pip install twine
-          if ! compgen -G "dist/*" > /dev/null; then
-            echo "Expected build artifacts under dist/, but none were found." >&2
-            exit 1
-          fi
-          export TWINE_PASSWORD="${PYPI_TOKEN}"
-          python -m twine upload --skip-existing dist/*
 
   guard-pre-1-0:
     needs: release

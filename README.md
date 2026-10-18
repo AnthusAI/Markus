@@ -67,13 +67,13 @@ Markus must not decay into an untyped CSS API. See
 ## Demo site
 
 **[anthusai.github.io/Markus/](https://anthusai.github.io/Markus/)** — written in
-Markus and built by Markus.
+Markus and built by [Papyrus](https://github.com/AnthusAI/Papyrus).
 
 To run the same site locally:
 
 ```bash
-pip install -e ".[dev]"
-markus site site --out _site --serve --port 43147
+pip install -r docsite/requirements.txt
+python docsite/build_site.py --out _site
 ```
 
 ## Preview locally
