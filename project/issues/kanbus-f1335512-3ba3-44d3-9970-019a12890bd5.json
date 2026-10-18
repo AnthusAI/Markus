@@ -17,10 +17,17 @@
       "text": "Branch feature/kanbus-f13355-design-system-docs (stacked on feat/multiline-directive-attributes, PR #9). Adds the example directive (source beside preview, stacked under 44rem), a design-system site theme that follows the system color scheme with an Auto/Light/Dark override, a grouped docs sidebar, new Get started / Example / Editorial finding pages, all demo pages converted to example blocks, and a parser fix so {: } attribute lists apply only to the directive they sit in directly. Verification: behave 248/248 scenarios, ruff clean, every site page passes markus validate, docsite builds 25 pages locally; checked light, dark, forced light on dark system, 1440/1280/375 widths, no horizontal overflow on any page at 375px.",
       "created_at": "2026-10-18T17:20:18.051223Z",
       "comment_type": "default"
+    },
+    {
+      "id": "06365116-68bf-439e-8dfe-aba08e56c6db",
+      "author": "home",
+      "text": "PR: https://github.com/AnthusAI/Markus/pull/10 (base feat/multiline-directive-attributes; retarget to develop after #9). Not landed. Deploy blocked on Papyrus: every papyrus-newsroom release asserts Markus == 0.5.1 exactly.",
+      "created_at": "2026-10-18T17:20:41.841753Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-18T17:05:36.922393Z",
-  "updated_at": "2026-10-18T17:20:18.051251Z",
+  "updated_at": "2026-10-18T17:20:41.841779Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
