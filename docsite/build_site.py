@@ -1,11 +1,14 @@
 import argparse
 import html
+import json
 import shutil
 import tempfile
 from pathlib import Path
 
 from papyrus_content.markus_renderer.build import build_markus_site
 from papyrus_content.markus_renderer.shell import SiteChrome
+
+from markusmd.themes import AVAILABLE_THEMES
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SITE_CONTENT_DIRECTORY = REPOSITORY_ROOT / "site"
@@ -86,12 +89,35 @@ FAVICON = (
     '%3C/svg%3E">'
 )
 
-# Applied before first paint so a reader's saved choice never flashes the other scheme.
+# Every bundled Markus theme, offered in the theme picker. "Markus" is the
+# design-system default, which follows the reader's light or dark setting.
+SITE_THEMES = sorted(theme for theme in AVAILABLE_THEMES if theme != "default")
+
+# Applied before first paint so a reader's saved choices never flash the defaults.
 COLOR_SCHEME_BOOTSTRAP = (
-    "<script>try{var s=localStorage.getItem('markus-color-scheme');"
-    "if(s==='light'||s==='dark')document.documentElement.setAttribute('data-color-scheme',s)"
+    "<script>try{var r=document.documentElement,"
+    "s=localStorage.getItem('markus-color-scheme'),t=localStorage.getItem('markus-theme');"
+    "if(s==='light'||s==='dark')r.setAttribute('data-color-scheme',s);"
+    f"if({json.dumps(SITE_THEMES)}.indexOf(t)>=0)r.setAttribute('data-theme',t)"
     "}catch(e){}</script>"
 )
+
+
+def theme_label(theme: str) -> str:
+    return " ".join(word.capitalize() for word in theme.split("-"))
+
+
+def render_theme_picker() -> str:
+    options = ['<option value="">Markus</option>'] + [
+        f'<option value="{html.escape(theme)}">{html.escape(theme_label(theme))}</option>'
+        for theme in SITE_THEMES
+    ]
+    return (
+        '<label class="site-theme">'
+        '<span class="site-theme-label">Theme</span>'
+        f'<select data-theme-picker aria-label="Markus theme">{"".join(options)}</select>'
+        "</label>"
+    )
 
 
 def render_navigation(page_context) -> str:
@@ -122,6 +148,7 @@ def render_site_banner(page_context) -> str:
         '<a href="https://github.com/AnthusAI/Markus">GitHub</a>'
         '<a href="https://pypi.org/project/anthus-markus/">PyPI</a>'
         "</nav>"
+        f"{render_theme_picker()}"
         '<div class="site-scheme" role="group" aria-label="Color scheme">'
         '<button type="button" data-scheme="system" aria-pressed="true">Auto</button>'
         '<button type="button" data-scheme="light" aria-pressed="false">Light</button>'

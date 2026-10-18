@@ -5,6 +5,8 @@ description: Every Markus directive and Markdown feature, each with a page of ex
 
 Every directive in the Markus registry and every Markdown feature it renders has a page here. Each page lists the attributes, then shows every variant as Markus source beside the result it renders. On narrow screens the source sits above the preview.
 
+Markus ships with 22 themes. Pick one from the **Theme** menu at the top of any page to see every example on the site re-rendered in it; **Markus** is the default and follows your light or dark setting. Apply a theme to your own pages with `theme:` in front matter or `markus convert --theme NAME`.
+
 ## Directives
 
 | Directive | Kind | Page |

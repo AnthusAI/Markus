@@ -35,6 +35,21 @@
   });
   apply(readSaved());
 
+  // The theme picker applies a bundled Markus theme to the content area; empty means the Markus default.
+  var themeKey = "markus-theme";
+  document.querySelectorAll("[data-theme-picker]").forEach(function (picker) {
+    picker.value = root.getAttribute("data-theme") || "";
+    picker.addEventListener("change", function () {
+      var theme = picker.value;
+      if (theme) root.setAttribute("data-theme", theme);
+      else root.removeAttribute("data-theme");
+      try {
+        if (theme) localStorage.setItem(themeKey, theme);
+        else localStorage.removeItem(themeKey);
+      } catch (error) {}
+    });
+  });
+
   // The sidebar is a <details> so it folds into a menu on narrow screens; keep it open when wide.
   var menu = document.querySelector(".site-menu");
   if (menu && window.matchMedia) {
