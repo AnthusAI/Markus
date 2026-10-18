@@ -43,10 +43,10 @@
     box-sizing: border-box;
     width: 1200px;
     height: 630px;
-    padding: 64px;
+    padding: 56px;
     display: grid;
-    grid-template-columns: 1fr 500px;
-    gap: 56px;
+    grid-template-columns: 1fr 600px;
+    gap: 48px;
     align-items: center;
   }
 
@@ -54,27 +54,27 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    font: 600 40px/1 "Geist Mono", monospace;
+    font: 600 36px/1 "Geist Mono", monospace;
     letter-spacing: -0.02em;
   }
   .mark { width: 28px; height: 28px; background: var(--volt); box-shadow: 0 0 0 2px var(--ink); }
 
   h1 {
-    margin: 40px 0 20px;
-    font: 600 64px/1.05 "Geist Mono", monospace;
+    margin: 32px 0 18px;
+    font: 600 52px/1.08 "Geist Mono", monospace;
     letter-spacing: -0.035em;
   }
 
   .lede {
     margin: 0;
     max-width: 30ch;
-    font-size: 26px;
-    line-height: 36px;
+    font-size: 22px;
+    line-height: 32px;
     color: var(--ink-muted);
   }
 
   .url {
-    margin-top: 40px;
+    margin-top: 32px;
     display: inline-block;
     padding: 6px 12px;
     background: var(--volt);
@@ -89,10 +89,10 @@
     background: var(--surface);
   }
 
-  .pane { padding: 20px 24px; }
+  .pane { padding: 24px 28px; }
   .label {
     margin: 0 0 12px;
-    font: 500 13px/16px "Geist Mono", monospace;
+    font: 500 16px/20px "Geist Mono", monospace;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-muted);
@@ -104,7 +104,7 @@
   }
   .source pre {
     margin: 0;
-    font: 400 17px/27px "Geist Mono", monospace;
+    font: 400 25px/38px "Geist Mono", monospace;
     color: var(--ink);
   }
   .f, .n { color: var(--volt-ink); }
@@ -115,20 +115,20 @@
   .callout {
     background: var(--surface);
     border: 1px solid var(--line-strong);
-    padding: 14px 18px 16px;
+    padding: 18px 22px 20px;
   }
   .callout-title {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin: 0 0 6px;
-    font: 500 13px/16px "Geist Mono", monospace;
+    gap: 10px;
+    margin: 0 0 8px;
+    font: 500 18px/22px "Geist Mono", monospace;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #0b7a3e;
   }
-  .callout-title::before { content: ""; width: 9px; height: 9px; background: currentColor; }
-  .callout p { margin: 0; font-size: 18px; line-height: 26px; }
+  .callout-title::before { content: ""; width: 12px; height: 12px; background: currentColor; }
+  .callout p { margin: 0; font-size: 26px; line-height: 36px; }
   .callout code {
     font: 400 16px "Geist Mono", monospace;
     background: var(--surface-sunken);
@@ -150,15 +150,13 @@
       <p class="label">Markus</p>
 <pre><span class="f">:::</span><span class="n">tip</span><span class="a">{title="Encode intent"}</span>
 Say *what* a block is.
-Leave the layout to the
-theme.
 <span class="f">:::</span></pre>
     </div>
     <div class="pane preview">
       <p class="label">Preview</p>
       <div class="callout">
         <p class="callout-title">Encode intent</p>
-        <p>Say <em>what</em> a block is. Leave the layout to the theme.</p>
+        <p>Say <em>what</em> a block is.</p>
       </div>
     </div>
   </div>
