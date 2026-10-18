@@ -41,8 +41,14 @@
     picker.value = root.getAttribute("data-theme") || "";
     picker.addEventListener("change", function () {
       var theme = picker.value;
-      if (theme) root.setAttribute("data-theme", theme);
-      else root.removeAttribute("data-theme");
+      var mode = picker.selectedOptions[0] ? picker.selectedOptions[0].dataset.mode : "both";
+      if (theme) {
+        root.setAttribute("data-theme", theme);
+        root.setAttribute("data-theme-mode", mode);
+      } else {
+        root.removeAttribute("data-theme");
+        root.removeAttribute("data-theme-mode");
+      }
       try {
         if (theme) localStorage.setItem(themeKey, theme);
         else localStorage.removeItem(themeKey);
