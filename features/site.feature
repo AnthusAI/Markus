@@ -40,6 +40,8 @@ Feature: GitHub Pages demo site
     And "index.html" should contain "markus-details"
     And "index.html" should contain "markus-aside"
     And "index.html" should contain "markus-metric"
+    And "demo-bar-chart.html" should contain "markus-bar-chart"
+    And "demo-tables.html" should contain "markus-table-wrap"
     And "index.html" should contain "markus-tabs"
     And "index.html" should contain "markus-step-list"
     And "index.html" should contain "markus-video"

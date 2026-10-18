@@ -23,6 +23,7 @@ Every directive in the Markus registry and every Markdown feature it renders has
 | `video` | leaf | [Figure and video](demo-media.html) |
 | `details` | container | [Details](demo-details.html) |
 | `metric` | leaf | [Metric](demo-metric.html) |
+| `bar-chart` | container | [Bar chart](demo-bar-chart.html) |
 | `step-list`, `step` | container | [Step list](demo-steps.html) |
 | `tabs`, `tab` | container | [Tabs](demo-tabs.html) |
 | `timeline`, `timeline-event` | container | [Timeline](demo-timeline.html) |
@@ -32,5 +33,6 @@ Every directive in the Markus registry and every Markdown feature it renders has
 
 - [Syntax and metadata](demo-syntax.html): front matter, attribute quoting, ids, nesting, code fences.
 - [GFM feature demos](gfm-features.html): headings, emphasis, links, images, lists, tasks, tables, code, quotes, alerts, breaks.
+- [Tables](demo-tables.html): alignment, wrapping, numeric columns, scrolling, captions.
 - [GitHub Flavored Markdown overview](gfm.html)
 - [Gallery](gallery.html): the original one-page tour.

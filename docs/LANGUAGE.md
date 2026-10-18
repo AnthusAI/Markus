@@ -42,6 +42,7 @@ Markdown, including nested directives.
 | `step` | Single step | — |
 | `timeline` | Chronological sequence | `label` |
 | `timeline-event` | Single event in a timeline | `date`, `time`, `title`, `icon` |
+| `bar-chart` | Labeled bars from a Markdown table | `title`, `max`, `unit`, `caption` |
 | `editorial-finding` | Editorial diagnose finding (machine or human) | `id`, `kind`, `rationale`, `decision`, `group` |
 
 A trailing kramdown-style attribute list is also accepted inside a directive:
@@ -52,6 +53,46 @@ A trailing kramdown-style attribute list is also accepted inside a directive:
 {: attribution="Editorial principle" }
 :::
 ```
+
+## Bar chart
+
+`bar-chart` turns a plain GFM table into labeled horizontal bars. The body is
+the table: column 1 is the row label, column 2 the value, and optional column 3
+a note shown at the end of the row. Any Markdown after the table is the chart
+caption (rendered italic and centered), or use the `caption` attribute.
+
+```md
+:::bar-chart{title="Context Snowball"}
+| Turn | Context used | Size |
+| --- | --- | --- |
+| Turn 1 | 2 | ~4K tokens |
+| Turn 10 | 35 | ~70K tokens |
+| Turn 25 | 75 | ~150K tokens |
+| Turn 50 | 100 | ~200K (full window) |
+
+Every turn re-sends the whole conversation. On a 50-turn session, that's
+roughly **25 input tokens for every 1 output token** - illustrative, not a
+measured trace.
+:::
+```
+
+| Attribute | Meaning | Default |
+| --- | --- | --- |
+| `title` | Chart title (the table caption) | none |
+| `max` | Value that fills the bar completely | `100` |
+| `unit` | Suffix shown after each value; a matching suffix in a cell is accepted | `%` |
+| `caption` | Caption text when no paragraph follows the table | none |
+
+Each value must be a number from 0 to `max`; otherwise validation fails with
+the offending row named. The output is a real `<table>` (row headers, values as
+text, bars hidden from assistive technology), so it reads correctly with no CSS
+and degrades to a plain table in other Markdown renderers.
+
+## Tables
+
+GFM tables render with column alignment from the delimiter row (`:---`, `:---:`,
+`---:`), wrapped cell text, tabular numerals, striped body rows, and horizontal
+scrolling inside a focusable region when a table is wider than the screen.
 
 ## Leaf directives
 

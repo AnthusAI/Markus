@@ -85,6 +85,13 @@ class MetricAttrs(_Strict):
     delta: str | None = None
 
 
+class BarChartAttrs(_Strict):
+    title: str | None = None
+    max: float = Field(default=100, gt=0)
+    unit: str = "%"
+    caption: str | None = None
+
+
 def _id_attr(attrs: dict[str, Any]) -> str:
     ident = attrs.get("id")
     if ident is not None and str(ident).strip():
@@ -310,6 +317,147 @@ def _render_metric(directive: Directive, inner: str, attrs: dict[str, Any]) -> s
         f"<dt>{escape(str(label))}</dt>"
         f"<dd><span class=\"markus-metric-value\">{value}</span>{unit}{delta_html}</dd>"
         f"</dl>"
+    )
+
+
+def _format_bar_number(number: float) -> str:
+    return f"{number:g}"
+
+
+def _bar_value_text(number: float, unit: str) -> str:
+    text = _format_bar_number(number)
+    if not unit:
+        return text
+    return f"{text}{unit}" if unit == "%" else f"{text} {unit}"
+
+
+def _parse_bar_value(raw: str, unit: str, *, line: int, label: str) -> float:
+    cleaned = raw.strip()
+    if unit and cleaned.endswith(unit):
+        cleaned = cleaned[: -len(unit)].strip()
+    try:
+        number = float(cleaned)
+    except ValueError:
+        raise MarkusValidationError(
+            f"bar-chart row {label!r}: value {raw.strip()!r} is not a number",
+            line=line,
+        ) from None
+    if number != number or number in (float("inf"), float("-inf")):
+        raise MarkusValidationError(
+            f"bar-chart row {label!r}: value {raw.strip()!r} is not a finite number",
+            line=line,
+        )
+    return number
+
+
+def _render_bar_chart(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    from markusmd.ast import MarkdownBlock
+    from markusmd.render import make_markdown
+
+    line = directive.span.line
+    source = "\n\n".join(
+        child.source for child in directive.children if isinstance(child, MarkdownBlock)
+    )
+    markdown = make_markdown()
+    tokens = markdown.parse(source)
+    table_start = next((i for i, tok in enumerate(tokens) if tok.type == "table_open"), None)
+    if table_start is None:
+        raise MarkusValidationError(
+            "Directive 'bar-chart' needs a Markdown table body with columns "
+            "label, value and an optional note",
+            line=line,
+        )
+    if table_start != 0:
+        raise MarkusValidationError(
+            "Directive 'bar-chart' must start with its table; "
+            "put the caption after the table or in the caption attribute",
+            line=line,
+        )
+    table_end = next(i for i, tok in enumerate(tokens) if tok.type == "table_close")
+    end_line = tokens[0].map[1] if tokens[0].map else 0
+    rows: list[list[str]] = []
+    header: list[str] = []
+    in_head = False
+    current: list[str] | None = None
+    for tok in tokens[: table_end + 1]:
+        if tok.type == "thead_open":
+            in_head = True
+        elif tok.type == "thead_close":
+            in_head = False
+        elif tok.type == "tr_open":
+            current = []
+        elif tok.type == "tr_close":
+            if in_head:
+                header = current or []
+            else:
+                rows.append(current or [])
+            current = None
+        elif tok.type == "inline" and current is not None:
+            html = markdown.renderer.renderInline(tok.children or [], markdown.options, {})
+            current.append(html)
+    if not 2 <= len(header) <= 3:
+        raise MarkusValidationError(
+            f"Directive 'bar-chart' table needs 2 or 3 columns (label, value, note), "
+            f"found {len(header)}",
+            line=line,
+        )
+    if not rows:
+        raise MarkusValidationError("Directive 'bar-chart' needs at least one data row", line=line)
+    unit = attrs["unit"]
+    maximum = float(attrs["max"])
+    has_note = len(header) == 3
+    body_rows = []
+    for row in rows:
+        cells = row + [""] * (len(header) - len(row))
+        label_html, value_html = cells[0], cells[1]
+        note_html = cells[2] if has_note else ""
+        plain_label = re.sub(r"<[^>]+>", "", label_html)
+        plain_value = re.sub(r"<[^>]+>", "", value_html)
+        number = _parse_bar_value(plain_value, unit, line=line, label=plain_label)
+        if number < 0 or number > maximum:
+            raise MarkusValidationError(
+                f"bar-chart row {plain_label!r}: value {_format_bar_number(number)} "
+                f"is outside 0 to {_format_bar_number(maximum)}",
+                line=line,
+            )
+        percent = number / maximum * 100
+        note_cell = f'<td class="markus-bar-chart-note">{note_html}</td>' if has_note else ""
+        body_rows.append(
+            f'<tr><th scope="row" class="markus-bar-chart-label">{label_html}</th>'
+            f'<td class="markus-bar-chart-bar"><div class="markus-bar-chart-line">'
+            f'<span class="markus-bar-chart-track" aria-hidden="true">'
+            f'<span class="markus-bar-chart-fill" style="--markus-bar-percent: {percent:.4g}%">'
+            f"</span></span>"
+            f'<span class="markus-bar-chart-value">{escape(_bar_value_text(number, unit))}</span>'
+            f"</div></td>{note_cell}</tr>"
+        )
+    head_cells = [
+        f'<th scope="col">{header[0]}</th>',
+        f'<th scope="col">{header[1]}</th>',
+    ]
+    if has_note:
+        head_cells.append(f'<th scope="col">{header[2]}</th>')
+    title = attrs.get("title")
+    caption_element = (
+        f'<caption class="markus-bar-chart-title">{escape(str(title))}</caption>' if title else ""
+    )
+    caption_html = ""
+    trailing = "\n".join(source.splitlines()[end_line:]).strip()
+    if trailing:
+        caption_html = markdown.render(trailing)
+    elif attrs.get("caption"):
+        caption_html = f"<p>{escape(str(attrs['caption']))}</p>"
+    figcaption = (
+        f'<figcaption class="markus-bar-chart-caption">{caption_html}</figcaption>'
+        if caption_html
+        else ""
+    )
+    return (
+        f'<figure{_id_attr(attrs)} class="markus-bar-chart">'
+        f'<table class="markus-bar-chart-table">{caption_element}'
+        f'<thead class="markus-bar-chart-head"><tr>{"".join(head_cells)}</tr></thead>'
+        f'<tbody>{"".join(body_rows)}</tbody></table>'
+        f"{figcaption}</figure>"
     )
 
 
@@ -646,6 +794,11 @@ def default_specs() -> list[DirectiveSpec]:
             schema=MetricAttrs,
             renderer=_render_metric,
             leaf=True,
+        ),
+        DirectiveSpec(
+            name="bar-chart",
+            schema=BarChartAttrs,
+            renderer=_render_bar_chart,
         ),
         DirectiveSpec(
             name="tabs",

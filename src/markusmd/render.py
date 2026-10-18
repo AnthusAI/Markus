@@ -14,8 +14,29 @@ from markusmd.registry import Registry
 from markusmd.themes import validate_theme
 
 
+def _wrap_tables_for_scrolling(md: MarkdownIt) -> MarkdownIt:
+    """Wrap every GFM table in a focusable scroll region so wide tables scroll on small screens."""
+
+    def table_open(renderer, tokens, idx, options, env):
+        return (
+            '<div class="markus-table-wrap" role="region" aria-label="Table" tabindex="0">\n'
+            "<table>\n"
+        )
+
+    def table_close(renderer, tokens, idx, options, env):
+        return "</table>\n</div>\n"
+
+    md.add_render_rule("table_open", table_open)
+    md.add_render_rule("table_close", table_close)
+    return md
+
+
 def make_markdown(*, allow_html: bool = False) -> MarkdownIt:
     """GitHub-flavored Markdown parser used for ordinary (non-directive) regions."""
+    return _wrap_tables_for_scrolling(_build_markdown(allow_html=allow_html))
+
+
+def _build_markdown(*, allow_html: bool) -> MarkdownIt:
     try:
         md = MarkdownIt(
             "gfm-like2",
