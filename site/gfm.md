@@ -1,7 +1,6 @@
 ---
 title: GitHub Flavored Markdown in Markus
 description: The GFM baseline Markus keeps on purpose.
-theme: catppuccin
 ---
 
 # GitHub Flavored Markdown

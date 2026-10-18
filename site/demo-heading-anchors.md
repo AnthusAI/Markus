@@ -1,14 +1,9 @@
 ---
 title: Heading anchors
 description: Every heading gets a stable id, and {#custom-id} sets one explicitly.
-theme: catppuccin
 ---
 
-# Heading anchors
-
 Every heading gets an `id` so it can be linked. End a heading with `{#custom-id}` to choose the id yourself, which keeps links stable when the title changes.
-
-[All features](features.html)
 
 ## Generated ids {#generated-ids}
 
@@ -26,12 +21,8 @@ A custom id must start with a letter or underscore and may use letters, digits, 
 
 ### Slug only
 
-## Example 1: Use AI models from any company's AI API
-
-See [the multiplexer](#ai-api-multiplexer) for the next step.
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ## Example 1: Use AI models from any company's AI API
 
 See [the multiplexer](#ai-api-multiplexer) for the next step.
@@ -40,12 +31,8 @@ See [the multiplexer](#ai-api-multiplexer) for the next step.
 
 ### With a custom id
 
-## Multiplexing across vendors {#ai-api-multiplexer}
-
-Links such as [this one](#ai-api-multiplexer) keep working when the title is reworded.
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ## Multiplexing across vendors {#ai-api-multiplexer}
 
 Links such as [this one](#ai-api-multiplexer) keep working when the title is reworded.

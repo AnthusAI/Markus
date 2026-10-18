@@ -10,10 +10,12 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
-from markusmd.ast import Directive
+from markusmd.ast import Directive, Document
 from markusmd.errors import MarkusValidationError
+from markusmd.example import example_snippet, highlight_markus_source, parse_example, render_example
 
 TRAILING_HTML_KEY = "_trailing_html"
+EXAMPLE_SOURCE_KEY = "_example_source"
 
 RenderFn = Callable[["Directive", str, dict[str, Any]], str]
 
@@ -74,6 +76,11 @@ class FigureAttrs(_Strict):
 class DetailsAttrs(_Strict):
     summary: str = "Details"
     open: bool = False
+
+
+class ExampleAttrs(_Strict):
+    title: str | None = None
+    layout: Literal["side-by-side", "stacked"] = "side-by-side"
 
 
 class AsideAttrs(_Strict):
@@ -315,6 +322,10 @@ def _render_figure(directive: Directive, inner: str, attrs: dict[str, Any]) -> s
         caption_bits.append(f'<span class="markus-credit">{escape(str(attrs["credit"]))}</span>')
     caption = f"<figcaption>{' · '.join(caption_bits)}</figcaption>" if caption_bits else ""
     return f'<figure{_id_attr(attrs)} class="markus-figure">{media}{inner}{caption}</figure>'
+
+
+def _render_example(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
+    return render_example(attrs[EXAMPLE_SOURCE_KEY], inner, attrs)
 
 
 def _render_details(directive: Directive, inner: str, attrs: dict[str, Any]) -> str:
@@ -738,6 +749,7 @@ class DirectiveSpec:
     extra_attributes: dict[str, Any] = field(default_factory=dict)
     allowed_parents: frozenset[str] | None = None
     trailing_markdown: bool = False
+    renders_example: bool = False
 
 
 class Registry:
@@ -818,6 +830,8 @@ class Registry:
             _assert_only_allowed_children(directive, spec, children)
         _assert_cardinality(canonical_name, children, line=directive.span.line)
         _assert_structure(canonical_name, children, line=directive.span.line)
+        if spec.renders_example:
+            self.validate_example(directive)
         return Directive(
             name=canonical_name,
             attributes=attributes,
@@ -826,12 +840,23 @@ class Registry:
             leaf=directive.leaf,
         )
 
+    def validate_example(self, directive: Directive) -> Document:
+        """Parse and validate an example's snippet as a Markus document."""
+        snippet, first_line = example_snippet(directive)
+        document = parse_example(snippet, first_line)
+        document.children = [
+            self.validate(child) if isinstance(child, Directive) else child
+            for child in document.children
+        ]
+        return document
+
     def render(
         self,
         directive: Directive,
         inner_html: str,
         *,
         trailing_html: str | None = None,
+        example_source: str | None = None,
     ) -> str:
         spec = self.resolve(directive.name)
         if spec is None:
@@ -842,6 +867,8 @@ class Registry:
         attributes = directive.attributes
         if trailing_html is not None:
             attributes = {**attributes, TRAILING_HTML_KEY: trailing_html}
+        if example_source is not None:
+            attributes = {**attributes, EXAMPLE_SOURCE_KEY: highlight_markus_source(example_source)}
         return spec.renderer(directive, inner_html, attributes)
 
     @classmethod
@@ -933,6 +960,12 @@ def default_specs() -> list[DirectiveSpec]:
             name="figure",
             schema=FigureAttrs,
             renderer=_render_figure,
+        ),
+        DirectiveSpec(
+            name="example",
+            schema=ExampleAttrs,
+            renderer=_render_example,
+            renders_example=True,
         ),
         DirectiveSpec(
             name="details",

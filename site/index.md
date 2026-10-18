@@ -4,7 +4,6 @@ description: GitHub-flavored Markdown with a small, semantic vocabulary for layo
 authors:
   - Anthus AI Solutions
 date: 2026-09-04
-theme: catppuccin
 ---
 
 Markus keeps [GitHub Flavored Markdown](gfm.html) as the content language, then adds a handful of colon-fenced directives for the things Markdown was never meant to say: *this is a pull quote*, *these are peer cards*, *these two ideas belong beside each other*.
@@ -19,7 +18,31 @@ Encode intent in the document. Leave grid tracks, type ramps, and hover states t
 It is not a visual programming language. There is no `margin`, no `font-size`, and no `grid-template-columns` in the authoring API. Unknown attributes are errors, on purpose.
 :::
 
-Browse every directive and Markdown feature, each with rendered output next to its source, in the [feature index](features.html).
+## Write this, get this
+
+Every example in these docs shows the Markus source beside what it renders. This one is a callout and a metric inside a two-up pair.
+
+:::example{layout="stacked"}
+```markus
+:::two-up{ratio="2:1"}
+:::column
+### Ship the smaller model
+
+It answers 94% of support questions on its own, at a tenth of the cost.
+
+:::tip
+Route the rest to the large model.
+:::
+:::
+
+:::column
+::metric{value="0.1" unit="x" label="Cost per answer" delta="-90%"}
+:::
+:::
+```
+:::
+
+[Get started](getting-started.html) to install Markus, or browse the [feature index](features.html) for every directive and Markdown feature.
 
 ## A vocabulary small enough to remember
 
@@ -105,23 +128,23 @@ Outside `two-up`, ordinary blocks span the entire track. Inside a `card-grid`, s
 
 ## Metrics as first-class facts
 
-Leaf directives cover facts that should be extractable later — not just styled.
+Leaf directives cover facts that should be extractable later, not just styled.
 
 :::card-grid{columns=3 label="Example metrics"}
 :::card
-::metric{value="0.1.0" label="Language version"}
-:::
-
-:::card
-::metric{value="15" unit="blocks" label="Directive vocabulary" delta="+15"}
+::metric{value="0" label="CSS properties in the authoring API"}
 :::
 
 :::card
 ::metric{value="GFM" label="Markdown baseline"}
 :::
+
+:::card
+::metric{value="MIT" label="License"}
+:::
 :::
 
-:::figure{src="assets/pipeline.svg" alt="Pipeline from Markus source through a validated AST to semantic HTML" caption="Parse, validate, then render. Never regex-replace a directive after the fact." credit="Markus 0.1"}
+:::figure{src="assets/pipeline.svg" alt="Pipeline from Markus source through a parser and a validating registry to semantic HTML" caption="Parse, validate, then render. Never regex-replace a directive after the fact."}
 :::
 
 ## Structured procedures
@@ -146,27 +169,27 @@ Output semantic markup ready for static hosting, responsive themes, or print.
 ## Multi-platform instructions
 
 :::tabs{label="Install instructions"}
-:::tab{label="macOS"}
-Install with Homebrew or pip:
-
-```bash
-brew install anthus-markus
-```
-:::
-
-:::tab{label="Linux"}
-Install using pip:
+:::tab{label="pip"}
+Install into the current environment:
 
 ```bash
 pip install anthus-markus
 ```
 :::
 
-:::tab{label="Windows"}
-Install via PowerShell:
+:::tab{label="pipx"}
+Install the `markus` command in its own environment:
 
-```powershell
-pip install anthus-markus
+```bash
+pipx install anthus-markus
+```
+:::
+
+:::tab{label="uv"}
+Add Markus to a uv project:
+
+```bash
+uv add anthus-markus
 ```
 :::
 :::
@@ -185,18 +208,18 @@ Implemented the markdown-it directive parser, Pydantic attribute validation, and
 :::timeline-event{date="2026-09-04" title="Rich Directives & Themes"}
 Added tabs, step lists, timelines, and 20+ accessible color palettes.
 :::
+
+:::timeline-event{date="2026-10-18" title="Conversations, diagrams, and examples"}
+Added conversation transcripts, flow diagrams, bar charts, highlights, heading anchors, and side-by-side source examples.
 :::
-
-## Media walkthrough
-
-::video{src="assets/pipeline.svg" title="Pipeline demonstration"}
+:::
 
 :::details{summary="Why not raw HTML?"}
 Raw HTML is a compatibility hatch, not the authoring API. It names CSS classes, invites sanitizer fights, and cannot tell a renderer whether three boxes are a comparison, a feature set, or leftover layout. Markus keeps a registry: unknown names fail in CI instead of silently becoming untyped markup.
 :::
 
 :::aside{title="Try it"}
-Install the Python module with `pip install anthus-markus`, then run `markus convert page.md`. The [gallery](gallery.html) renders every directive in the 0.1 vocabulary. `markus preview` opens a live editor.
+Install the Python module with `pip install anthus-markus`, then run `markus convert page.md`. The [gallery](gallery.html) renders every directive on one page. `markus preview` opens a live editor.
 :::
 
 :::tip{title="A note on the package name"}

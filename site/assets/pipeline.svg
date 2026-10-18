@@ -1,23 +1,53 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-labelledby="title desc">
   <title id="title">Markus rendering pipeline</title>
-  <desc id="desc">Markdown source flows into a parser, then a validated directive AST, then semantic HTML.</desc>
-  <rect width="720" height="220" rx="18" fill="#fffcf6" stroke="#d9d0c0"/>
-  <g font-family="Georgia, serif" font-size="16" fill="#1c1914" text-anchor="middle">
-    <rect x="28" y="58" width="150" height="104" rx="12" fill="#f4efe4" stroke="#0f5f5b" stroke-width="2"/>
-    <text x="103" y="104">Markus</text>
-    <text x="103" y="128">source</text>
-    <rect x="214" y="58" width="150" height="104" rx="12" fill="#f4efe4" stroke="#0f5f5b" stroke-width="2"/>
-    <text x="289" y="104">Parser</text>
-    <text x="289" y="128">GFM + fences</text>
-    <rect x="400" y="58" width="150" height="104" rx="12" fill="#f4efe4" stroke="#0f5f5b" stroke-width="2"/>
-    <text x="475" y="104">Registry</text>
-    <text x="475" y="128">validate</text>
-    <rect x="586" y="58" width="106" height="104" rx="12" fill="#0f5f5b"/>
-    <text x="639" y="116" fill="#f4efe4">HTML</text>
+  <desc id="desc">Markus source flows into a parser, then a registry that validates every directive, then semantic HTML.</desc>
+  <style>
+    .ground { fill: #f3f3ef; }
+    .box { fill: #ffffff; stroke: #86887f; stroke-width: 1; }
+    .ink { fill: #0f1011; }
+    .muted { fill: #575a5e; }
+    .volt { fill: #c6f135; stroke: #0f1011; stroke-width: 1; }
+    .on-volt { fill: #0f1011; }
+    .shadow { fill: #0f1011; }
+    .arrow { fill: #0f1011; }
+    text { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .name { font-size: 18px; font-weight: 600; }
+    .note { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+    @media (prefers-color-scheme: dark) {
+      .ground { fill: #0b0c0d; }
+      .box { fill: #15171a; stroke: #6b7178; }
+      .ink { fill: #f1f2ed; }
+      .muted { fill: #a2a7ad; }
+      .volt { stroke: #c6f135; }
+      .shadow { fill: #c6f135; }
+      .arrow { fill: #c6f135; }
+    }
+  </style>
+  <rect class="ground" width="720" height="200"/>
+  <g text-anchor="middle">
+    <rect class="box" x="24" y="56" width="152" height="88"/>
+    <text class="ink name" x="100" y="96">Markus</text>
+    <text class="muted note" x="100" y="120">source</text>
+
+    <rect class="box" x="208" y="56" width="152" height="88"/>
+    <text class="ink name" x="284" y="96">Parser</text>
+    <text class="muted note" x="284" y="120">GFM + fences</text>
+
+    <rect class="box" x="392" y="56" width="152" height="88"/>
+    <text class="ink name" x="468" y="96">Registry</text>
+    <text class="muted note" x="468" y="120">validate</text>
+
+    <rect class="shadow" x="580" y="60" width="120" height="88"/>
+    <rect class="volt" x="576" y="56" width="120" height="88"/>
+    <text class="on-volt name" x="636" y="96">HTML</text>
+    <text class="on-volt note" x="636" y="120">semantic</text>
   </g>
-  <g fill="#b45309">
-    <polygon points="186,110 206,100 206,120"/>
-    <polygon points="372,110 392,100 392,120"/>
-    <polygon points="558,110 578,100 578,120"/>
+  <g class="arrow">
+    <rect x="180" y="98" width="16" height="4"/>
+    <polygon points="196,92 204,100 196,108"/>
+    <rect x="364" y="98" width="16" height="4"/>
+    <polygon points="380,92 388,100 380,108"/>
+    <rect x="548" y="98" width="16" height="4"/>
+    <polygon points="564,92 572,100 564,108"/>
   </g>
 </svg>

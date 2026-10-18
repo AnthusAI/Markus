@@ -1,14 +1,9 @@
 ---
 title: Highlight
 description: ==text==, inline highlighting that renders a mark element.
-theme: catppuccin
 ---
 
-# Highlight
-
 Wrap a phrase in double equals signs to highlight it. The renderer emits a `<mark>` element, and the color comes from the theme, so it is readable in every theme.
-
-[All features](features.html)
 
 ## Rules
 
@@ -19,31 +14,24 @@ Wrap a phrase in double equals signs to highlight it. The renderer emits a `<mar
 
 ## A phrase
 
-A preview of ==a new type of software solution.== that arrived early.
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 A preview of ==a new type of software solution.== that arrived early.
 ```
 :::
 
 ## Strong text inside
 
-==**Run the counterfactual as a smoke test.**== Then compare the numbers.
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ==**Run the counterfactual as a smoke test.**== Then compare the numbers.
 ```
 :::
 
 ## Across two lines
 
-The sentence starts ==with a highlight that runs
-across two source lines== and then ends normally.
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 The sentence starts ==with a highlight that runs
 across two source lines== and then ends normally.
 ```
@@ -51,10 +39,8 @@ across two source lines== and then ends normally.
 
 ## Next to code
 
-Inline code stays literal: `a ==b== c`, and ==a *nested emphasis* phrase== is fine.
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 Inline code stays literal: `a ==b== c`, and ==a *nested emphasis* phrase== is fine.
 ```
 :::

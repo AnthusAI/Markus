@@ -10,6 +10,7 @@ from markdown_it import MarkdownIt
 from mdit_py_plugins.tasklists import tasklists_plugin
 
 from markusmd.ast import Document, MarkdownBlock, Node
+from markusmd.example import example_snippet
 from markusmd.heading_ids import (
     HEADING_IDS_ENV_KEY,
     LINE_OFFSET_ENV_KEY,
@@ -206,6 +207,12 @@ def _render_nodes(
             parts.append(markdown.render(node.source, block_env))
             continue
         spec = registry.resolve(node.name)
+        if spec is not None and spec.renders_example:
+            example = registry.validate_example(node)
+            snippet, _ = example_snippet(node)
+            preview = _render_header(example.front_matter) + render_children(example.children)
+            parts.append(registry.render(node, preview, example_source=snippet))
+            continue
         if spec is not None and spec.trailing_markdown:
             structural = [child for child in node.children if not isinstance(child, MarkdownBlock)]
             trailing = [child for child in node.children if isinstance(child, MarkdownBlock)]
