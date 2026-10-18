@@ -3,7 +3,7 @@
   "title": "Adopt the Markus design system on the demo site: system light/dark, side-by-side source and preview examples, full feature docs",
   "description": "Apply the Markus design system (https://claude.ai/artifact/Raod2FgTPZTjoPh4MxLpfb) to the demo site. Follow the system color scheme by default with real light and dark palettes; fix the pipeline figure that stays light in dark mode. Add an example directive that renders Markus source beside its preview (stacked on narrow viewports) and use it for every example. Document every directive and language feature with examples.",
   "type": "task",
-  "status": "in_progress",
+  "status": "closed",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -24,11 +24,18 @@
       "text": "PR: https://github.com/AnthusAI/Markus/pull/10 (base feat/multiline-directive-attributes; retarget to develop after #9). Not landed. Deploy blocked on Papyrus: every papyrus-newsroom release asserts Markus == 0.5.1 exactly.",
       "created_at": "2026-10-18T17:20:41.841753Z",
       "comment_type": "default"
+    },
+    {
+      "id": "606c7f4f-35b2-48e1-849f-69b366c8ab5d",
+      "author": "home",
+      "text": "Landed and live at https://markus.anth.us (main). PRs: #10 example directive and design-system site, #13 papyrus-newsroom 1.11.0, #15 theme picker, #17 Geist Mono semibold headlines; promotions #14, #16, #18. Papyrus #295 (released as 1.11.0) accepts Markus >=0.6.0,<1.0.0. markus.anth.us now CNAMEs to anthusai.github.io (papyrus-production Route 53), HTTPS enforced; the amplify-app-shell-markus-site stack (markus-site-reader Amplify app) was deleted. Verification: behave 248/248, Pages deploy success, live CSS serves GeistMono-600.",
+      "created_at": "2026-10-18T18:32:56.530458Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-18T17:05:36.922393Z",
-  "updated_at": "2026-10-18T17:20:41.841779Z",
-  "closed_at": null,
+  "updated_at": "2026-10-18T18:32:56.551664Z",
+  "closed_at": "2026-10-18T18:32:56.551451Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",
