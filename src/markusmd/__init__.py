@@ -12,7 +12,7 @@ from markusmd.errors import (
 from markusmd.registry import Registry
 from markusmd.render import minify_css
 
-__version__ = "0.7.0"
+__version__ = "0.12.0"
 
 __all__ = [
     "IR_SCHEMA_VERSION",
