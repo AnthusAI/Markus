@@ -83,8 +83,12 @@ lines inside a container work as before.
 | `row` | Nodes side by side inside a diagram | — |
 | `node` | One box in a diagram | `title`, `tone` |
 | `editorial-finding` | Editorial diagnose finding (machine or human) | `id`, `kind`, `rationale`, `decision`, `group` |
+| `example` | Markus source shown beside its rendered preview | `layout` (`side-by-side`, `stacked`), `title` |
 
-A trailing kramdown-style attribute list is also accepted inside a directive:
+A trailing kramdown-style attribute list is also accepted inside a directive.
+It applies to the directive whose body it sits in directly; a `{: ... }` line
+inside a nested directive belongs to that directive, and one inside a code
+fence is ordinary code:
 
 ```md
 :::pull-quote
@@ -92,6 +96,35 @@ A trailing kramdown-style attribute list is also accepted inside a directive:
 {: attribution="Editorial principle" }
 :::
 ```
+
+## Example
+
+`example` documents Markus in Markus. Its body is exactly one fenced code
+block of Markus source; the renderer shows that source, with directive fences,
+names and attributes marked, beside the HTML it renders. There is one copy of
+the source, so the two cannot drift apart.
+
+````md
+:::example{title="A tip"}
+```markus
+:::tip
+The preview renders this source.
+:::
+```
+:::
+````
+
+| Attribute | Meaning | Default |
+| --- | --- | --- |
+| `layout` | `side-by-side` places source and preview in two panes when the example is at least 44rem wide and stacks them below that; `stacked` always puts the source above the preview | `side-by-side` |
+| `title` | Caption above the panes | none |
+
+The snippet is parsed and validated with the page, so an invalid example fails
+the build at its real line number. Front matter in the snippet renders as a
+document header in the preview. When the snippet has its own code fences, use
+a longer outer fence. The preview pane is its own CSS container, so layouts
+inside it respond to the pane's width, not the page's; use `stacked` for wide
+layouts such as card grids and two-up pairs.
 
 ## Bar chart
 

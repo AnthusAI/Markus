@@ -1,14 +1,9 @@
 ---
 title: Tabs
 description: tabs and tab.
-theme: catppuccin
 ---
 
-# Tabs
-
 Tabs group alternatives. `tabs` may contain only `tab` blocks, and every tab needs a `label`.
-
-[All features](features.html)
 
 ## Attributes
 
@@ -17,24 +12,12 @@ Tabs group alternatives. `tabs` may contain only `tab` blocks, and every tab nee
 | tabs `label` | any text; accessible name | none |
 | tab `label` | any text (required) |  |
 
+Every directive also accepts `id`, which becomes the HTML id; see [Syntax and metadata](demo-syntax.html#element-id).
+
 ### Basic
 
-:::tabs
-:::tab{label="macOS"}
-```bash
-brew install anthus-markus
-```
-:::
-
-:::tab{label="Linux"}
-```bash
-pip install anthus-markus
-```
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-````md
+:::example
+````markus
 :::tabs
 :::tab{label="macOS"}
 ```bash
@@ -55,22 +38,8 @@ pip install anthus-markus
 
 The `label` on `tabs` is the accessible name of the tab list.
 
-:::tabs{label="Install methods"}
-:::tab{label="pip"}
-Use pip.
-:::
-
-:::tab{label="uv"}
-Use uv.
-:::
-
-:::tab{label="From source"}
-Clone and install.
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::tabs{label="Install methods"}
 :::tab{label="pip"}
 Use pip.
@@ -89,22 +58,8 @@ Clone and install.
 
 ### Rich panels
 
-:::tabs
-:::tab{label="Prose"}
-Any Markdown works in a panel.
-
-- list item
-:::
-
-:::tab{label="Directive"}
-:::callout{kind="note"}
-A callout in a panel.
-:::
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 :::tabs
 :::tab{label="Prose"}
 Any Markdown works in a panel.

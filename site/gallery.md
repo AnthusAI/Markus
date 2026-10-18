@@ -1,12 +1,11 @@
 ---
 title: Markus gallery
 description: Every built-in directive, rendered from Markus source.
-theme: catppuccin
 ---
 
 # Every directive, live
 
-This page is itself Markus. Each section is a real block from the 0.1 registry, followed by the source that produced it.
+This page is itself Markus. Each section is a real block from the registry. For every attribute and its source beside the result, see the [feature index](features.html).
 
 ## Callouts
 

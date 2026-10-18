@@ -1,28 +1,16 @@
 ---
 title: Tables
 description: GFM tables with alignment, wrapping, numeric columns, and horizontal scrolling.
-theme: catppuccin
 ---
 
-# Tables
-
 Tables are plain GFM. Markus themes them in every theme: header styling, striped rows, tabular numerals, wrapped cell text, and a focusable scroll region so a wide table never breaks the page on a small screen.
-
-[All features](features.html)
 
 ## Benchmark results
 
 The delimiter row sets alignment: `:---` left, `---:` right, `:---:` center. Numeric columns are right aligned so digits line up.
 
-| Model / agent configuration | Resolved tasks | Cost per task |
-| :--- | ---: | ---: |
-| GPT-5 mini + schema-guided agent | 58.8% | $0.24 |
-| GPT-5 + schema-guided agent | 58.0% | $0.86 |
-| Qwen 3 Coder + schema-guided agent | 32.3% | $0.13 |
-| Devstral 2 Small + interactive agent | 42.2% | $0.30 |
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 | Model / agent configuration | Resolved tasks | Cost per task |
 | :--- | ---: | ---: |
 | GPT-5 mini + schema-guided agent | 58.8% | $0.24 |

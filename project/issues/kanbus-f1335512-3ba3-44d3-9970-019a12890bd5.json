@@ -1,0 +1,33 @@
+{
+  "id": "kanbus-f1335512-3ba3-44d3-9970-019a12890bd5",
+  "title": "Adopt the Markus design system on the demo site: system light/dark, side-by-side source and preview examples, full feature docs",
+  "description": "Apply the Markus design system (https://claude.ai/artifact/Raod2FgTPZTjoPh4MxLpfb) to the demo site. Follow the system color scheme by default with real light and dark palettes; fix the pipeline figure that stays light in dark mode. Add an example directive that renders Markus source beside its preview (stacked on narrow viewports) and use it for every example. Document every directive and language feature with examples.",
+  "type": "task",
+  "status": "in_progress",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "5bdeede7-66b6-40b7-ad8c-15e2e4bbee42",
+      "author": "home",
+      "text": "Branch feature/kanbus-f13355-design-system-docs (stacked on feat/multiline-directive-attributes, PR #9). Adds the example directive (source beside preview, stacked under 44rem), a design-system site theme that follows the system color scheme with an Auto/Light/Dark override, a grouped docs sidebar, new Get started / Example / Editorial finding pages, all demo pages converted to example blocks, and a parser fix so {: } attribute lists apply only to the directive they sit in directly. Verification: behave 248/248 scenarios, ruff clean, every site page passes markus validate, docsite builds 25 pages locally; checked light, dark, forced light on dark system, 1440/1280/375 widths, no horizontal overflow on any page at 375px.",
+      "created_at": "2026-10-18T17:20:18.051223Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-10-18T17:05:36.922393Z",
+  "updated_at": "2026-10-18T17:20:18.051251Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "Claude"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

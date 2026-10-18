@@ -1,14 +1,9 @@
 ---
 title: Metric
 description: metric, the leaf directive for key figures.
-theme: catppuccin
 ---
 
-# Metric
-
 A metric is a single key fact. It is a leaf directive: two colons, no body.
-
-[All features](features.html)
 
 ## Attributes
 
@@ -19,34 +14,30 @@ A metric is a single key fact. It is a leaf directive: two colons, no body.
 | `label` | any text | `Metric` |
 | `delta` | any text; sign picks the direction | none |
 
+Every directive also accepts `id`, which becomes the HTML id; see [Syntax and metadata](demo-syntax.html#element-id).
+
 ### Value only
 
 The label falls back to `Metric`.
 
-::metric{value="42"}
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ::metric{value="42"}
 ```
 :::
 
 ### Value and label
 
-::metric{value="99.95%" label="Uptime"}
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ::metric{value="99.95%" label="Uptime"}
 ```
 :::
 
 ### With unit
 
-::metric{value="12" unit="ms" label="p95 latency"}
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ::metric{value="12" unit="ms" label="p95 latency"}
 ```
 :::
@@ -57,30 +48,24 @@ The delta text decides the direction: a leading `-` is down, a leading `+` is up
 
 ### Negative delta
 
-::metric{value="12" unit="ms" label="p95 latency" delta="-38%"}
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ::metric{value="12" unit="ms" label="p95 latency" delta="-38%"}
 ```
 :::
 
 ### Positive delta
 
-::metric{value="4.2" unit="k" label="Requests per second" delta="+12%"}
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ::metric{value="4.2" unit="k" label="Requests per second" delta="+12%"}
 ```
 :::
 
 ### Neutral delta
 
-::metric{value="7" label="Open issues" delta="0%"}
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ::metric{value="7" label="Open issues" delta="0%"}
 ```
 :::
@@ -89,14 +74,8 @@ The delta text decides the direction: a leading `-` is down, a leading `+` is up
 
 Metrics stack in the document flow; wrap them in a `card-grid` for a dashboard row.
 
-::metric{value="12" unit="ms" label="Latency" delta="-38%"}
-
-::metric{value="99.95%" label="Uptime" delta="+0.02%"}
-
-::metric{value="3" label="Regions"}
-
-:::details{summary="Markus source" open=true}
-```md
+:::example
+```markus
 ::metric{value="12" unit="ms" label="Latency" delta="-38%"}
 
 ::metric{value="99.95%" label="Uptime" delta="+0.02%"}
@@ -107,22 +86,8 @@ Metrics stack in the document flow; wrap them in a `card-grid` for a dashboard r
 
 ### Metrics in cards
 
-:::card-grid{columns=3 label="Dashboard"}
-:::card{title="Speed"}
-::metric{value="12" unit="ms" label="p95" delta="-38%"}
-:::
-
-:::card{title="Uptime"}
-::metric{value="99.95%" label="30 days" delta="+0.02%"}
-:::
-
-:::card{title="Regions"}
-::metric{value="3" label="Live"}
-:::
-:::
-
-:::details{summary="Markus source" open=true}
-```md
+:::example{layout="stacked"}
+```markus
 :::card-grid{columns=3 label="Dashboard"}
 :::card{title="Speed"}
 ::metric{value="12" unit="ms" label="p95" delta="-38%"}

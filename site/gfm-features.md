@@ -1,31 +1,14 @@
 ---
-title: GFM feature demos
+title: GitHub Flavored Markdown
 description: Every GitHub Flavored Markdown feature Markus renders.
-theme: catppuccin
 ---
 
-# GFM feature demos
-
-Markus renders CommonMark plus the GFM extensions with markdown-it. Each section shows the rendered result, then the source.
-
-[All features](features.html)
+Markus renders CommonMark plus the GFM extensions with markdown-it. Each section shows the Markdown beside what it renders.
 
 ## Headings
 
-# Heading 1
-
-## Heading 2
-
-### Heading 3
-
-#### Heading 4
-
-##### Heading 5
-
-###### Heading 6
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 # Heading 1
 
 ## Heading 2
@@ -42,22 +25,16 @@ Markus renders CommonMark plus the GFM extensions with markdown-it. Each section
 
 ## Emphasis, strong, strikethrough, inline code
 
-*Italic*, **bold**, ***both***, ~~struck~~, and `inline code`.
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 *Italic*, **bold**, ***both***, ~~struck~~, and `inline code`.
 ```
 :::
 
 ## Links and autolinks
 
-An [inline link](https://github.github.com/gfm/), a [link with a title](https://example.com "Example title"), a [reference link][ref], and a bare URL https://github.com/AnthusAI/Markus that becomes a link.
-
-[ref]: https://example.com
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 An [inline link](https://github.github.com/gfm/), a [link with a title](https://example.com "Example title"), a [reference link][ref], and a bare URL https://github.com/AnthusAI/Markus that becomes a link.
 
 [ref]: https://example.com
@@ -66,24 +43,16 @@ An [inline link](https://github.github.com/gfm/), a [link with a title](https://
 
 ## Images
 
-![Markus pipeline](assets/pipeline.svg)
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 ![Markus pipeline](assets/pipeline.svg)
 ```
 :::
 
 ## Bullet lists, nested
 
-- Parse
-- Validate
-  - Attributes
-  - Nesting
-- Render
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 - Parse
 - Validate
   - Attributes
@@ -94,17 +63,8 @@ An [inline link](https://github.github.com/gfm/), a [link with a title](https://
 
 ## Ordered lists
 
-1. Parse
-2. Validate
-3. Render
-
-Starting elsewhere:
-
-5. Five
-6. Six
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 1. Parse
 2. Validate
 3. Render
@@ -118,12 +78,8 @@ Starting elsewhere:
 
 ## Task lists
 
-- [x] Tables
-- [x] Strikethrough
-- [ ] Something still to do
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 - [x] Tables
 - [x] Strikethrough
 - [ ] Something still to do
@@ -132,13 +88,8 @@ Starting elsewhere:
 
 ## Tables with alignment
 
-| Left | Center | Right |
-| :--- | :---: | ---: |
-| a | b | c |
-| longer | cell | 12 |
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 | Left | Center | Right |
 | :--- | :---: | ---: |
 | a | b | c |
@@ -148,14 +99,8 @@ Starting elsewhere:
 
 ## Fenced code with a language
 
-```python
-from markusmd import convert
-
-html = convert("# Hello\n")
-```
-
-:::details{summary="Markdown source" open=true}
-````md
+:::example
+````markus
 ```python
 from markusmd import convert
 
@@ -166,11 +111,8 @@ html = convert("# Hello\n")
 
 ## Indented code
 
-    four spaces
-    make a code block
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
     four spaces
     make a code block
 ```
@@ -178,12 +120,8 @@ html = convert("# Hello\n")
 
 ## Blockquotes
 
-> A quote.
->
-> > A nested quote.
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 > A quote.
 >
 > > A nested quote.
@@ -192,14 +130,8 @@ html = convert("# Hello\n")
 
 ## GFM alerts
 
-> [!NOTE]
-> A note alert.
-
-> [!WARNING]
-> A warning alert.
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 > [!NOTE]
 > A note alert.
 
@@ -210,14 +142,8 @@ html = convert("# Hello\n")
 
 ## Thematic break
 
-Above
-
----
-
-Below
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 Above
 
 ---
@@ -228,15 +154,8 @@ Below
 
 ## Hard and soft line breaks
 
-A soft break
-continues the line.
-
-A hard break ends with two spaces  
-or a backslash\
-and starts a new line.
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 A soft break
 continues the line.
 
@@ -248,20 +167,16 @@ and starts a new line.
 
 ## Typographer
 
-"Smart quotes", it's, an ellipsis..., and a dash -- or --- are typeset.
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 "Smart quotes", it's, an ellipsis..., and a dash -- or --- are typeset.
 ```
 :::
 
 ## Escapes
 
-\*not italic\*, \`not code\`, and \# not a heading.
-
-:::details{summary="Markdown source" open=true}
-```md
+:::example
+```markus
 \*not italic\*, \`not code\`, and \# not a heading.
 ```
 :::

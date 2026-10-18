@@ -22,7 +22,7 @@ _ATTR_RE = re.compile(
     re.VERBOSE,
 )
 
-_IAL_LINE_RE = re.compile(
+IAL_LINE_RE = re.compile(
     r"^[ \t]*\{:\s*(?P<body>.*?)\}\s*$",
     re.MULTILINE,
 )
@@ -101,18 +101,6 @@ def parse_attribute_body(body: str, *, line: int) -> dict[str, Any]:
         attrs[name] = value
         index = match.end()
     return attrs
-
-
-def extract_inline_attribute_lists(source: str, *, line: int) -> tuple[str, dict[str, Any]]:
-    """Lift `{: key=value }` lines out of a directive body into attributes."""
-    attrs: dict[str, Any] = {}
-
-    def _replace(match: re.Match[str]) -> str:
-        attrs.update(parse_attribute_body(match.group("body"), line=line))
-        return ""
-
-    remainder = _IAL_LINE_RE.sub(_replace, source)
-    return remainder, attrs
 
 
 def _coerce_bare(value: str) -> Any:
