@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "5337b55b-95f7-4e8e-aa3b-dfde926dd79a",
+  "issue_id": "kanbus-7c0531b8-6da7-4593-abec-59632f9f93b1",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T04:29:49.813Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Audit cleanup (low priority): Markus",
+    "description": "**Problem**\nLow-severity findings from the 2026-10-20 audit of Markus.\n\n**Evidence / Fix** (one checklist line per finding)\n- [ ] README directive table is missing about 15 directives that exist in the implementation; add them (the feature index on the docs site is the reference).\n- [ ] The site footer's anth.us/blog link redirects to /articles; update it (the footer is shared, see the footer issue and AnthusAI/anthus-footer).\n\n**How to verify**\nEvery directive registered in the parser appears in the README table; `curl -s -o /dev/null -w '%{http_code}' https://anth.us/blog` no longer redirects once the footer link is updated.\n\nSource: Anthus repo audit, 2026-10-20.",
+    "issue_type": "bug",
+    "status": "open",
+    "priority": 3,
+    "assignee": null,
+    "parent": null,
+    "labels": [],
+    "agent": {
+      "platform": "claude-code",
+      "model": "claude-sonnet-5-5",
+      "name": "audit-filing"
+    }
+  }
+}

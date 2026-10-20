@@ -1,0 +1,25 @@
+{
+  "id": "kanbus-483c4976-a8ec-4691-9c43-a9b93204d39c",
+  "title": "CHANGELOG.md tops out at 0.6.0 while the package version is 0.13.0",
+  "description": "**Problem**\nThe changelog is out of date by several releases, so readers cannot see what changed since 0.6.0.\n\n**Evidence**\n- CHANGELOG.md top entry is `## 0.6.0`.\n- pyproject.toml:7 `version = \"0.13.0\"`.\n\n**Fix**\nBackfill the missing release notes (0.7.0 to 0.13.0) from git history, and check that semantic-release (configured in pyproject.toml) is writing to this file on release.\n\n**How to verify**\nThe first heading under `# Changelog` in CHANGELOG.md matches the version in pyproject.toml.\n\nSource: Anthus repo audit, 2026-10-20.",
+  "type": "bug",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-20T04:29:49.733192Z",
+  "updated_at": "2026-10-20T04:29:49.733221Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude-code",
+    "model": "claude-sonnet-5-5",
+    "name": "audit-filing"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

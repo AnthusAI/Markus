@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "95ef21e1-2469-4cdc-bfa4-08d685a89d2e",
+  "issue_id": "kanbus-b92751e8-91b4-4828-9e85-db6c53eb82c3",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T04:29:49.602Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Footer in docsite/build_site.py links Biblicus to anthusai.github.io/Biblicus/, which returns 404",
+    "description": "**Problem**\nThe Markus docs site (https://markus.anth.us/) footer has a Biblicus link to a GitHub Pages site that does not exist. The same URL appears in the footer served on https://babul.us/, so this is a shared-footer problem, not only a Markus one.\n\n**Evidence**\n- docsite/build_site.py:242: `(\"Biblicus\", \"https://anthusai.github.io/Biblicus/\", False),`\n- `curl -s -o /dev/null -w '%{http_code}' -L https://anthusai.github.io/Biblicus/` returns 404.\n- `curl -s https://markus.anth.us/ | grep -o 'href=\"[^\"]*Biblicus[^\"]*\"'` and the same against https://babul.us/ both show that URL.\n- The shared footer registry (AnthusAI/anthus-footer, ~/Projects/anthus-footer, src/sites.js) already points Biblicus at https://github.com/AnthusAI/Biblicus on main, so the sites serving the dead link are using a hardcoded or older-pinned copy.\n- Root cause on the Biblicus side: its docs site is not published (separate Biblicus issue filed from this audit); once that is fixed the link works again.\n\n**Fix**\nShort term: point the Biblicus entry in build_site.py:242 at https://github.com/AnthusAI/Biblicus (matching anthus-footer's sites.js) or, better, consume the footer from anthus-footer instead of hardcoding it. Also update the footer's anth.us/blog link, which redirects to /articles.\n\n**How to verify**\n`curl -s https://markus.anth.us/ | grep -c 'anthusai.github.io/Biblicus'` returns 0 after the next docs deploy, and every footer link returns 200 (`curl -s -o /dev/null -w '%{http_code}' -L <url>`).\n\nSource: Anthus repo audit, 2026-10-20.",
+    "issue_type": "bug",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": null,
+    "labels": [],
+    "agent": {
+      "platform": "claude-code",
+      "model": "claude-sonnet-5-5",
+      "name": "audit-filing"
+    }
+  }
+}
