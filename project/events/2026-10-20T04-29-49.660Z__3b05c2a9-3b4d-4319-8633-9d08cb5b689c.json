@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "3b05c2a9-3b4d-4319-8633-9d08cb5b689c",
+  "issue_id": "kanbus-47a40d9f-a7a4-4998-8442-6c77fd66893b",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T04:29:49.660Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "README demo and feature links point to anthusai.github.io/Markus instead of markus.anth.us",
+    "description": "**Problem**\nThe README sends readers to the old GitHub Pages address instead of the canonical site markus.anth.us.\n\n**Evidence**\n- README.md:50 links the feature index to `https://anthusai.github.io/Markus/articles/features.html`\n- README.md:70 links the demo to `https://anthusai.github.io/Markus/`\n\n**Fix**\nReplace both with the markus.anth.us equivalents (https://markus.anth.us/ and https://markus.anth.us/articles/features.html, after confirming the path exists).\n\n**How to verify**\n`grep -n 'anthusai.github.io/Markus' README.md` returns nothing and `curl -s -o /dev/null -w '%{http_code}' -L https://markus.anth.us/articles/features.html` returns 200.\n\nSource: Anthus repo audit, 2026-10-20.",
+    "issue_type": "bug",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": null,
+    "labels": [],
+    "agent": {
+      "platform": "claude-code",
+      "model": "claude-sonnet-5-5",
+      "name": "audit-filing"
+    }
+  }
+}
