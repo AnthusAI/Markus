@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "1100125d-2cd9-4a74-95ca-7f5767739514",
+  "issue_id": "kanbus-b6a55748-38ef-4061-8191-22494fbe3f4c",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T04:28:51.538Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Renderer turns bare filenames and domains into external links",
+    "description": "**Problem**\nMarkus renders bare filenames and domain-like words as external links. Text such as `AGENTS.md`, `agent.py` or `Anth.us` in ordinary prose becomes `<a href=\"http://AGENTS.md\">`, which points at a real outside site (.md is Moldova's country domain, .py is Paraguay's, .us is the US). Readers who click land on an unrelated third-party site, and the links look like Anthus content.\n\n**Evidence**\nLive pages built with the Papyrus/Markus renderer:\n- https://chattic.us/wiki/typescript-control-plane renders `AGENTS.md` as `<a href=\"http://AGENTS.md\">` (several times) and `VOICE.md` as `<a href=\"http://VOICE.md\">`.\n- https://chattic.us/wiki/messaging renders `Chattic.us` as `<a href=\"http://Chattic.us\">` (and Anth.us likewise).\n- https://tactus.anth.us/why-new-language/ renders `agent.py` as `<a href=\"http://agent.py\">`.\n- https://anth.us/ai-project-planning renders `project-plan.md` as `<a href=\"http://project-plan.md\">`.\n- Cause: src/markusmd/render.py:54 and :59 build `MarkdownIt(\"gfm-like2\", {\"html\": ..., \"linkify\": True, \"typographer\": True})`. markdown-it-py's linkify (linkify-it) treats any `word.tld` with a real TLD as a URL. Reproduced locally: rendering \"See AGENTS.md and agent.py and Anth.us\" produces `<a href=\"http://AGENTS.md\">`, `<a href=\"http://agent.py\">` and `<a href=\"http://Anth.us\">`.\n- Papyrus delegates to Markus for this, so the fix belongs here rather than in Papyrus.\n\n**Fix**\nRestrict linkify so it only links explicit schemes: either turn linkify off and rely on explicit `<https://...>` autolinks (the GFM spec only autolinks `http(s)://` and `www.`), or enable linkify with fuzzy matching off (`md.linkify.set({\"fuzzy_link\": False, \"fuzzy_email\": False, \"fuzzy_ip\": False})`). Add a Gherkin scenario covering `AGENTS.md`, `agent.py`, `Chattic.us` and a real `https://example.com/x` URL, then release Markus and bump the pin in the Papyrus sites that render with it (Chattic.us-web, Tactus-web, Anth.us).\n\n**How to verify**\nRender `See AGENTS.md and agent.py, or https://example.com/x` with Markus: the output has an `<a>` only for the https URL. After the sites are rebuilt, `curl -sL https://chattic.us/wiki/typescript-control-plane | grep -c 'href=\"http://AGENTS.md\"'` returns 0, and likewise for the other pages.\n\nSource: Anthus repo audit, 2026-10-20.",
+    "issue_type": "bug",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": null,
+    "labels": [],
+    "agent": {
+      "platform": "claude-code",
+      "model": "claude-opus-5-5",
+      "name": "audit-filing"
+    }
+  }
+}
