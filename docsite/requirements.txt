@@ -1,3 +1,3 @@
-papyrus-newsroom[markus]==5.1.0
+papyrus-newsroom[markus]==5.8.0
 # Build the docs with this checkout of Markus, so the site documents the source it ships with.
 .
