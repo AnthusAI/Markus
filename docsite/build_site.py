@@ -359,6 +359,12 @@ def stage_papyrus_content_layout(staging_directory: Path) -> None:
             (articles_directory / source_page.name).write_text(page_text, encoding="utf-8")
 
 
+def write_robots(output_directory: Path) -> None:
+    (output_directory / "robots.txt").write_text(
+        f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}sitemap.xml\n", encoding="utf-8"
+    )
+
+
 def write_custom_domain(output_directory: Path) -> None:
     (output_directory / "CNAME").write_text(f"{SITE_CUSTOM_DOMAIN}\n", encoding="utf-8")
 
@@ -389,6 +395,7 @@ def build_documentation_site(output_directory: Path):
         )
     write_redirects_from_former_urls(output_directory)
     write_sitemap_and_not_found_page(SITEMAP_CONFIG, output_directory)
+    write_robots(output_directory)
     write_custom_domain(output_directory)
     return build_result
 
