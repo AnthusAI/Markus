@@ -393,8 +393,9 @@ def build_documentation_site(output_directory: Path):
             site_css=SITE_STYLESHEET,
             chrome=SITE_CHROME,
         )
-    write_redirects_from_former_urls(output_directory)
-    write_sitemap_and_not_found_page(SITEMAP_CONFIG, output_directory)
+        write_redirects_from_former_urls(output_directory)
+        # content_directory also writes the .md twins, llms.txt and llms-full.txt
+        write_sitemap_and_not_found_page(SITEMAP_CONFIG, output_directory, content_directory=staging_directory)
     write_robots(output_directory)
     write_custom_domain(output_directory)
     return build_result
