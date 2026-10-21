@@ -6,6 +6,11 @@ import tempfile
 from pathlib import Path
 
 from papyrus_content.markus_renderer.build import build_markus_site
+from papyrus_content.markus_renderer.docs_site import (
+    DocsSiteConfig,
+    stage_generated_pages,
+    write_sitemap_and_not_found_page,
+)
 from papyrus_content.markus_renderer.shell import SiteChrome
 
 from markusmd.themes import THEME_MODES
@@ -14,6 +19,15 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SITE_CONTENT_DIRECTORY = REPOSITORY_ROOT / "site"
 SITE_CUSTOM_DOMAIN = "markus.anth.us"
 SITE_STYLESHEET = SITE_CONTENT_DIRECTORY / "site.css"
+SITE_URL = "https://markus.anth.us/"
+# Papyrus writes sitemap.xml and 404.html for a docs site that declares its public address.
+SITEMAP_CONFIG = DocsSiteConfig(
+    site_name="Markus",
+    tagline="",
+    documentation_directory=SITE_CONTENT_DIRECTORY,
+    source_repository_url="https://github.com/AnthusAI/Markus",
+    published_site_url=SITE_URL,
+)
 HOME_HREF = "index.html"
 
 # The sidebar, in reading order. Every page under site/ must appear here exactly
@@ -104,7 +118,6 @@ THEME_NAMES = {"github": "GitHub", "one": "One", "rose-pine": "Rosé Pine", "ret
 
 # Link previews: every page shares the 1200x630 card rendered from
 # docsite/social-preview.html. Crawlers need an absolute image URL.
-SITE_URL = "https://markus.anth.us/"
 SOCIAL_DESCRIPTION = (
     "GitHub-flavored Markdown with a small vocabulary of semantic layout directives."
 )
@@ -366,6 +379,7 @@ def build_documentation_site(output_directory: Path):
     with tempfile.TemporaryDirectory(prefix="markus-site-content-") as staging_name:
         staging_directory = Path(staging_name)
         stage_papyrus_content_layout(staging_directory)
+        stage_generated_pages(staging_directory)
         build_result = build_markus_site(
             content_dir=staging_directory,
             out_dir=output_directory,
@@ -374,6 +388,7 @@ def build_documentation_site(output_directory: Path):
             chrome=SITE_CHROME,
         )
     write_redirects_from_former_urls(output_directory)
+    write_sitemap_and_not_found_page(SITEMAP_CONFIG, output_directory)
     write_custom_domain(output_directory)
     return build_result
 
