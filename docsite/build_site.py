@@ -229,8 +229,7 @@ def render_site_banner(page_context) -> str:
 ANTHUS_COMMUNITY_LINKS = (
     (
         "Contact us",
-        "https://docs.google.com/forms/d/e/1FAIpQLSdWlt4KpwPSBHzg3o8fikHcfrzxo5rCcV-0-zDt815NZ1tcyg"
-        "/viewform?usp=sf_link",
+        "https://anth.us/engage/?solution=Markus&cta=contact",
     ),
     ("GitHub", "https://github.com/AnthusAI"),
     ("LinkedIn", "https://www.linkedin.com/in/ryanalynporter/"),
