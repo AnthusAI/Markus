@@ -11,6 +11,7 @@ from papyrus_content.markus_renderer.docs_site import (
     stage_generated_pages,
     write_sitemap_and_not_found_page,
 )
+from papyrus_content.markus_renderer.consent import ConsentModeSettings
 from papyrus_content.markus_renderer.shell import SiteChrome
 
 from markusmd.themes import THEME_MODES
@@ -20,6 +21,9 @@ SITE_CONTENT_DIRECTORY = REPOSITORY_ROOT / "site"
 SITE_CUSTOM_DOMAIN = "markus.anth.us"
 SITE_STYLESHEET = SITE_CONTENT_DIRECTORY / "site.css"
 SITE_URL = "https://markus.anth.us/"
+# The one Anthus GA4 property. Papyrus emits Consent Mode v2 defaults, the banner and the privacy-safe events.
+GA_MEASUREMENT_ID = "G-31SC26SDGX"
+PRIVACY_POLICY_URL = "https://anth.us/privacy/"
 # Papyrus writes sitemap.xml and 404.html for a docs site that declares its public address.
 SITEMAP_CONFIG = DocsSiteConfig(
     site_name="Markus",
@@ -300,6 +304,8 @@ def render_anthus_footer() -> str:
         "</div>"
         '<div class="anthus-footer-bottom">'
         "<span>Built by Anthus AI Solutions</span>"
+        f'<a href="{PRIVACY_POLICY_URL}">Privacy</a>'
+        '<a href="#" data-papyrus-consent-reopen hidden>Cookie settings</a>'
         "<span>Free and open-source Anthus platform components where applicable</span>"
         "</div>"
         "</div>"
@@ -312,6 +318,8 @@ SITE_CHROME = SiteChrome(
     render_masthead=render_site_banner,
     footer_html=render_anthus_footer(),
     scripts=("assets/site.js",),
+    ga_measurement_id=GA_MEASUREMENT_ID,
+    consent_mode=ConsentModeSettings(privacy_policy_url=PRIVACY_POLICY_URL),
 )
 
 
